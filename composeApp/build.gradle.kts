@@ -7,6 +7,8 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
 }
 
 kotlin {
@@ -16,12 +18,12 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     jvm("desktop")
-    
+
     sourceSets {
         val desktopMain by getting
-        
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
@@ -29,10 +31,18 @@ kotlin {
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
-            implementation(compose.material)
+            implementation(compose.material3)
             implementation(compose.ui)
+            implementation(compose.preview)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            implementation(libs.viewmodel)
+            implementation(libs.navigation)
+            implementation(libs.koin)
+            implementation(libs.gson)
+            implementation(libs.room.runtime)
+            implementation(libs.retrofit)
+            implementation(libs.retrofit.gson)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -88,3 +98,9 @@ compose.desktop {
         }
     }
 }
+
+room {
+    schemaDirectory("$projectDir/schemas")
+}
+
+dependencies { ksp(libs.room.compiler) }
