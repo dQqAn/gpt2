@@ -18,3 +18,5 @@ fun App() {
         }
     }
 }
+
+//TODO: Resources migrate (mppr to Res.drawable)
