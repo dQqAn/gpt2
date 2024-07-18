@@ -43,6 +43,8 @@ kotlin {
             implementation(libs.room.runtime)
             implementation(libs.retrofit)
             implementation(libs.retrofit.gson)
+            implementation(libs.lifecycle)
+            implementation(libs.lifecycle.livedata)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
