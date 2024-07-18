@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ml.bert.BertHelper
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
@@ -14,6 +15,7 @@ class ChatViewModel : ViewModel(), KoinComponent {
 
     private val database: AppDatabase by inject()
     private val repository: Repository by inject()
+    private val bertHelper: BertHelper by inject()
 
     private val _messages: MutableStateFlow<List<Message>> = MutableStateFlow(emptyList())
     val messages = _messages.asStateFlow()
@@ -38,7 +40,17 @@ class ChatViewModel : ViewModel(), KoinComponent {
     }
 
     init {
-
+        /*val rnds = (0..10).random()
+//        var titles: List<String> = emptyList()
+        var content: String = ""
+        //    var questions: List<String> = emptyList()
+        val client = LoadDataSetClient()
+        client.loadJson()?.let {
+//            titles = it.getTitles()
+            content = it.getContents()[rnds]
+            //        questions = it.questions
+        }
+        println(content)*/
     }
 
     fun askQuestion(question: String, chatID: String, senderID: String, receiverID: String) {

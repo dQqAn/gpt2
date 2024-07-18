@@ -119,7 +119,5 @@ fun ChatScreen(
 fun ChatScreenPreview() {
     ChatScreen(
         navController = rememberNavController(),
-//        argument = null,
-//        chatID = null
     )
 }

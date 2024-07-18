@@ -13,15 +13,15 @@ actual class BertQaHelper(
     private val context: Context,
     private val numThreads: Int = 2,
     private val currentDelegate: Int = 0,
-    private val answererListener: AnswererListener?
-) {
+//    private val answererListener: AnswererListener?
+) : BertHelper {
     private var bertQuestionAnswerer: BertQuestionAnswerer? = null
 
     init {
         setupBertQuestionAnswerer()
     }
 
-    actual fun clearBertQuestionAnswerer() {
+    override fun clearBertQuestionAnswerer() {
         bertQuestionAnswerer = null
     }
 
@@ -37,7 +37,7 @@ actual class BertQaHelper(
                 if (CompatibilityList().isDelegateSupportedOnThisDevice) {
                     baseOptionsBuilder.useGpu()
                 } else {
-                    answererListener?.onError("GPU is not supported on this device")
+//                    answererListener?.onError("GPU is not supported on this device")
                 }
             }
 
@@ -54,13 +54,12 @@ actual class BertQaHelper(
             bertQuestionAnswerer =
                 BertQuestionAnswerer.createFromFileAndOptions(context, BERT_QA_MODEL, options)
         } catch (e: IllegalStateException) {
-            answererListener
-                ?.onError("Bert Question Answerer failed to initialize. See error logs for details")
+//            answererListener?.onError("Bert Question Answerer failed to initialize. See error logs for details")
             Log.e(TAG, "TFLite failed to load model with error: " + e.message)
         }
     }
 
-    actual fun answer(contextOfQuestion: String, question: String) {
+    override fun answer(contextOfQuestion: String, question: String) {
         if (bertQuestionAnswerer == null) {
             setupBertQuestionAnswerer()
         }
@@ -71,7 +70,7 @@ actual class BertQaHelper(
 
         val answers = bertQuestionAnswerer?.answer(contextOfQuestion, question)
         inferenceTime = SystemClock.uptimeMillis() - inferenceTime
-        answererListener?.onResults(answers, inferenceTime)
+//        answererListener?.onResults(answers, inferenceTime)
     }
 
     interface AnswererListener {
@@ -82,9 +81,9 @@ actual class BertQaHelper(
         )
     }
 
-    actual val BERT_QA_MODEL = "mobilebert.tflite"
-    actual val TAG = "BertQaHelper"
-    actual val DELEGATE_CPU = 0
-    actual val DELEGATE_GPU = 1
-    actual val DELEGATE_NNAPI = 2
+    override val BERT_QA_MODEL = "mobilebert.tflite"
+    override val TAG = "BertQaHelper"
+    override val DELEGATE_CPU = 0
+    override val DELEGATE_GPU = 1
+    override val DELEGATE_NNAPI = 2
 }
