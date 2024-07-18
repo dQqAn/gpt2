@@ -12,6 +12,12 @@ plugins {
 }
 
 kotlin {
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    compilerOptions {
+        // Common compiler options applied to all Kotlin source sets
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
+
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
@@ -45,6 +51,9 @@ kotlin {
             implementation(libs.retrofit.gson)
             implementation(libs.lifecycle)
             implementation(libs.lifecycle.livedata)
+            implementation(libs.tensorflow.text)
+            implementation(libs.tensorflow.gpu.delegate)
+            implementation(libs.tensorflow.gpu)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
