@@ -21,9 +21,9 @@ room = "2.7.0-alpha05"
 ksp = "2.0.0-1.0.23"
 retrofit_ref = "2.11.0"
 lifecycle_ref = "2.8.3"
-tensorflow_text_ref="0.4.4"
-tensorflow_gpu_delegate_ref="0.4.4"
-tensorflow_gpu_ref="2.16.1"
+tensorflow_text_ref = "0.4.4"
+tensorflow_gpu_delegate_ref = "0.4.4"
+tensorflow_gpu_ref = "2.16.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }

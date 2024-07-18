@@ -11,8 +11,8 @@ import org.tensorflow.lite.task.text.qa.QaAnswer
 
 actual class BertQaHelper(
     private val context: Context,
-    private val numThreads: Int,
-    private val currentDelegate: Int,
+    private val numThreads: Int = 2,
+    private val currentDelegate: Int = 0,
     private val answererListener: AnswererListener?
 ) {
     private var bertQuestionAnswerer: BertQuestionAnswerer? = null

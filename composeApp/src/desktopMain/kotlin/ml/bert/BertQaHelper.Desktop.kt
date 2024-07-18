@@ -1,7 +1,8 @@
 package ml.bert
 
-actual class BertQaHelper  (
-    private val numThreads: Int, private val currentDelegate: Int,
+actual class BertQaHelper(
+    private val numThreads: Int = 2,
+    private val currentDelegate: Int = 0,
 ) {
     actual fun clearBertQuestionAnswerer() {
     }
