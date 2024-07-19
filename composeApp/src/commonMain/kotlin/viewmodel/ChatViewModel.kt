@@ -31,6 +31,14 @@ class ChatViewModel : ViewModel(), KoinComponent {
         }
     }*/
 
+    fun getAllTitles(): String {
+        var allTitles = ""
+        for ((index, message) in getTitles().withIndex()) {
+            allTitles += "$index. $message\n"
+        }
+        return allTitles
+    }
+
     fun loadMessages(chatID: String, isNewChat: MutableState<Boolean>) {
         viewModelScope.launch {
             repository.getMessages(chatID).collect { data ->
@@ -40,15 +48,11 @@ class ChatViewModel : ViewModel(), KoinComponent {
         viewModelScope.launch {
             if (isNewChat.value) {
                 withContext(Dispatchers.IO) {
-                    var allTitles = ""
-                    for ((index, message) in getTitles().withIndex()) {
-                        allTitles += "$index. $message\n"
-                    }
                     database.answerDao().addAnswer(
                         answerEntity = AnswerEntity(
                             chatID = chatID,
                             role = "assistant",
-                            content = allTitles,
+                            content = getAllTitles(),
                             senderID = chatID,
                             receiverID = "gpt"
                         )
@@ -61,7 +65,7 @@ class ChatViewModel : ViewModel(), KoinComponent {
 
     private var _titles: List<String> = emptyList()
     private val client = LoadDataSetClient()
-    fun getTitles(): List<String?> {
+    private fun getTitles(): List<String?> {
         //        val rnds = (0..10).random()
         //    var questions: List<String> = emptyList()
 
@@ -75,7 +79,7 @@ class ChatViewModel : ViewModel(), KoinComponent {
     }
 
     private var _content: String = ""
-    fun getContent(index: Int): String {
+    private fun getContent(index: Int): String {
         client.loadJson()?.let {
             _content = it.getContents()[index]
         }
@@ -89,47 +93,87 @@ class ChatViewModel : ViewModel(), KoinComponent {
     }
 
     fun askQuestion(question: String, chatID: String, senderID: String, receiverID: String) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                database.answerDao().addAnswer(
-                    answerEntity = AnswerEntity(
-                        chatID = chatID,
-                        role = "user",
-                        content = question,
-                        senderID = senderID,
-                        receiverID = receiverID
+
+        if (_titles.isNotEmpty()) {
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    database.answerDao().addAnswer(
+                        answerEntity = AnswerEntity(
+                            chatID = chatID,
+                            role = "user",
+                            content = question,
+                            senderID = senderID,
+                            receiverID = receiverID
+                        )
                     )
-                )
-            }
-            _loading.update { true }
-            repository.askQuestion(
-                prevQuestion = messages.value,
-                question = question,
-                senderID = senderID,
-                receiverID = receiverID,
-                chatID = chatID
-            ).also { baseModel ->
-                _loading.update { false }
-                when (baseModel) {
-                    is BaseModel.Success -> {
-                        withContext(Dispatchers.IO) {
-                            database.answerDao().addAnswer(
-                                answerEntity = AnswerEntity(
-                                    chatID = chatID,
-                                    role = "assistant",
-                                    content = baseModel.data.choices.first().message.content,
-                                    senderID = senderID,
-                                    receiverID = receiverID
-                                )
+                    val questionIndex = question.toInt()
+                    if (0 < questionIndex && questionIndex <= _titles.size) {
+                        database.answerDao().addAnswer(
+                            answerEntity = AnswerEntity(
+                                chatID = chatID,
+                                role = "assistant",
+                                content = getContent(questionIndex),
+                                senderID = chatID,
+                                receiverID = "gpt"
                             )
+                        )
+                        _titles = emptyList()
+                    } else {
+                        database.answerDao().addAnswer(
+                            answerEntity = AnswerEntity(
+                                chatID = chatID,
+                                role = "assistant",
+                                content = getAllTitles(),
+                                senderID = chatID,
+                                receiverID = "gpt"
+                            )
+                        )
+                    }
+                }
+            }
+        } else {
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    database.answerDao().addAnswer(
+                        answerEntity = AnswerEntity(
+                            chatID = chatID,
+                            role = "user",
+                            content = question,
+                            senderID = senderID,
+                            receiverID = receiverID
+                        )
+                    )
+                }
+                _loading.update { true }
+                repository.askQuestion(
+                    prevQuestion = messages.value,
+                    question = question,
+                    senderID = senderID,
+                    receiverID = receiverID,
+                    chatID = chatID
+                ).also { baseModel ->
+                    _loading.update { false }
+                    when (baseModel) {
+                        is BaseModel.Success -> {
+                            withContext(Dispatchers.IO) {
+                                database.answerDao().addAnswer(
+                                    answerEntity = AnswerEntity(
+                                        chatID = chatID,
+                                        role = "assistant",
+                                        content = baseModel.data.choices.first().message.content,
+                                        senderID = senderID,
+                                        receiverID = receiverID
+                                    )
+                                )
+                            }
                         }
-                    }
 
-                    is BaseModel.Error -> {
-                        println("Something wrong : ${baseModel.error}")
-                    }
+                        is BaseModel.Error -> {
+                            println("Something wrong : ${baseModel.error}")
+                        }
 
-                    else -> {}
+                        else -> {}
+                    }
                 }
             }
         }
