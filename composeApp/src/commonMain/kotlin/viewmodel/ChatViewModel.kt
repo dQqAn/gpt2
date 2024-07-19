@@ -1,4 +1,3 @@
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -23,34 +22,65 @@ class ChatViewModel : ViewModel(), KoinComponent {
     private val _loading = MutableStateFlow(false)
     val loading = _loading.asStateFlow()
 
-    private val _chatID = mutableStateOf<String?>(null)
-    val chatID = _chatID
-    fun changeChatID(chatID: String?) {
+//    private val _chatID = mutableStateOf<String?>(null)
+//    val chatID = _chatID
+    /*fun changeChatID(chatID: String?) {
         viewModelScope.launch {
             _chatID.value = chatID
         }
-    }
+    }*/
 
-    fun loadMessages() {
+    fun loadMessages(chatID: String) {
         viewModelScope.launch {
-            repository.getMessages(_chatID.value!!).collect { data ->
+            repository.getMessages(chatID).collect { data ->
                 _messages.update { data }
+            }
+        }
+        viewModelScope.launch {
+            //new chat check
+            if (_messages.value.isEmpty()) { //problem
+                withContext(Dispatchers.IO) {
+                    database.answerDao().addAnswer(
+                        answerEntity = AnswerEntity(
+                            chatID = chatID,
+                            role = "assistant",
+                            content = "temp",
+                            senderID = chatID,
+                            receiverID = "gpt"
+                        )
+                    )
+                }
             }
         }
     }
 
-    init {
-        /*val rnds = (0..10).random()
-//        var titles: List<String> = emptyList()
-        var content: String = ""
+    private var _titles: List<String> = emptyList()
+    private val client = LoadDataSetClient()
+    fun getTitles(): List<String?> {
+        //        val rnds = (0..10).random()
         //    var questions: List<String> = emptyList()
-        val client = LoadDataSetClient()
-        client.loadJson()?.let {
-//            titles = it.getTitles()
-            content = it.getContents()[rnds]
-            //        questions = it.questions
+
+        if (_titles.isEmpty()) {
+            client.loadJson()?.let {
+                _titles = it.getTitles()
+//                questions = it.questions
+            }
         }
-        println(content)*/
+        return _titles
+    }
+
+    private var _content: String = ""
+    fun getContent(index: Int): String {
+        client.loadJson()?.let {
+            _content = it.getContents()[index]
+        }
+        return _content
+    }
+
+    init {
+        viewModelScope.launch {
+
+        }
     }
 
     fun askQuestion(question: String, chatID: String, senderID: String, receiverID: String) {

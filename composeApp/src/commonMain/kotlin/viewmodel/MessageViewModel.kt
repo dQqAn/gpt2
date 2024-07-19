@@ -16,7 +16,7 @@ class MessageViewModel : ViewModel(), KoinComponent {
 
     init {
         viewModelScope.launch {
-            repository.deleteTable()
+//            repository.deleteTable()
             repository.getChats().collect { data ->
                 _messages.update { data }
             }

@@ -24,8 +24,9 @@ fun ChatScreen(
     viewModel: ChatViewModel = viewModel(),
     sharedVM: MessageToChatViewModel = viewModel()
 ) {
-    viewModel.changeChatID(sharedVM.chatID.value)
-    viewModel.loadMessages()
+//    viewModel.changeChatID(sharedVM.chatID.value)
+    val chatID = sharedVM.chatID.value!!
+    viewModel.loadMessages(chatID)
 
     val messages by viewModel.messages.collectAsState()
     val loading by viewModel.loading.collectAsState()
@@ -57,14 +58,14 @@ fun ChatScreen(
                                 receiverID = "gpt"
                             )
                         } else {
-                            currentDate = viewModel.chatID.value
+                            currentDate = chatID
                             viewModel.askQuestion(
                                 question = input,
-                                chatID = currentDate!!,
+                                chatID = currentDate,
                                 senderID = currentDate,
                                 receiverID = "gpt"
                             )
-                            viewModel.loadMessages()
+//                            viewModel.loadMessages()
                         }
                         setInput("")
 
