@@ -16,6 +16,15 @@ class MessageToChatViewModel : ViewModel(), KoinComponent {
         }
     }
 
+    private val _isNewChat = mutableStateOf(false)
+    val isNewChat = _isNewChat
+
+    fun changeIsNewChat(isNewChat: Boolean) {
+        viewModelScope.launch {
+            _isNewChat.value = isNewChat
+        }
+    }
+
     init {
 
     }

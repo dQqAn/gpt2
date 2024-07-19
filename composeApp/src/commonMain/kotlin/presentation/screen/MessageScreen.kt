@@ -55,6 +55,7 @@ fun MessageScreen(
                             val sdf = SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS")
                             val currentDate = sdf.format(Date())
                             sharedVM.changeChatID("$currentDate gpt")
+                            sharedVM.changeIsNewChat(true)
                         }
                     }) {
                     Text(modifier = Modifier, text = "New chat")
@@ -85,6 +86,7 @@ fun MessageScreen(
                                 }
                             }.apply {
                                 sharedVM.changeChatID(message)
+                                sharedVM.changeIsNewChat(false)
                             }
                         }).fillMaxWidth()
                             .background(color = Color.Gray)

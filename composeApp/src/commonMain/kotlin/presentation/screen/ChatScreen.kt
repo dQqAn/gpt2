@@ -26,7 +26,8 @@ fun ChatScreen(
 ) {
 //    viewModel.changeChatID(sharedVM.chatID.value)
     val chatID = sharedVM.chatID.value!!
-    viewModel.loadMessages(chatID)
+    val isNewChat = sharedVM.isNewChat
+    viewModel.loadMessages(chatID, isNewChat)
 
     val messages by viewModel.messages.collectAsState()
     val loading by viewModel.loading.collectAsState()

@@ -1,3 +1,4 @@
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -30,15 +31,14 @@ class ChatViewModel : ViewModel(), KoinComponent {
         }
     }*/
 
-    fun loadMessages(chatID: String) {
+    fun loadMessages(chatID: String, isNewChat: MutableState<Boolean>) {
         viewModelScope.launch {
             repository.getMessages(chatID).collect { data ->
                 _messages.update { data }
             }
         }
         viewModelScope.launch {
-            //new chat check
-            if (_messages.value.isEmpty()) { //problem
+            if (isNewChat.value) {
                 withContext(Dispatchers.IO) {
                     database.answerDao().addAnswer(
                         answerEntity = AnswerEntity(
@@ -50,6 +50,7 @@ class ChatViewModel : ViewModel(), KoinComponent {
                         )
                     )
                 }
+                isNewChat.value = false
             }
         }
     }
