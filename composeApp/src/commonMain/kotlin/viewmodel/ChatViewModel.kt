@@ -40,11 +40,15 @@ class ChatViewModel : ViewModel(), KoinComponent {
         viewModelScope.launch {
             if (isNewChat.value) {
                 withContext(Dispatchers.IO) {
+                    var allTitles = ""
+                    for ((index, message) in getTitles().withIndex()) {
+                        allTitles += "$index. $message\n"
+                    }
                     database.answerDao().addAnswer(
                         answerEntity = AnswerEntity(
                             chatID = chatID,
                             role = "assistant",
-                            content = "temp",
+                            content = allTitles,
                             senderID = chatID,
                             receiverID = "gpt"
                         )
