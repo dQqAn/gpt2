@@ -38,7 +38,8 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
 viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "viewmodel_ref" }
 navigation = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "navigation_ref" }
-koin = { group = "io.insert-koin", name = "koin-compose", version.ref = "koin_ref" }
+koin = { group = "io.insert-koin", name = "koin-core", version.ref = "koin_ref" }
+koin-android = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin_ref" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson_ref" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }

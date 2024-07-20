@@ -11,11 +11,20 @@ import ml.bert.BertHelper
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class ChatViewModel : ViewModel(), KoinComponent {
+class ChatViewModel(
+//    private val bertHelper: BertHelper,
+//    private val bertHelper: BertQaHelper,
+//    private val database: AppDatabase,
+//    private val repository: Repository
+) : ViewModel(), KoinComponent {
+//) : ViewModel(){
 
     private val database: AppDatabase by inject()
     private val repository: Repository by inject()
     private val bertHelper: BertHelper by inject()
+//    private val bertHelper: BertQaHelper by inject()
+
+    private val myX: MyInterface by inject()
 
     private val _messages: MutableStateFlow<List<Message>> = MutableStateFlow(emptyList())
     val messages = _messages.asStateFlow()
@@ -86,6 +95,13 @@ class ChatViewModel : ViewModel(), KoinComponent {
         return _content
     }
 
+    private fun answerQuestion(question: String) {
+        myX.MyFun()
+        println("ada: " + bertHelper.TAG)
+        bertHelper.dump()
+        bertHelper.answer(_content, question)
+    }
+
     init {
         viewModelScope.launch {
 
@@ -107,7 +123,7 @@ class ChatViewModel : ViewModel(), KoinComponent {
                         )
                     )
                     val questionIndex = question.toInt()
-                    if (0 < questionIndex && questionIndex <= _titles.size) {
+                    if (0 <= questionIndex && questionIndex <= _titles.size) {
                         database.answerDao().addAnswer(
                             answerEntity = AnswerEntity(
                                 chatID = chatID,
@@ -145,36 +161,44 @@ class ChatViewModel : ViewModel(), KoinComponent {
                     )
                 }
                 _loading.update { true }
-                repository.askQuestion(
-                    prevQuestion = messages.value,
-                    question = question,
-                    senderID = senderID,
-                    receiverID = receiverID,
-                    chatID = chatID
-                ).also { baseModel ->
-                    _loading.update { false }
-                    when (baseModel) {
-                        is BaseModel.Success -> {
-                            withContext(Dispatchers.IO) {
-                                database.answerDao().addAnswer(
-                                    answerEntity = AnswerEntity(
-                                        chatID = chatID,
-                                        role = "assistant",
-                                        content = baseModel.data.choices.first().message.content,
-                                        senderID = senderID,
-                                        receiverID = receiverID
+
+                answerQuestion(question)
+                /*if (question.lowercase() == "bert") {
+                    answerQuestion(question)
+                } else if (question.lowercase() == "gpt") {
+                    //gpt
+                } else {
+                    repository.askQuestion(
+                        prevQuestion = messages.value,
+                        question = question,
+                        senderID = senderID,
+                        receiverID = receiverID,
+                        chatID = chatID
+                    ).also { baseModel ->
+                        _loading.update { false }
+                        when (baseModel) {
+                            is BaseModel.Success -> {
+                                withContext(Dispatchers.IO) {
+                                    database.answerDao().addAnswer(
+                                        answerEntity = AnswerEntity(
+                                            chatID = chatID,
+                                            role = "assistant",
+                                            content = baseModel.data.choices.first().message.content,
+                                            senderID = senderID,
+                                            receiverID = receiverID
+                                        )
                                     )
-                                )
+                                }
                             }
-                        }
 
-                        is BaseModel.Error -> {
-                            println("Something wrong : ${baseModel.error}")
-                        }
+                            is BaseModel.Error -> {
+                                println("Something wrong : ${baseModel.error}")
+                            }
 
-                        else -> {}
+                            else -> {}
+                        }
                     }
-                }
+                }*/
             }
         }
     }

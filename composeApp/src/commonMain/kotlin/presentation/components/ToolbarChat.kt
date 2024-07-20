@@ -15,7 +15,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -24,7 +23,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun ToolbarChat(
     modifier: Modifier = Modifier,
     navController: NavController,
-    viewModel: ChatViewModel = viewModel()
+//    viewModel: ChatViewModel = viewModel()
 ) {
     Column(
         modifier = modifier.fillMaxWidth()
