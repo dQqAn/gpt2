@@ -21,9 +21,10 @@ room = "2.7.0-alpha05"
 ksp = "2.0.0-1.0.23"
 retrofit_ref = "2.11.0"
 lifecycle_ref = "2.8.3"
-tensorflow_text_ref = "0.4.4"
-tensorflow_gpu_delegate_ref = "0.4.4"
-tensorflow_gpu_ref = "2.16.1"
+tensorflow_text_ref = "0.3.0"
+tensorflow_gpu_delegate_ref = "0.4.0"
+tensorflow_gpu_ref = "2.9.0"
+undercouch_ref="5.6.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -59,3 +60,4 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "room" }
+undercouch = { id = "de.undercouch.download", version.ref = "undercouch_ref" }

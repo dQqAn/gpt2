@@ -9,7 +9,12 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
+    alias(libs.plugins.undercouch)
 }
+
+project.ext.set("ASSET_DIR", "$projectDir/src/commonMain/resources")
+//project.ext.set("TEST_ASSETS_DIR", "$projectDir/src/androidTest/assets")
+apply("download_models.gradle")
 
 kotlin {
     @OptIn(ExperimentalKotlinGradlePluginApi::class)
