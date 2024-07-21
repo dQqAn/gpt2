@@ -10,6 +10,8 @@ import android.content.Context
 import androidx.room.Room
 import ml.bert.BertHelper
 import ml.bert.BertQaHelper
+import ml.gpt2.GPT2Client
+import ml.gpt2.GPT2Interface
 import org.koin.dsl.module
 import repositories.RepositoryImpl
 import retrofit2.Retrofit
@@ -22,6 +24,7 @@ class AndroidApp : Application() {
         initKoin(
             module {
                 single<Context> { this@AndroidApp }
+                single<Application> { this@AndroidApp }
 
                 single {
                     val retrofit: Retrofit = get()
@@ -50,6 +53,11 @@ class AndroidApp : Application() {
 //                    BertQaHelper(context = get())
                     BertQaHelper()
                 }
+
+                single<GPT2Interface> {
+                    GPT2Client(application = get())
+                }
+
                 /*single {
                     BertQaHelper(context = get())
                 } bind BertHelper::class*/

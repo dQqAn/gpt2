@@ -1,5 +1,6 @@
 package ml.bert
 
+import android.app.Application
 import android.content.Context
 import android.os.SystemClock
 import org.jetbrains.compose.resources.ExperimentalResourceApi
@@ -24,6 +25,7 @@ actual class BertQaHelper(
     private val currentDelegate: Int = 0
 
     private val context: Context by inject()
+    private val application : Application by inject()
 
     private var bertQuestionAnswerer: BertQuestionAnswerer? = null
 

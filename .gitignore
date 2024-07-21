@@ -17,3 +17,7 @@ captures
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
 /composeApp/schemas/AppDatabase/
+/composeApp/src/androidMain/assets/model.tflite
+/composeApp/src/commonMain/resources/mobilebert.tflite
+/composeApp/src/androidMain/assets/
+/composeApp/src/commonMain/resources/

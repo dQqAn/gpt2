@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ml.bert.BertHelper
+import ml.gpt2.GPT2Interface
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -24,7 +25,7 @@ class ChatViewModel(
     private val database: AppDatabase by inject()
     private val repository: Repository by inject()
     private val bertHelper: BertHelper by inject()
-//    private val bertHelper: BertQaHelper by inject()
+//    private val gpt2Client: GPT2Interface by inject()
 
     private val myX: MyInterface by inject()
 
@@ -99,6 +100,10 @@ class ChatViewModel(
 
     private fun answerQuestion(question: String) {
         myX.MyFun()
+//        println("gpt2: " + gpt2Client.prompt.value)
+//        gpt2Client.launchAutocomplete()
+//        gpt2Client.refreshPrompt()
+//        println("gpt2: " + gpt2Client.completion.value)
         println("ada: " + bertHelper.TAG)
         bertHelper.dump()
         bertHelper.answer(_content, question)

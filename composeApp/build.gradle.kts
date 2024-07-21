@@ -57,6 +57,7 @@ kotlin {
             implementation(libs.retrofit.gson)
             implementation(libs.lifecycle)
             implementation(libs.lifecycle.livedata)
+            implementation(libs.tensorflow.lite)
             implementation(libs.tensorflow.text)
             implementation(libs.tensorflow.gpu.delegate)
             implementation(libs.tensorflow.gpu)
