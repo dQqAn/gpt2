@@ -2,6 +2,7 @@ package ml.bert
 
 import android.content.Context
 import android.os.SystemClock
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.tensorflow.lite.gpu.CompatibilityList
@@ -34,6 +35,7 @@ actual class BertQaHelper(
         bertQuestionAnswerer = null
     }
 
+    @OptIn(ExperimentalResourceApi::class)
     private fun setupBertQuestionAnswerer() {
         val baseOptionsBuilder = BaseOptions.builder().setNumThreads(numThreads)
 
@@ -61,9 +63,7 @@ actual class BertQaHelper(
             .build()
 
         try {
-            println(context)
             bertQuestionAnswerer = BertQuestionAnswerer.createFromFileAndOptions(context, BERT_QA_MODEL, options)
-            println("try2")
         } catch (e: IllegalStateException) {
 //            answererListener?.onError("Bert Question Answerer failed to initialize. See error logs for details")
 //            Log.e(TAG, "TFLite failed to load model with error: " + e.message)
@@ -72,6 +72,7 @@ actual class BertQaHelper(
     }
 
     override fun answer(contextOfQuestion: String, question: String) {
+        println("ANSWER")
         println("answer: " + bertQuestionAnswerer)
         if (bertQuestionAnswerer == null) {
             setupBertQuestionAnswerer()

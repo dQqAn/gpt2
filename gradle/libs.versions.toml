@@ -24,7 +24,7 @@ lifecycle_ref = "2.8.3"
 tensorflow_text_ref = "0.3.0"
 tensorflow_gpu_delegate_ref = "0.4.0"
 tensorflow_gpu_ref = "2.9.0"
-undercouch_ref="5.6.0"
+undercouch_ref = "5.6.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }

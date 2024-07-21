@@ -8,9 +8,11 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ml.bert.BertHelper
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
+@OptIn(ExperimentalResourceApi::class)
 class ChatViewModel(
 //    private val bertHelper: BertHelper,
 //    private val bertHelper: BertQaHelper,
