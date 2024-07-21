@@ -63,7 +63,8 @@ actual class BertQaHelper(
             .build()
 
         try {
-            bertQuestionAnswerer = BertQuestionAnswerer.createFromFileAndOptions(context, BERT_QA_MODEL, options)
+            //file access problem
+//            bertQuestionAnswerer = BertQuestionAnswerer.createFromFileAndOptions(context, BERT_QA_MODEL, options)
         } catch (e: IllegalStateException) {
 //            answererListener?.onError("Bert Question Answerer failed to initialize. See error logs for details")
 //            Log.e(TAG, "TFLite failed to load model with error: " + e.message)
