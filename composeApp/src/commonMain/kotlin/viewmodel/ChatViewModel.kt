@@ -41,7 +41,7 @@ class ChatViewModel(
         }
     }*/
 
-    fun getAllTitles(): String {
+    private fun getAllTitles(): String {
         var allTitles = ""
         for ((index, message) in getTitles().withIndex()) {
             allTitles += "$index. $message\n"
@@ -97,14 +97,7 @@ class ChatViewModel(
     }
 
     private fun answerQuestion(question: String) {
-//        myX.MyFun()
-//        println("gpt2: " + gpt2Client.prompt.value)
-//        gpt2Client.launchAutocomplete()
-//        gpt2Client.refreshPrompt()
-//        println("gpt2: " + gpt2Client.completion.value)
-//        println("ada: " + bertHelper.TAG)
-//        bertHelper.dump()
-        bertHelper.answer(_content, question)
+        println(bertHelper.answer(_content, question))
     }
 
     init {
@@ -115,7 +108,7 @@ class ChatViewModel(
 
     fun askQuestion(question: String, chatID: String, senderID: String, receiverID: String) {
 
-        if (_titles.isNotEmpty()) {
+        if (_titles.isNotEmpty()) { //new chat
             viewModelScope.launch {
                 withContext(Dispatchers.IO) {
                     database.answerDao().addAnswer(
@@ -127,8 +120,8 @@ class ChatViewModel(
                             receiverID = receiverID
                         )
                     )
-                    val questionIndex = question.toInt()
-                    if (0 <= questionIndex && questionIndex <= _titles.size) {
+                    val questionIndex = question.toIntOrNull()
+                    if (questionIndex != null && 0 <= questionIndex && questionIndex <= _titles.size) {
                         database.answerDao().addAnswer(
                             answerEntity = AnswerEntity(
                                 chatID = chatID,
@@ -152,7 +145,7 @@ class ChatViewModel(
                     }
                 }
             }
-        } else {
+        } else { //todo: it is not new chat but content and title empty
             viewModelScope.launch {
                 withContext(Dispatchers.IO) {
                     database.answerDao().addAnswer(
@@ -167,7 +160,9 @@ class ChatViewModel(
                 }
                 _loading.update { true }
 
+                //load all prevquestions from database
                 answerQuestion(question)
+
                 /*if (question.lowercase() == "bert") {
                     answerQuestion(question)
                 } else if (question.lowercase() == "gpt") {

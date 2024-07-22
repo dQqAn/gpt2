@@ -95,7 +95,7 @@ actual class BertQaHelper(
         }
     }
 
-    override fun answer(contextOfQuestion: String, question: String) {
+    override fun answer(contextOfQuestion: String, question: String): List<String?> {
         if (bertQuestionAnswerer == null) {
             setupBertQuestionAnswerer()
         }
@@ -108,9 +108,14 @@ actual class BertQaHelper(
         inferenceTime = SystemClock.uptimeMillis() - inferenceTime
 //        answererListener?.onResults(answers, inferenceTime)
 
-        for (item in answers!!.toList()) {
-            println("answers: " + item.text)
+        val answerList = mutableListOf<String?>()
+        answers?.let {
+            for (item in it.toList()) {
+                answerList.add(item.text)
+            }
         }
+
+        return answerList.toList()
     }
 
     interface AnswererListener {
