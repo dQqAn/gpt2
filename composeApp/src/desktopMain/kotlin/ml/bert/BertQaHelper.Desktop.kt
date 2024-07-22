@@ -30,7 +30,4 @@ actual class BertQaHelper(
         TODO("Not yet implemented")
     }
 
-    override fun dump() {
-        TODO("Not yet implemented")
-    }
 }
