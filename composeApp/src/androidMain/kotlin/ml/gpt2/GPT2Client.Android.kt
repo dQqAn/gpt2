@@ -39,7 +39,6 @@ actual class GPT2Client(private val application: Application) : GPT2Interface {
 
     private val prompts = arrayOf(
         "Before boarding your rocket to Mars, remember to pack these items",
-        "Temmuzda izmire tatile gidelim.",
         "In a shocking finding, scientist discovered a herd of unicorns living in a remote, previously unexplored valley, in the Andes Mountains. Even more surprising to the researchers was the fact that the unicorns spoke perfect English.",
         "Legolas and Gimli advanced on the orcs, raising their weapons with a harrowing war cry.",
         "Today, scientists confirmed the worst possible outcome: the massive asteroid will collide with Earth",

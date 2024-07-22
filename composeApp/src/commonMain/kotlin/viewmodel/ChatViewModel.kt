@@ -25,9 +25,7 @@ class ChatViewModel(
     private val database: AppDatabase by inject()
     private val repository: Repository by inject()
     private val bertHelper: BertHelper by inject()
-//    private val gpt2Client: GPT2Interface by inject()
-
-    private val myX: MyInterface by inject()
+    private val gpt2Client: GPT2Interface by inject()
 
     private val _messages: MutableStateFlow<List<Message>> = MutableStateFlow(emptyList())
     val messages = _messages.asStateFlow()
@@ -99,13 +97,13 @@ class ChatViewModel(
     }
 
     private fun answerQuestion(question: String) {
-        myX.MyFun()
+//        myX.MyFun()
 //        println("gpt2: " + gpt2Client.prompt.value)
 //        gpt2Client.launchAutocomplete()
 //        gpt2Client.refreshPrompt()
 //        println("gpt2: " + gpt2Client.completion.value)
-        println("ada: " + bertHelper.TAG)
-        bertHelper.dump()
+//        println("ada: " + bertHelper.TAG)
+//        bertHelper.dump()
         bertHelper.answer(_content, question)
     }
 

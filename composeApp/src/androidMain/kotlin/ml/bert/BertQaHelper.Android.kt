@@ -11,6 +11,20 @@ import org.tensorflow.lite.task.core.BaseOptions
 import org.tensorflow.lite.task.text.qa.BertQuestionAnswerer
 import org.tensorflow.lite.task.text.qa.BertQuestionAnswerer.BertQuestionAnswererOptions
 import org.tensorflow.lite.task.text.qa.QaAnswer
+import java.io.File
+import java.io.IOException
+
+@Throws(IOException::class)
+fun getFileFromAssets(context: Context, fileName: String): File = File(context.cacheDir, fileName)
+    .also {
+        if (!it.exists()) {
+            it.outputStream().use { cache ->
+                context.assets.open(fileName).use { inputStream ->
+                    inputStream.copyTo(cache)
+                }
+            }
+        }
+    }
 
 actual class BertQaHelper(
 //    private val context: Context,
@@ -21,11 +35,18 @@ actual class BertQaHelper(
 //) : BertHelper {
     : BertHelper, KoinComponent {
     //    : BertHelper {
+
+    override val BERT_QA_MODEL = "mobilebert.tflite"
+    override val TAG = "BertQaHelper"
+    override val DELEGATE_CPU = 0
+    override val DELEGATE_GPU = 1
+    override val DELEGATE_NNAPI = 2
+
     private val numThreads: Int = 2
     private val currentDelegate: Int = 0
 
     private val context: Context by inject()
-    private val application : Application by inject()
+    private val application: Application by inject()
 
     private var bertQuestionAnswerer: BertQuestionAnswerer? = null
 
@@ -66,7 +87,7 @@ actual class BertQaHelper(
 
         try {
             //file access problem
-//            bertQuestionAnswerer = BertQuestionAnswerer.createFromFileAndOptions(context, BERT_QA_MODEL, options)
+            bertQuestionAnswerer = BertQuestionAnswerer.createFromFileAndOptions(context, "mobilebert.tflite", options)
         } catch (e: IllegalStateException) {
 //            answererListener?.onError("Bert Question Answerer failed to initialize. See error logs for details")
 //            Log.e(TAG, "TFLite failed to load model with error: " + e.message)
@@ -75,8 +96,6 @@ actual class BertQaHelper(
     }
 
     override fun answer(contextOfQuestion: String, question: String) {
-        println("ANSWER")
-        println("answer: " + bertQuestionAnswerer)
         if (bertQuestionAnswerer == null) {
             setupBertQuestionAnswerer()
         }
@@ -88,11 +107,10 @@ actual class BertQaHelper(
         val answers = bertQuestionAnswerer?.answer(contextOfQuestion, question)
         inferenceTime = SystemClock.uptimeMillis() - inferenceTime
 //        answererListener?.onResults(answers, inferenceTime)
-        println(answers)
-    }
 
-    override fun dump() {
-        println("dump")
+        for(item in answers!!.toList()){
+            println("answers: "+item.text)
+        }
     }
 
     interface AnswererListener {
@@ -102,10 +120,4 @@ actual class BertQaHelper(
             inferenceTime: Long
         )
     }
-
-    override val BERT_QA_MODEL = "mobilebert.tflite"
-    override val TAG = "BertQaHelper"
-    override val DELEGATE_CPU = 0
-    override val DELEGATE_GPU = 1
-    override val DELEGATE_NNAPI = 2
 }

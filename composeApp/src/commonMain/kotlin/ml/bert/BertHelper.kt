@@ -4,8 +4,6 @@ interface BertHelper {
     fun clearBertQuestionAnswerer()
     fun answer(contextOfQuestion: String, question: String)
 
-    fun dump()
-
     val BERT_QA_MODEL: String
     val TAG: String
     val DELEGATE_CPU: Int

@@ -17,18 +17,6 @@ import androidx.navigation.compose.rememberNavController
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import viewmodel.MessageToChatViewModel
 
-interface MyInterface {
-    fun MyFun() {
-        println("MyFun")
-    }
-}
-
-class MyClass() : MyInterface {
-    override fun MyFun() {
-        super.MyFun()
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatScreen(
