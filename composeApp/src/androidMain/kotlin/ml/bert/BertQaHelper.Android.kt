@@ -108,8 +108,8 @@ actual class BertQaHelper(
         inferenceTime = SystemClock.uptimeMillis() - inferenceTime
 //        answererListener?.onResults(answers, inferenceTime)
 
-        for(item in answers!!.toList()){
-            println("answers: "+item.text)
+        for (item in answers!!.toList()) {
+            println("answers: " + item.text)
         }
     }
 

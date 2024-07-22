@@ -2,8 +2,6 @@ package org.example.project
 
 import Api
 import AppDatabase
-import MyClass
-import MyInterface
 import Repository
 import android.app.Application
 import android.content.Context
@@ -44,10 +42,6 @@ class AndroidApp : Application() {
                     RepositoryImpl(api = api, dao = database.answerDao())
 
                 } /*bind Repository::class*/
-
-                single<MyInterface> {
-                    MyClass()
-                }
 
                 single<BertHelper> {
 //                    BertQaHelper(context = get())
