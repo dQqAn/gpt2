@@ -96,8 +96,18 @@ class ChatViewModel(
         return _content
     }
 
-    private fun answerQuestion(question: String) {
-        println(bertHelper.answer(_content, question))
+    private suspend fun answerQuestion(question: String?, chatID: String) {
+        question?.let {
+            database.answerDao().addAnswer(
+                answerEntity = AnswerEntity(
+                    chatID = chatID,
+                    role = "assistant",
+                    content = it,
+                    senderID = chatID,
+                    receiverID = "gpt"
+                )
+            )
+        }
     }
 
     init {
@@ -164,7 +174,9 @@ class ChatViewModel(
                 _loading.update { true }
 
                 //load all prevquestions from database
-                answerQuestion(question)
+                for (item in bertHelper.answer(_content, question)) {
+                    answerQuestion(item, chatID)
+                }
 
                 /*if (question.lowercase() == "bert") {
                     answerQuestion(question)
