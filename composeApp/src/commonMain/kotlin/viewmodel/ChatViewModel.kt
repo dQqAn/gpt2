@@ -108,7 +108,7 @@ class ChatViewModel(
 
     fun askQuestion(question: String, chatID: String, senderID: String, receiverID: String) {
 
-        if (_titles.isNotEmpty()) { //new chat
+        if (_content.isBlank()) { //new chat
             viewModelScope.launch {
                 withContext(Dispatchers.IO) {
                     database.answerDao().addAnswer(
@@ -120,6 +120,9 @@ class ChatViewModel(
                             receiverID = receiverID
                         )
                     )
+                    if (_titles.isEmpty()) {
+                        getTitles()
+                    }
                     val questionIndex = question.toIntOrNull()
                     if (questionIndex != null && 0 <= questionIndex && questionIndex <= _titles.size) {
                         database.answerDao().addAnswer(
@@ -131,7 +134,7 @@ class ChatViewModel(
                                 receiverID = "gpt"
                             )
                         )
-                        _titles = emptyList()
+//                        _titles = emptyList()
                     } else {
                         database.answerDao().addAnswer(
                             answerEntity = AnswerEntity(
@@ -145,7 +148,7 @@ class ChatViewModel(
                     }
                 }
             }
-        } else { //todo: it is not new chat but content and title empty
+        } else { //todo: check _content id from database
             viewModelScope.launch {
                 withContext(Dispatchers.IO) {
                     database.answerDao().addAnswer(
