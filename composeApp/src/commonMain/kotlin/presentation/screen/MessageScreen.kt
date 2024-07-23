@@ -17,16 +17,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import ml.gpt2.GPT2Client
 import viewmodel.MessageToChatViewModel
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 @Composable
 fun MessageScreen(
     navController: NavController,
     viewModel: MessageViewModel = viewModel(),
     sharedVM: MessageToChatViewModel = viewModel(),
+//    gpt2Client: GPT2Client = viewModel()
 ) {
     val messages by viewModel.messages.collectAsState()
 
@@ -44,6 +45,11 @@ fun MessageScreen(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.Bottom
             ) {
+                /*Button(onClick = {
+                    gpt2Client.launchAutocomplete()
+                }) {
+                    Text("Gpt2 Test")
+                }*/
                 Button(
                     colors = ButtonDefaults.buttonColors(containerColor = BluePrimary),
                     onClick = {

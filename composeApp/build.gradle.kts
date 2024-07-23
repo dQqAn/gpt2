@@ -12,9 +12,10 @@ plugins {
     alias(libs.plugins.undercouch)
 }
 
-project.ext.set("ASSET_DIR", "$projectDir/src/commonMain/resources")
+project.ext.set("ASSET_DIR", "$projectDir/src/androidMain/assets")
 //project.ext.set("TEST_ASSETS_DIR", "$projectDir/src/androidTest/assets")
 apply("download_models.gradle")
+//apply("download.gradle")
 
 kotlin {
     @OptIn(ExperimentalKotlinGradlePluginApi::class)
@@ -91,11 +92,13 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
+            getDefaultProguardFile("proguard-android-optimize.txt")
+            proguardFile("proguard-rules.pro")
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_19
+        targetCompatibility = JavaVersion.VERSION_19
     }
     buildFeatures {
         compose = true
@@ -103,6 +106,7 @@ android {
     dependencies {
         debugImplementation(compose.uiTooling)
     }
+    androidResources.noCompress.add("tflite")
 }
 
 compose.desktop {

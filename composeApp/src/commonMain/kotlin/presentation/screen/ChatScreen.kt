@@ -15,6 +15,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import viewmodel.MessageToChatViewModel
+//import ml.gpt2.*
 
 @Composable
 fun ChatScreen(

@@ -64,6 +64,7 @@ actual class GPT2Client : GPT2Interface, ViewModel(), KoinComponent {
 
             tokenizer = GPT2Tokenizer(encoder, decoder, bpeRanks)
             tflite = loadModel()
+//            println("Start...")
         }
     }
 
@@ -77,6 +78,7 @@ actual class GPT2Client : GPT2Interface, ViewModel(), KoinComponent {
             initJob.join()
             autocompleteJob?.cancelAndJoin()
             _completion.value = ""
+//            println("prompt: "+_prompt.value)
             generate(_prompt.value)
         }
     }
