@@ -8,24 +8,13 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ml.bert.BertHelper
-import ml.gpt2.GPT2Interface
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-@OptIn(ExperimentalResourceApi::class)
-class ChatViewModel(
-//    private val bertHelper: BertHelper,
-//    private val bertHelper: BertQaHelper,
-//    private val database: AppDatabase,
-//    private val repository: Repository
-) : ViewModel(), KoinComponent {
-//) : ViewModel(){
-
+class ChatViewModel() : ViewModel(), KoinComponent {
     private val database: AppDatabase by inject()
     private val repository: Repository by inject()
     private val bertHelper: BertHelper by inject()
-    private val gpt2Client: GPT2Interface by inject()
 
     private val _messages: MutableStateFlow<List<Message>> = MutableStateFlow(emptyList())
     val messages = _messages.asStateFlow()
@@ -107,12 +96,6 @@ class ChatViewModel(
                     receiverID = "gpt"
                 )
             )
-        }
-    }
-
-    init {
-        viewModelScope.launch {
-
         }
     }
 

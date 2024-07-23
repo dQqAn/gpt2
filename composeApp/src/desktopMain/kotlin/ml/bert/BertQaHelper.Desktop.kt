@@ -26,7 +26,7 @@ actual class BertQaHelper(
         TODO("Not yet implemented")
     }
 
-    override fun answer(contextOfQuestion: String, question: String) :List<String?>{
+    override fun answer(contextOfQuestion: String, question: String): List<String?> {
         TODO("Not yet implemented")
     }
 

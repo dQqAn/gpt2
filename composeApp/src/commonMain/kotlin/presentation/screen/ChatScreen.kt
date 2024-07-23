@@ -3,7 +3,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
@@ -17,14 +16,13 @@ import androidx.navigation.compose.rememberNavController
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import viewmodel.MessageToChatViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatScreen(
     navController: NavController,
     viewModel: ChatViewModel = viewModel(),
-    sharedVM: MessageToChatViewModel = viewModel()
+    sharedVM: MessageToChatViewModel = viewModel(),
+//    gpt2Client: GPT2Client = viewModel()
 ) {
-//    viewModel.changeChatID(sharedVM.chatID.value)
     val chatID = sharedVM.chatID.value!!
     val isNewChat = sharedVM.isNewChat
     viewModel.loadMessages(chatID, isNewChat)
@@ -37,7 +35,6 @@ fun ChatScreen(
     Scaffold(
         containerColor = Color.White,
         topBar = {
-//            ToolbarChat(navController = navController, viewModel = viewModel)
             ToolbarChat(navController = navController)
         },
         floatingActionButton = {
@@ -70,6 +67,8 @@ fun ChatScreen(
 //                            viewModel.loadMessages()
                         }
                         setInput("")
+
+//                        gpt2Client.launchAutocomplete()
 
                         /* val currentDate = sdf.format(Date())
 

@@ -8,8 +8,6 @@ import android.content.Context
 import androidx.room.Room
 import ml.bert.BertHelper
 import ml.bert.BertQaHelper
-import ml.gpt2.GPT2Client
-import ml.gpt2.GPT2Interface
 import org.koin.dsl.module
 import repositories.RepositoryImpl
 import retrofit2.Retrofit
@@ -41,22 +39,11 @@ class AndroidApp : Application() {
 
                     RepositoryImpl(api = api, dao = database.answerDao())
 
-                } /*bind Repository::class*/
+                }
 
                 single<BertHelper> {
-//                    BertQaHelper(context = get())
                     BertQaHelper()
                 }
-
-                single<GPT2Interface> {
-                    GPT2Client(application = get())
-                }
-
-                /*single {
-                    BertQaHelper(context = get())
-                } bind BertHelper::class*/
-//                viewModel { ChatViewModel(bertHelper = get(), database = get(), repository = get()) }
-//                viewModelOf(::ChatViewModel)//{ChatViewModel()}
             }
         )
     }

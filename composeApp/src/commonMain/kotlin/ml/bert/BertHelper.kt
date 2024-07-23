@@ -2,7 +2,7 @@ package ml.bert
 
 interface BertHelper {
     fun clearBertQuestionAnswerer()
-    fun answer(contextOfQuestion: String, question: String):List<String?>
+    fun answer(contextOfQuestion: String, question: String): List<String?>
 
     val BERT_QA_MODEL: String
     val TAG: String

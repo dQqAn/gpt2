@@ -3,10 +3,14 @@ package ml.gpt2
 import GPT2Tokenizer
 import android.app.Application
 import android.util.JsonReader
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import org.tensorflow.lite.Interpreter
 import java.io.BufferedReader
 import java.io.FileInputStream
@@ -29,9 +33,8 @@ private typealias Predictions = Array<Array<FloatArray>>
 enum class GPT2StrategyEnum { GREEDY, TOPK }
 data class GPT2Strategy(val strategy: GPT2StrategyEnum, val value: Int = 0)
 
-//actual class GPT2Client(private val application: Application) : GPT2Interface, AndroidViewModel(application) {
-actual class GPT2Client(private val application: Application) : GPT2Interface {
-    //actual class GPT2Client() : GPT2Interface, ViewModel() {
+actual class GPT2Client : GPT2Interface, ViewModel(), KoinComponent {
+    private val application: Application by inject()
     private val initJob: Job
     private var autocompleteJob: Job? = null
     private lateinit var tokenizer: GPT2Tokenizer
@@ -54,14 +57,13 @@ actual class GPT2Client(private val application: Application) : GPT2Interface {
     private var strategy = GPT2Strategy(GPT2StrategyEnum.TOPK, 40)
 
     init {
-        initJob = GlobalScope.launch(Dispatchers.IO) {
+        initJob = viewModelScope.launch {
             val encoder = loadEncoder()
             val decoder = encoder.entries.associateBy({ it.value }, { it.key })
             val bpeRanks = loadBpeRanks()
 
             tokenizer = GPT2Tokenizer(encoder, decoder, bpeRanks)
             tflite = loadModel()
-            println("tflite: " + tflite)
         }
     }
 
@@ -71,11 +73,11 @@ actual class GPT2Client(private val application: Application) : GPT2Interface {
     }*/
 
     override fun launchAutocomplete() {
-        autocompleteJob = GlobalScope.launch(Dispatchers.IO) {
+        autocompleteJob = viewModelScope.launch {
             initJob.join()
             autocompleteJob?.cancelAndJoin()
             _completion.value = ""
-            generate(_prompt.value!!)
+            generate(_prompt.value)
         }
     }
 
@@ -120,12 +122,11 @@ actual class GPT2Client(private val application: Application) : GPT2Interface {
 
             tokens.add(nextToken)
             val decodedToken = tokenizer.decode(listOf(nextToken))
-            println("comp1: " + decodedToken)
 //            _completion.postValue(_completion.value + decodedToken)
+            println("decodedToken: " + decodedToken)
             _completion.update {
                 _completion.value + decodedToken
             }
-            println("comp: " + _completion.value)
             yield()
         }
     }

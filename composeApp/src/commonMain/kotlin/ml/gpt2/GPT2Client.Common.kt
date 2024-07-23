@@ -1,5 +1,7 @@
 package ml.gpt2
 
-expect class GPT2Client {
+import androidx.lifecycle.ViewModel
+
+expect class GPT2Client : GPT2Interface, ViewModel {
 
 }
