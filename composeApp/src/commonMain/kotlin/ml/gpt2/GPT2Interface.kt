@@ -6,6 +6,6 @@ interface GPT2Interface {
     fun launchAutocomplete()
     fun refreshPrompt()
 
-    val prompt: StateFlow<String>
-    val completion: StateFlow<String>
+    val prompt: String
+    val completion: String?
 }

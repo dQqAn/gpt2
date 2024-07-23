@@ -8,6 +8,8 @@ import android.content.Context
 import androidx.room.Room
 import ml.bert.BertHelper
 import ml.bert.BertQaHelper
+import ml.gpt2.GPT2Client
+import ml.gpt2.GPT2Interface
 import org.koin.dsl.module
 import repositories.RepositoryImpl
 import retrofit2.Retrofit
@@ -43,6 +45,10 @@ class AndroidApp : Application() {
 
                 single<BertHelper> {
                     BertQaHelper()
+                }
+
+                single<GPT2Interface> {
+                    GPT2Client()
                 }
             }
         )

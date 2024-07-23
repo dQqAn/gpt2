@@ -6,9 +6,6 @@ import android.util.JsonReader
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.tensorflow.lite.Interpreter
@@ -48,11 +45,11 @@ actual class GPT2Client : GPT2Interface, ViewModel(), KoinComponent {
         "Hugging Face is a company that releases awesome projects in machine learning because"
     )
 
-    private val _prompt = MutableStateFlow(prompts.random())
-    override val prompt = _prompt.asStateFlow()
+    private var _prompt = prompts.random()
+    override val prompt = _prompt
 
-    private val _completion = MutableStateFlow("")
-    override val completion = _completion.asStateFlow()
+    private var _completion: String? = ""
+    override val completion = _completion
 
     private var strategy = GPT2Strategy(GPT2StrategyEnum.TOPK, 40)
 
@@ -64,7 +61,7 @@ actual class GPT2Client : GPT2Interface, ViewModel(), KoinComponent {
 
             tokenizer = GPT2Tokenizer(encoder, decoder, bpeRanks)
             tflite = loadModel()
-//            println("Start...")
+            println("GPT2 is loading...")
         }
     }
 
@@ -77,14 +74,14 @@ actual class GPT2Client : GPT2Interface, ViewModel(), KoinComponent {
         autocompleteJob = viewModelScope.launch {
             initJob.join()
             autocompleteJob?.cancelAndJoin()
-            _completion.value = ""
-//            println("prompt: "+_prompt.value)
-            generate(_prompt.value)
+            _completion = ""
+            println("prompt: " + _prompt)
+            generate(_prompt)
         }
     }
 
     override fun refreshPrompt() {
-        _prompt.value = prompts.random()
+        _prompt = prompts.random()
         launchAutocomplete()
     }
 
@@ -126,9 +123,7 @@ actual class GPT2Client : GPT2Interface, ViewModel(), KoinComponent {
             val decodedToken = tokenizer.decode(listOf(nextToken))
 //            _completion.postValue(_completion.value + decodedToken)
             println("decodedToken: " + decodedToken)
-            _completion.update {
-                _completion.value + decodedToken
-            }
+            _completion = _completion + decodedToken
             yield()
         }
     }

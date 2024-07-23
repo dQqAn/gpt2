@@ -10,11 +10,13 @@ import kotlinx.coroutines.withContext
 import ml.bert.BertHelper
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import ml.gpt2.*
 
 class ChatViewModel() : ViewModel(), KoinComponent {
     private val database: AppDatabase by inject()
     private val repository: Repository by inject()
     private val bertHelper: BertHelper by inject()
+    private val gpT2Interface:GPT2Interface by inject()
 
     private val _messages: MutableStateFlow<List<Message>> = MutableStateFlow(emptyList())
     val messages = _messages.asStateFlow()
@@ -157,9 +159,10 @@ class ChatViewModel() : ViewModel(), KoinComponent {
                 _loading.update { true }
 
                 //load all prevquestions from database
-                for (item in bertHelper.answer(_content, question)) {
+                /*for (item in bertHelper.answer(_content, question)) {
                     answerQuestion(item, chatID)
-                }
+                }*/
+                gpT2Interface.launchAutocomplete()
 
                 /*if (question.lowercase() == "bert") {
                     answerQuestion(question)
