@@ -38,6 +38,10 @@ fun ChatScreen(
             ToolbarChat(navController = navController)
         },
         floatingActionButton = {
+
+        },
+        floatingActionButtonPosition = FabPosition.Center,
+        bottomBar = {
             WriteMessageCard(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
                 value = input,
@@ -85,8 +89,7 @@ fun ChatScreen(
                     }
                 },
             )
-        },
-        floatingActionButtonPosition = FabPosition.Center
+        }
     ) { paddingValues ->
         Column(
             modifier = Modifier
