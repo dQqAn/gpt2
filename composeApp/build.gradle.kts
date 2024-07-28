@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -11,6 +10,7 @@ plugins {
     alias(libs.plugins.room)
     alias(libs.plugins.undercouch)
     alias(libs.plugins.google.service)
+    alias(libs.plugins.serialization)
 }
 
 project.ext.set("ASSET_DIR", "$projectDir/src/androidMain/assets")
@@ -32,10 +32,10 @@ kotlin {
         }
     }
 
-    jvm("desktop")
+//    jvm("desktop")
 
     sourceSets {
-        val desktopMain by getting
+//        val desktopMain by getting
 
         androidMain.dependencies {
             implementation(compose.preview)
@@ -66,10 +66,11 @@ kotlin {
             implementation(libs.tensorflow.text)
             implementation(libs.tensorflow.gpu.delegate)
             implementation(libs.tensorflow.gpu)
+            implementation(libs.serialization)
         }
-        desktopMain.dependencies {
+        /*desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
-        }
+        }*/
     }
 }
 
@@ -113,7 +114,7 @@ android {
     androidResources.noCompress.add("tflite")
 }
 
-compose.desktop {
+/*compose.desktop {
     application {
         mainClass = "MainKt"
 
@@ -123,7 +124,7 @@ compose.desktop {
             packageVersion = "1.0.0"
         }
     }
-}
+}*/
 
 room {
     schemaDirectory("$projectDir/schemas")

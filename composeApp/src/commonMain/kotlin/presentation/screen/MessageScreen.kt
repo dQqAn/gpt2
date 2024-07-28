@@ -17,7 +17,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import ml.gpt2.GPT2Client
 import viewmodel.MessageToChatViewModel
 import java.text.SimpleDateFormat
 import java.util.*
