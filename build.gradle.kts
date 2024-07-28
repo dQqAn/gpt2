@@ -7,4 +7,5 @@ plugins {
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.undercouch) apply false
+    alias(libs.plugins.google.service) apply false
 }

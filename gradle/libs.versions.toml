@@ -20,12 +20,15 @@ gson_ref = "2.11.0"
 room = "2.7.0-alpha05"
 ksp = "2.0.0-1.0.23"
 retrofit_ref = "2.11.0"
-lifecycle_ref = "2.8.3"
+lifecycle_ref = "2.8.4"
 tensorflow_lite_ref = "2.16.1"
 tensorflow_text_ref = "0.4.4"
 tensorflow_gpu_delegate_ref = "0.4.4"
 tensorflow_gpu_ref = "2.16.1"
 undercouch_ref = "5.6.0"
+google_service_ref = "4.4.2"
+google_bom_ref = "33.1.2"
+google_auth_ref = "7.2.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -53,6 +56,9 @@ tensorflow-lite = { module = "org.tensorflow:tensorflow-lite", version.ref = "te
 tensorflow-text = { module = "org.tensorflow:tensorflow-lite-task-text", version.ref = "tensorflow_text_ref" }
 tensorflow-gpu-delegate = { module = "org.tensorflow:tensorflow-lite-gpu-delegate-plugin", version.ref = "tensorflow_gpu_delegate_ref" }
 tensorflow-gpu = { module = "org.tensorflow:tensorflow-lite-gpu", version.ref = "tensorflow_gpu_ref" }
+google-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "google_bom_ref" }
+google-database = { group = "com.google.firebase", name = "firebase-database" }
+google-auth = { group = "com.firebaseui", name = "firebase-ui-auth", version.ref = "google_auth_ref" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -63,3 +69,4 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 room = { id = "androidx.room", version.ref = "room" }
 undercouch = { id = "de.undercouch.download", version.ref = "undercouch_ref" }
+google-service = { id = "com.google.gms.google-services", version.ref = "google_service_ref" }

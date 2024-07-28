@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.room)
     alias(libs.plugins.undercouch)
+    alias(libs.plugins.google.service)
 }
 
 project.ext.set("ASSET_DIR", "$projectDir/src/androidMain/assets")
@@ -40,6 +41,9 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
+            implementation(project.dependencies.platform(libs.google.bom))
+            implementation(libs.google.auth)
+            implementation(libs.google.database)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
