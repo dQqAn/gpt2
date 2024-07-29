@@ -48,12 +48,10 @@ actual class UserRepository(
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.v("Firebase", "signInWithEmail: success")
-//                    navigationClick?.invoke()//                    navigationClick.value?.invoke()
                         screenListener.onResults(Screen.MailVerification)
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.v("Firebase", "signInWithEmail: failure", task.exception)
-//                    showShortToastMessage(localization.authenticationFailed)
                         screenListener.onError("signInWithEmail: failure, " + task.exception)
                     }
                 }
@@ -70,12 +68,12 @@ actual class UserRepository(
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.v("Firebase", "createUserWithEmail:success")
-//                    navigationClick?.invoke()//                    navigationClick.value?.invoke()
+                        screenListener.onResults(Screen.MailVerification)
                         auth.firebaseAuthSettings.forceRecaptchaFlowForTesting(true)
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.v("Firebase", "createUserWithEmail:failure", task.exception)
-//                    showShortToastMessage(localization.authenticationFailed)
+                        screenListener.onError("signInWithEmail: failure, " + task.exception)
                     }
                 }
         } else {
@@ -204,9 +202,9 @@ actual class UserRepository(
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
 //                        showShortToastMessage(localization.loggedInAs + " " + it.phoneNumber)
-//                        navigationClick?.invoke() //                        navigationClick.value?.invoke()
+                        screenListener.onResults(Screen.Message)
                     } else {
-//                        showShortToastMessage(task.exception?.message ?: "")
+                        screenListener.onError("linkWithCredential: failure, " + task.exception)
                     }
                 }
         }
