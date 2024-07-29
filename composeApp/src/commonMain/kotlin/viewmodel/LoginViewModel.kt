@@ -1,11 +1,16 @@
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import repositories.UserInterface
 
-class LoginViewModel(
-    private val repository: UserInterface,
-) : ViewModel() {
+class LoginViewModel : ViewModel(), KoinComponent {
+    private val repository: UserInterface by inject()
+
     private val _signInMailText = mutableStateOf("")
     internal val signInMailText = _signInMailText
 
@@ -108,7 +113,9 @@ class LoginViewModel(
     private fun phoneNumber(): String? = repository.phoneNumber()
     internal fun signOut() = repository.signOut()
     internal fun reloadUser() {
-        repository.reloadUser()
+        viewModelScope.launch(Dispatchers.Main) {
+            repository.reloadUser()
+        }
     }
 
     internal fun isPhoneCodeSent(): MutableState<Boolean> = repository.isPhoneCodeSent

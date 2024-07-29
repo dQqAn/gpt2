@@ -53,7 +53,7 @@ fun MessageScreen(
                     colors = ButtonDefaults.buttonColors(containerColor = BluePrimary),
                     onClick = {
                         navController.navigate(route = Screen.Chat.route) {
-                            popUpTo("chat") {
+                            popUpTo(Screen.Chat.route) {
                                 inclusive = true
                             }
                         }.apply {
@@ -86,7 +86,7 @@ fun MessageScreen(
                     Row(
                         modifier = Modifier.clickable(onClick = {
                             navController.navigate(route = Screen.Chat.route) {
-                                popUpTo("chat") {
+                                popUpTo(Screen.Chat.route) {
                                     inclusive = true
                                 }
                             }.apply {

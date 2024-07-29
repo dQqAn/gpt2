@@ -1,17 +1,12 @@
-import android.graphics.BitmapFactory
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.KeyboardType
@@ -19,18 +14,17 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import gpt2.composeapp.generated.resources.Res
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 
 
 @Composable
-fun SignInContent(
-    loginViewModel: LoginViewModel,
-    onSignUpPageClick: () -> Unit,
-    onLocalizationPageClick: () -> Unit,
-    onMessagePageClick: () -> Unit,
-    onForgotPasswordClick: () -> Unit,
-    maxWidth: Dp,
+fun BoxWithConstraintsScope.SignInContent(
+    navController: NavController,
+    loginViewModel: LoginViewModel = viewModel(),
 ) {
+    val maxWidth = maxWidth
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -70,29 +64,44 @@ fun SignInContent(
         Spacer(modifier = Modifier.height(14.dp))
 
         TextButton(onClick = {
-            onForgotPasswordClick()
+            navController.navigate(route = Screen.ForgotPassword.route) {
+                popUpTo(Screen.ForgotPassword.route) {
+                    inclusive = true
+                }
+            }
         }) { Text("Forgot password") }
 
         Spacer(modifier = Modifier.height(14.dp))
 
         Button(onClick = {
-            onSignUpPageClick()
+            navController.navigate(route = Screen.SignUp.route) {
+                popUpTo(Screen.SignUp.route) {
+                    inclusive = true
+                }
+            }
         }) { Text("Create new account") }
 
         Spacer(modifier = Modifier.height(28.dp))
 
         TextButton(modifier = Modifier.align(Alignment.CenterHorizontally),
-            onClick = { onLocalizationPageClick() }) { Text(text = "Select your language") }
+            onClick = {
+//                onLocalizationPageClick()
+                /*navController.navigate(route = Screen.Chat.route) {
+                    popUpTo("chat") {
+                        inclusive = true
+                    }
+                }*/
+            }) { Text(text = "Select your language") }
     }
 }
 
 @Composable
-fun SignUpContent(
-    loginViewModel: LoginViewModel,
-    onNavigationClick: () -> Unit,
-    onBackClick: () -> Unit,
-    maxWidth: Dp,
+fun BoxWithConstraintsScope.SignUpContent(
+    navController: NavController,
+    loginViewModel: LoginViewModel = viewModel(),
 ) {
+    val maxWidth = maxWidth
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -158,7 +167,7 @@ fun SignUpContent(
         Spacer(modifier = Modifier.height(14.dp))
 
         TextButton(onClick = {
-            onBackClick()
+            navController.popBackStack()
         }) { Text("You already have account") }
 
         Spacer(modifier = Modifier.height(14.dp))
@@ -166,10 +175,9 @@ fun SignUpContent(
 }
 
 @Composable
-fun MailVerificationContent(
-    loginViewModel: LoginViewModel,
-    onNavigationClick: () -> Unit,
-    onBackClick: () -> Unit,
+fun BoxWithConstraintsScope.MailVerificationContent(
+    navController: NavController,
+    loginViewModel: LoginViewModel = viewModel(),
 ) {
     val isEmailSent by remember { loginViewModel.isEmailVerificationSent() }
     val checkEmail = loginViewModel.signUpFirstMailText.value.ifEmpty { loginViewModel.email() }
@@ -206,7 +214,7 @@ fun MailVerificationContent(
         Row {
             TextButton(onClick = {
                 loginViewModel.signOut().apply {
-                    onBackClick()
+                    navController.popBackStack()
                     loginViewModel.changeIsEmailVerificationSent(false)
                 }
             }) { Text("Back") }
@@ -216,7 +224,7 @@ fun MailVerificationContent(
             Button(onClick = {
                 loginViewModel.reloadUser().apply {
                     if (loginViewModel.isEmailVerified() == true) {
-                        onNavigationClick()
+//                        onNavigationClick()
                     }
                 }
             }) { Text("Next") }
@@ -225,12 +233,12 @@ fun MailVerificationContent(
 }
 
 @Composable
-fun PhoneVerificationContent(
-    loginViewModel: LoginViewModel,
-    onNavigationClick: () -> Unit,
-    onBackClick: () -> Unit,
-    maxWidth: Dp,
+fun BoxWithConstraintsScope.PhoneVerificationContent(
+    navController: NavController,
+    loginViewModel: LoginViewModel = viewModel(),
 ) {
+    val maxWidth = maxWidth
+
     val isCodeSent by remember { loginViewModel.isPhoneCodeSent() }
 
     Column(
@@ -296,7 +304,7 @@ fun PhoneVerificationContent(
 
             Row {
                 TextButton(onClick = {
-                    onBackClick()
+                    navController.popBackStack()
                     loginViewModel.changeIsPhoneCodeSent(false)
                 }) { Text("Back") }
 
@@ -312,11 +320,12 @@ fun PhoneVerificationContent(
 }
 
 @Composable
-fun ForgotPasswordContent(
-    loginViewModel: LoginViewModel,
-    onBackClick: () -> Unit,
-    maxWidth: Dp,
+fun BoxWithConstraintsScope.ForgotPasswordContent(
+    navController: NavController,
+    loginViewModel: LoginViewModel = viewModel(),
 ) {
+    val maxWidth = maxWidth
+
     val isEmailSent by remember { loginViewModel.isEmailForgotPasswordSent() }
 
     Column(
@@ -351,7 +360,7 @@ fun ForgotPasswordContent(
         Spacer(modifier = Modifier.height(28.dp))
 
         Button(onClick = {
-            onBackClick()
+            navController.popBackStack()
             loginViewModel.changeIsEmailForgotPasswordSent(false)
         }) {
             Text("Back")
@@ -401,11 +410,14 @@ private fun PasswordOutlinedTextField(
                     !passwordHidden // loginViewModel.changePasswordHiddenState(!passwordHidden) /*{ changePasswordHiddenState(!passwordHidden) }*/
             }) {
                 val visibilityIcon =
-                    if (passwordHidden) Res.javaClass.classLoader?.getResourceAsStream("invisibility_eye_24.xml")
-                    else Res.javaClass.classLoader?.getResourceAsStream("visibility_eye_24.xml")
+//                    if (passwordHidden) Res.javaClass.classLoader.getResourceAsStream("invisibility_eye_24.xml")
+//                    else Res.javaClass.classLoader.getResourceAsStream("visibility_eye_24.xml")
 
-                val bitmap = BitmapFactory.decodeStream(visibilityIcon)
-                Icon(bitmap.asImageBitmap(), contentDescription = trailingDescription)
+                    if (passwordHidden) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown
+
+//                val bitmap = BitmapFactory.decodeStream(visibilityIcon)
+//                Icon(bitmap.asImageBitmap(), contentDescription = trailingDescription)
+                Icon(imageVector = visibilityIcon, contentDescription = trailingDescription)
             }
         }
     )

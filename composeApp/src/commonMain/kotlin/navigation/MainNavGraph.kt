@@ -1,3 +1,4 @@
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -8,49 +9,91 @@ import viewmodel.MessageToChatViewModel
 
 @Composable
 fun MainNavGraph(navController: NavHostController) {
-    val viewModel: MessageToChatViewModel = viewModel()
+    BoxWithConstraints {
+        val messageToChatViewModel: MessageToChatViewModel = viewModel()
+        val loginViewModel: LoginViewModel = viewModel()
 
-    NavHost(
-        navController = navController,
-        route = "main_route",
-        startDestination = Screen.Splash.route
-    ) {
-        //intro screen
-        composable(route = Screen.Splash.route) {
-            SplashScreen(navController = navController)
-        }
-
-        //entrance screen
-        composable(route = Screen.OnBoarding.route) {
-            OnBoardingScreen(navController = navController)
-        }
-
-        //message screen
-        composable(
-            route = Screen.Message.route,
-            /*arguments = listOf(navArgument("chatID") {
-                type = NavType.StringType
-            })*/
+        NavHost(
+            navController = navController,
+            route = "main_route",
+            startDestination = Screen.SignIn.route
         ) {
-            MessageScreen(
-                navController = navController,
-                sharedVM = viewModel
-            )
-        }
+            //intro screen
+            composable(route = Screen.Splash.route) {
+                SplashScreen(navController = navController)
+            }
 
-        //chat screen
+            //entrance screen
+            composable(route = Screen.OnBoarding.route) {
+                OnBoardingScreen(navController = navController)
+            }
+
+            //message screen
+            composable(
+                route = Screen.Message.route,
+                /*arguments = listOf(navArgument("chatID") {
+                    type = NavType.StringType
+                })*/
+            ) {
+                MessageScreen(
+                    navController = navController,
+                    sharedVM = messageToChatViewModel
+                )
+            }
+
+            //chat screen
 //        composable(route = Screen.Chat.route + "/{chatID}") { backStackEntry ->
-        composable(route = Screen.Chat.route) {
+            composable(route = Screen.Chat.route) {
 //            val chatID = backStackEntry.arguments?.getString("chatID")
 
 //            val args = it.toRoute<Screen.Message>()
-            ChatScreen(
-                navController = navController,
-                sharedVM = viewModel
+                ChatScreen(
+                    navController = navController,
+                    sharedVM = messageToChatViewModel
 //                argument = chatID
 //                chatID=args.chatID
-            )
+                )
+            }
+
+            //sign in screen
+            composable(route = Screen.SignIn.route) {
+                SignInContent(
+                    navController = navController,
+                    loginViewModel = loginViewModel
+                )
+            }
+
+            // sign up screen
+            composable(route = Screen.SignUp.route) {
+                SignUpContent(
+                    navController = navController,
+                    loginViewModel = loginViewModel
+                )
+            }
+
+            // mail verification screen
+            composable(route = Screen.MailVerification.route) {
+                MailVerificationContent(
+                    navController = navController,
+                    loginViewModel = loginViewModel
+                )
+            }
+
+            // phone verification screen
+            composable(route = Screen.PhoneVerification.route) {
+                PhoneVerificationContent(
+                    navController = navController,
+                    loginViewModel = loginViewModel
+                )
+            }
+
+            //forgot password screen
+            composable(route = Screen.ForgotPassword.route) {
+                ForgotPasswordContent(
+                    navController = navController,
+                    loginViewModel = loginViewModel
+                )
+            }
         }
     }
-
 }

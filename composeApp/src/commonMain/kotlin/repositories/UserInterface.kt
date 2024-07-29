@@ -7,11 +7,13 @@ interface UserInterface {
     fun signOut()
     fun signIn(email: String, password: String)
     fun signUp(email: String, password: String)
-    fun reloadUser()
+    suspend fun reloadUser()
     fun sendEmailVerification()
     fun startPhoneNumberVerification(phoneNumber: String)
     fun resendPhoneNumberVerificationCode(phoneNumber: String)
     fun verifyPhoneNumberWithCode(code: String)
+
+    fun linkWithPhoneAuthCredential(credential: Any?)
 
     fun userID(): String?
     fun email(): String?

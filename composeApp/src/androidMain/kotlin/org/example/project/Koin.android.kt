@@ -3,6 +3,7 @@ package org.example.project
 import Api
 import AppDatabase
 import Repository
+import UserRepository
 import android.app.Application
 import android.content.Context
 import androidx.room.Room
@@ -10,6 +11,7 @@ import ml.bert.BertHelper
 import ml.bert.BertQaHelper
 import org.koin.dsl.module
 import repositories.RepositoryImpl
+import repositories.UserInterface
 import retrofit2.Retrofit
 import util.initKoin
 
@@ -43,6 +45,10 @@ class AndroidApp : Application() {
 
                 single<BertHelper> {
                     BertQaHelper()
+                }
+
+                single<UserInterface> {
+                    UserRepository()
                 }
             }
         )

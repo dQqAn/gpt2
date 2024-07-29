@@ -12,4 +12,13 @@ sealed class Screen(val route: String) {
 //        val chatID:String?= null
     }
 
+    object SignIn : Screen("sign_in_screen")
+
+    object SignUp : Screen("sign_up_screen")
+
+    object MailVerification : Screen("mail_verification_screen")
+
+    object PhoneVerification : Screen("phone_verification_screen")
+
+    object ForgotPassword : Screen("forgot_password_screen")
 }
