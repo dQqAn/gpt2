@@ -9,6 +9,7 @@ import android.content.Context
 import androidx.room.Room
 import ml.bert.BertHelper
 import ml.bert.BertQaHelper
+import org.koin.dsl.bind
 import org.koin.dsl.module
 import repositories.RepositoryImpl
 import repositories.UserInterface
@@ -49,9 +50,9 @@ class AndroidApp : Application() {
 
                 single { AndroidActivityViewModel() }
 
-                single<UserInterface> {
-                    UserRepository()
-                }
+                single {
+                    UserRepository(get())
+                } bind UserInterface::class
             }
         )
     }

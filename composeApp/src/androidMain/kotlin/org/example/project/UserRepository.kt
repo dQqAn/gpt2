@@ -15,7 +15,11 @@ import org.koin.core.component.inject
 import repositories.UserInterface
 import java.util.concurrent.TimeUnit
 
-actual class UserRepository : UserInterface, KoinComponent {
+actual class UserRepository(
+    private val screenListener: ScreenListener
+) : UserInterface, KoinComponent {
+
+//    private val screenListener: ScreenListener by inject()
 
     private val context: Context by inject()
     private val androidActivityViewModel: AndroidActivityViewModel by inject()
@@ -45,10 +49,12 @@ actual class UserRepository : UserInterface, KoinComponent {
                         // Sign in success, update UI with the signed-in user's information
                         Log.v("Firebase", "signInWithEmail: success")
 //                    navigationClick?.invoke()//                    navigationClick.value?.invoke()
+                        screenListener.onResults(Screen.MailVerification)
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.v("Firebase", "signInWithEmail: failure", task.exception)
 //                    showShortToastMessage(localization.authenticationFailed)
+                        screenListener.onError("signInWithEmail: failure, " + task.exception)
                     }
                 }
         } else {
@@ -300,5 +306,10 @@ actual class UserRepository : UserInterface, KoinComponent {
                     }
                 }
         }
+    }
+
+    actual interface ScreenListener {
+        actual fun onError(error: String)
+        actual fun onResults(screen: Screen)
     }
 }

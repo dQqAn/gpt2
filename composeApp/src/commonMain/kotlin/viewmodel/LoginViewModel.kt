@@ -6,10 +6,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import repositories.UserInterface
+import org.koin.core.parameter.parametersOf
 
-class LoginViewModel : ViewModel(), KoinComponent {
-    private val repository: UserInterface by inject()
+class LoginViewModel : ViewModel(), KoinComponent, UserRepository.ScreenListener {
+    private val repository: UserRepository by inject() {
+        parametersOf(this as UserRepository.ScreenListener)
+    }
 
     private val _signInMailText = mutableStateOf("")
     internal val signInMailText = _signInMailText
@@ -80,6 +82,7 @@ class LoginViewModel : ViewModel(), KoinComponent {
     internal fun signIn() {
         if (signInMailText.value.isNotEmpty() && signInPasswordText.value.isNotEmpty()) {
             repository.signIn(signInMailText.value, signInPasswordText.value)
+
         } else {
 //            repository.showShortToastMessage(currentLocalizationValue.enterYourEmailAndPassword)
         }
@@ -183,5 +186,13 @@ class LoginViewModel : ViewModel(), KoinComponent {
 
     internal fun changeColumnState(state: Boolean) {
         _columnState.value = state
+    }
+
+    override fun onError(error: String) {
+        println(error)
+    }
+
+    override fun onResults(screen: Screen) {
+        println(screen)
     }
 }
