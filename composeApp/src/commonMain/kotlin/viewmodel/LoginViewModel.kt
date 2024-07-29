@@ -133,7 +133,7 @@ class LoginViewModel : ViewModel(), KoinComponent {
         repository.isEmailForgotPasswordSent.value = initialize
     }
 
-    internal fun getPage() {
+    internal fun getPage(): Screen {
         reloadUser()
 
         val isEmailVerified: Boolean? = isEmailVerified()
@@ -141,13 +141,13 @@ class LoginViewModel : ViewModel(), KoinComponent {
         val userId: String? = repository.userID()
 
         return if (isEmailVerified == true && phoneNumberStatus != null) {
-//            BasePage()
+            Screen.Message
         } else if (isEmailVerified == true && phoneNumberStatus == null) {
-//            PhoneVerificationPage()
+            Screen.PhoneVerification
         } else if (isEmailVerified == false && userId != null) {
-//            MailVerificationPage()
+            Screen.MailVerification
         } else {
-//            SignInPage()
+            Screen.SignIn
         }
     }
 

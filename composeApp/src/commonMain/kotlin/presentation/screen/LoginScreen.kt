@@ -168,7 +168,7 @@ fun BoxWithConstraintsScope.SignUpContent(
 
         TextButton(onClick = {
             navController.popBackStack()
-        }) { Text("You already have account") }
+        }) { Text("Do you already have an account?") }
 
         Spacer(modifier = Modifier.height(14.dp))
     }
@@ -214,6 +214,7 @@ fun BoxWithConstraintsScope.MailVerificationContent(
         Row {
             TextButton(onClick = {
                 loginViewModel.signOut().apply {
+                    //todo: check first page
                     navController.popBackStack()
                     loginViewModel.changeIsEmailVerificationSent(false)
                 }
@@ -224,7 +225,7 @@ fun BoxWithConstraintsScope.MailVerificationContent(
             Button(onClick = {
                 loginViewModel.reloadUser().apply {
                     if (loginViewModel.isEmailVerified() == true) {
-//                        onNavigationClick()
+                        navController.navigate(route = Screen.PhoneVerification.route)
                     }
                 }
             }) { Text("Next") }
@@ -406,8 +407,8 @@ private fun PasswordOutlinedTextField(
         trailingIcon = {
             IconButton(onClick =
             {
-                passwordHidden =
-                    !passwordHidden // loginViewModel.changePasswordHiddenState(!passwordHidden) /*{ changePasswordHiddenState(!passwordHidden) }*/
+                passwordHidden = !passwordHidden
+                // loginViewModel.changePasswordHiddenState(!passwordHidden) /*{ changePasswordHiddenState(!passwordHidden) }*/
             }) {
                 val visibilityIcon =
 //                    if (passwordHidden) Res.javaClass.classLoader.getResourceAsStream("invisibility_eye_24.xml")
