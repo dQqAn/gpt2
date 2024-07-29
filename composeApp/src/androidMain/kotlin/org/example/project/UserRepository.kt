@@ -1,3 +1,4 @@
+import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import android.util.Log
@@ -8,6 +9,7 @@ import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import kotlinx.coroutines.tasks.await
+import org.example.project.AndroidActivityViewModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import repositories.UserInterface
@@ -16,7 +18,8 @@ import java.util.concurrent.TimeUnit
 actual class UserRepository : UserInterface, KoinComponent {
 
     private val context: Context by inject()
-//    val activity = context.getActivity() as Activity
+    private val androidActivityViewModel: AndroidActivityViewModel by inject()
+    private val activity = androidActivityViewModel.activity.value as Activity
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 //    private val auth : FirebaseAuth = Firebase.auth
@@ -156,7 +159,7 @@ actual class UserRepository : UserInterface, KoinComponent {
                 val options = PhoneAuthOptions.newBuilder(auth)
                     .setPhoneNumber(phoneNumber) // Phone number to verify
                     .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-//                    .setActivity(activity) // Activity (for callback binding)
+                    .setActivity(activity) // Activity (for callback binding)
                     .setCallbacks(it) // OnVerificationStateChangedCallbacks
                     .build()
 
@@ -170,7 +173,7 @@ actual class UserRepository : UserInterface, KoinComponent {
             val optionsBuilder = PhoneAuthOptions.newBuilder(auth)
                 .setPhoneNumber(phoneNumber) // Phone number to verify
                 .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-//                .setActivity(activity) // (optional) Activity for callback binding
+                .setActivity(activity) // (optional) Activity for callback binding
                 // If no activity is passed, reCAPTCHA verification can not be used.
                 .setCallbacks(callbacks!!) // OnVerificationStateChangedCallbacks
 

@@ -47,6 +47,8 @@ class AndroidApp : Application() {
                     BertQaHelper()
                 }
 
+                single { AndroidActivityViewModel() }
+
                 single<UserInterface> {
                     UserRepository()
                 }
