@@ -519,7 +519,7 @@ private fun CountryCodePicker(
     }
 
     if (openBottomSheet) {
-        loginViewModel.changeColumnState(!openBottomSheet)
+        loginViewModel.changeColumnState(true)
 
         CountryPickerBottomSheetScaffold(
             scaffoldState = scaffoldState,
