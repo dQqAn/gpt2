@@ -199,6 +199,10 @@ class LoginViewModel : ViewModel(), KoinComponent, UserRepository.ScreenListener
     }
 
     override fun onResults(screen: Screen) {
-        println(screen)
+        _navController.value?.navigate(route = screen.route) {
+            popUpTo(screen.route) {
+                inclusive = true
+            }
+        }
     }
 }
