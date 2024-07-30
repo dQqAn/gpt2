@@ -13,10 +13,12 @@ fun getCurrentLocalization(localizationViewModel: LocalizationViewModel) =
         AvailableLanguages.TR -> TurkishLocalization
         AvailableLanguages.FR -> FrenchLocalization
         AvailableLanguages.RU -> RussianLocalization
-//        else -> {DeutschLocalization}
+        else -> {
+            null
+        }
     }
 
-private object EnglishLocalization : Localization {
+object EnglishLocalization : Localization {
     override val yourMail: String
         get() = "Your Email"
     override val confirmYourMail: String
@@ -106,7 +108,7 @@ private object EnglishLocalization : Localization {
 
 }
 
-private object DeutschLocalization : Localization {
+object DeutschLocalization : Localization {
     override val yourMail: String
         get() = "Ihre E-Mail"
     override val confirmYourMail: String
@@ -195,7 +197,7 @@ private object DeutschLocalization : Localization {
         get() = "Geben Sie Ihre Informationen ein."
 }
 
-private object TurkishLocalization : Localization {
+object TurkishLocalization : Localization {
     override val yourMail: String
         get() = "E-postanız"
     override val confirmYourMail: String
@@ -284,7 +286,7 @@ private object TurkishLocalization : Localization {
         get() = "Bilgilerinizi girin."
 }
 
-private object FrenchLocalization : Localization {
+object FrenchLocalization : Localization {
     override val yourMail: String
         get() = "Votre adresse e-mail"
     override val confirmYourMail: String
@@ -373,7 +375,7 @@ private object FrenchLocalization : Localization {
         get() = "Entrez vos informations."
 }
 
-private object RussianLocalization : Localization {
+object RussianLocalization : Localization {
     override val yourMail: String
         get() = "Ваш e-mail"
     override val confirmYourMail: String

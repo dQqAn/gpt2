@@ -16,12 +16,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import util.Localization
 
 
 @Composable
 fun BoxWithConstraintsScope.SignInContent(
     navController: NavController,
     loginViewModel: LoginViewModel = viewModel(),
+    localization: Localization?
 ) {
     val maxWidth = maxWidth
 
@@ -34,11 +36,11 @@ fun BoxWithConstraintsScope.SignInContent(
         MyOutlinedTextField(
             text = loginViewModel.signInMailText.value,
             onTextChanged = loginViewModel::signInMailTextSetName,
-            placeHolderText = "Your email",
+            placeHolderText = localization!!.yourMail,
             keyboardType = KeyboardType.Email,
             leadingIcon = Icons.Default.Email,
-            leadingDescription = "Email icon",
-            trailingDescription = "Clear icon",
+            leadingDescription = localization.mailIcon,
+            trailingDescription = localization.clearIcon,
             maxWidth
         )
 

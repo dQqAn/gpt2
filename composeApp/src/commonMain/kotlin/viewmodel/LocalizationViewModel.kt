@@ -1,6 +1,7 @@
 package viewmodel
 
 import AvailableLanguages
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,7 +18,7 @@ import org.koin.core.component.inject
 class LocalizationViewModel : ViewModel(), UserDao, KoinComponent {
     private val database: UserDatabase by inject()
 
-    private val _appLanguage = mutableStateOf(getDeviceLanguage())
+    private val _appLanguage: MutableState<AvailableLanguages?> = mutableStateOf(null)
     internal val appLanguage = _appLanguage
     private fun changeAppLanguage(userEntity: UserEntity?) {
         userEntity?.let { _appLanguage.value = AvailableLanguages.valueOf(it.lang) }
@@ -25,13 +26,17 @@ class LocalizationViewModel : ViewModel(), UserDao, KoinComponent {
 
     init {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                changeAppLanguage(getLang().last())
+            withContext(Dispatchers.Main) {
+                if (getLang().isEmpty()) {
+                    changeAppLanguage(UserEntity(lang = getDeviceLanguage().name))
+                } else {
+                    changeAppLanguage(getLang().last())
+                }
             }
         }
     }
 
-    override suspend fun getLang(): List<UserEntity?> = withContext(Dispatchers.IO) {
+    override suspend fun getLang(): List<UserEntity?> = withContext(Dispatchers.Main) {
         database.userDao().getLang()
     }
 
