@@ -40,6 +40,22 @@ actual class UserRepository(
         auth.currentUser?.let { auth.signOut() }
     }
 
+    private fun getScreen(): Screen {
+        val isEmailVerified: Boolean? = isEmailVerified()
+        val phoneNumberStatus: String? = phoneNumber()
+        val userId: String? = userID()
+
+        return if (isEmailVerified == true && phoneNumberStatus != null) {
+            Screen.Message
+        } else if (isEmailVerified == true && phoneNumberStatus == null) {
+            Screen.PhoneVerification
+        } else if (isEmailVerified == false && userId != null) {
+            Screen.MailVerification
+        } else {
+            Screen.SignIn
+        }
+    }
+
     override fun signIn(email: String, password: String) {
         signOut()
         if (auth.currentUser == null) {
@@ -48,7 +64,7 @@ actual class UserRepository(
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.v("Firebase", "signInWithEmail: success")
-                        screenListener.onResults(Screen.MailVerification)
+                        screenListener.onResults(getScreen())
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.v("Firebase", "signInWithEmail: failure", task.exception)

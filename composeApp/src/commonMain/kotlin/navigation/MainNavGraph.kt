@@ -47,7 +47,8 @@ fun MainNavGraph() {
                 ) {
                     MessageScreen(
                         navController = navController,
-                        sharedVM = messageToChatViewModel
+                        sharedVM = messageToChatViewModel,
+                        loginViewModel = loginViewModel
                     )
                 }
 

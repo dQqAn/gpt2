@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
@@ -122,8 +123,10 @@ class LoginViewModel : ViewModel(), KoinComponent, UserRepository.ScreenListener
     private fun phoneNumber(): String? = repository.phoneNumber()
     internal fun signOut() = repository.signOut()
     internal fun reloadUser() {
-        viewModelScope.launch(Dispatchers.Main) {
-            repository.reloadUser()
+        viewModelScope.launch {
+            withContext(Dispatchers.Main) {
+                repository.reloadUser()
+            }
         }
     }
 
@@ -149,9 +152,9 @@ class LoginViewModel : ViewModel(), KoinComponent, UserRepository.ScreenListener
         val phoneNumberStatus: String? = phoneNumber()
         val userId: String? = repository.userID()
 
-        return if (isEmailVerified == true && phoneNumberStatus != null) {
+        return if (isEmailVerified == true && phoneNumberStatus!!.isNotEmpty()) {
             Screen.Message
-        } else if (isEmailVerified == true && phoneNumberStatus == null) {
+        } else if (isEmailVerified == true && phoneNumberStatus!!.isEmpty()) {
             Screen.PhoneVerification
         } else if (isEmailVerified == false && userId != null) {
             Screen.MailVerification

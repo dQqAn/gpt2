@@ -1,6 +1,7 @@
 package presentation.screen
 
 import BluePrimary
+import LoginViewModel
 import MessageViewModel
 import Screen
 import androidx.compose.foundation.background
@@ -26,6 +27,7 @@ fun MessageScreen(
     navController: NavController,
     viewModel: MessageViewModel = viewModel(),
     sharedVM: MessageToChatViewModel = viewModel(),
+    loginViewModel: LoginViewModel = viewModel()
 //    gpt2Client: GPT2Client = viewModel()
 ) {
     val messages by viewModel.messages.collectAsState()
@@ -49,6 +51,12 @@ fun MessageScreen(
                 }) {
                     Text("Gpt2 Test")
                 }*/
+                Button(onClick = {
+                    loginViewModel.signOut()
+                    navController.navigate(route = Screen.SignIn.route)
+                }) {
+                    Text("Sign Out")
+                }
                 Button(
                     colors = ButtonDefaults.buttonColors(containerColor = BluePrimary),
                     onClick = {
