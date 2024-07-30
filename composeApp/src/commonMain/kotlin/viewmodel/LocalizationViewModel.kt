@@ -27,10 +27,11 @@ class LocalizationViewModel : ViewModel(), UserDao, KoinComponent {
     init {
         viewModelScope.launch {
             withContext(Dispatchers.Main) {
-                if (getLang().isEmpty()) {
+                val currentLang = getLang()
+                if (currentLang.isEmpty()) {
                     changeAppLanguage(UserEntity(lang = getDeviceLanguage().name))
                 } else {
-                    changeAppLanguage(getLang().last())
+                    changeAppLanguage(currentLang.last())
                 }
             }
         }
