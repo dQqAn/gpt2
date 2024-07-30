@@ -2,6 +2,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
@@ -11,6 +12,11 @@ import org.koin.core.parameter.parametersOf
 class LoginViewModel : ViewModel(), KoinComponent, UserRepository.ScreenListener {
     private val repository: UserRepository by inject() {
         parametersOf(this as UserRepository.ScreenListener)
+    }
+
+    private val _navController: MutableState<NavController?> = mutableStateOf(null)
+    internal fun setNavController(navController: NavController) {
+        _navController.value = navController
     }
 
     private val _signInMailText = mutableStateOf("")

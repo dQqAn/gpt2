@@ -4,14 +4,18 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import presentation.screen.MessageScreen
 import viewmodel.MessageToChatViewModel
 
 @Composable
-fun MainNavGraph(navController: NavHostController) {
+fun MainNavGraph() {
     BoxWithConstraints {
         val messageToChatViewModel: MessageToChatViewModel = viewModel()
         val loginViewModel: LoginViewModel = viewModel()
+
+        val navController: NavHostController = rememberNavController()
+        loginViewModel.setNavController(navController)
 
         NavHost(
             navController = navController,
