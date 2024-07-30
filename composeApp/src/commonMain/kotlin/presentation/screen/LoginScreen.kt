@@ -214,8 +214,13 @@ fun BoxWithConstraintsScope.MailVerificationContent(
         Row {
             TextButton(onClick = {
                 loginViewModel.signOut().apply {
-                    //todo: check first page
-                    navController.popBackStack()
+                    loginViewModel.signOut()
+                    navController.navigate(route = Screen.SignIn.route)
+                    /*if (navController.previousBackStackEntry?.destination?.route == null) {
+                        navController.navigate(route = Screen.SignIn.route)
+                    } else {
+                        navController.popBackStack()
+                    }*/
                     loginViewModel.changeIsEmailVerificationSent(false)
                 }
             }) { Text("Back") }
@@ -305,7 +310,8 @@ fun BoxWithConstraintsScope.PhoneVerificationContent(
 
             Row {
                 TextButton(onClick = {
-                    navController.popBackStack()
+                    loginViewModel.signOut()
+                    navController.navigate(route = Screen.SignIn.route)
                     loginViewModel.changeIsPhoneCodeSent(false)
                 }) { Text("Back") }
 
