@@ -85,12 +85,11 @@ fun BoxWithConstraintsScope.SignInContent(
 
         TextButton(modifier = Modifier.align(Alignment.CenterHorizontally),
             onClick = {
-//                onLocalizationPageClick()
-                /*navController.navigate(route = Screen.Chat.route) {
-                    popUpTo("chat") {
+                navController.navigate(route = Screen.Language.route) {
+                    popUpTo(Screen.Language.route) {
                         inclusive = true
                     }
-                }*/
+                }
             }) { Text(text = "Select your language") }
     }
 }

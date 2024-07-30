@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import presentation.screen.MessageScreen
+import viewmodel.LocalizationViewModel
 import viewmodel.MessageToChatViewModel
 
 @Composable
@@ -13,6 +14,7 @@ fun MainNavGraph() {
     BoxWithConstraints {
         val messageToChatViewModel: MessageToChatViewModel = viewModel()
         val loginViewModel: LoginViewModel = viewModel()
+        val localizationViewModel: LocalizationViewModel = viewModel()
 
         val navController: NavHostController = rememberNavController()
         loginViewModel.setNavController(navController)
@@ -98,6 +100,11 @@ fun MainNavGraph() {
                     navController = navController,
                     loginViewModel = loginViewModel
                 )
+            }
+
+            //language screen
+            composable(route = Screen.Language.route) {
+                LanguageContent(navController, localizationViewModel)
             }
         }
     }

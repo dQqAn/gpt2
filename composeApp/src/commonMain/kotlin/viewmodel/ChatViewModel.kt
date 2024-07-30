@@ -12,7 +12,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 class ChatViewModel() : ViewModel(), KoinComponent {
-    private val database: AppDatabase by inject()
+    private val database: AnswerDatabase by inject()
     private val repository: Repository by inject()
     private val bertHelper: BertHelper by inject()
 

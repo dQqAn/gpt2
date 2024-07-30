@@ -21,4 +21,6 @@ sealed class Screen(val route: String) {
     object PhoneVerification : Screen("phone_verification_screen")
 
     object ForgotPassword : Screen("forgot_password_screen")
+
+    object Language : Screen("language_screen")
 }

@@ -1,12 +1,13 @@
 package org.example.project
 
+import AnswerDatabase
 import Api
-import AppDatabase
 import Repository
 import UserRepository
 import android.app.Application
 import android.content.Context
 import androidx.room.Room
+import database.UserDatabase
 import ml.bert.BertHelper
 import ml.bert.BertQaHelper
 import org.koin.dsl.bind
@@ -29,16 +30,16 @@ class AndroidApp : Application() {
                     val retrofit: Retrofit = get()
                     retrofit.create(Api::class.java)
                 }
-                single<AppDatabase> {
+                single<AnswerDatabase> {
                     Room.databaseBuilder(
                         this@AndroidApp,
-                        AppDatabase::class.java,
+                        AnswerDatabase::class.java,
                         "db_gpt2"
                     ).fallbackToDestructiveMigration(false).build()
                 }
                 single<Repository> {
                     val api: Api = get()
-                    val database: AppDatabase = get()
+                    val database: AnswerDatabase = get()
 
                     RepositoryImpl(api = api, dao = database.answerDao())
 
@@ -53,6 +54,14 @@ class AndroidApp : Application() {
                 single {
                     UserRepository(get())
                 } bind UserInterface::class
+
+                single<UserDatabase> {
+                    Room.databaseBuilder(
+                        this@AndroidApp,
+                        UserDatabase::class.java,
+                        "db_user"
+                    ).fallbackToDestructiveMigration(false).build()
+                }
             }
         )
     }
