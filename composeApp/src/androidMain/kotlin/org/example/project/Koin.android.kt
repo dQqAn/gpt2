@@ -12,7 +12,7 @@ import ml.bert.BertHelper
 import ml.bert.BertQaHelper
 import org.koin.dsl.bind
 import org.koin.dsl.module
-import repositories.RepositoryImpl
+import repositories.AiRepositoryImpl
 import repositories.UserInterface
 import retrofit2.Retrofit
 import util.initKoin
@@ -41,7 +41,7 @@ class AndroidApp : Application() {
                     val api: Api = get()
                     val database: AnswerDatabase = get()
 
-                    RepositoryImpl(api = api, dao = database.answerDao())
+                    AiRepositoryImpl(api = api, dao = database.answerDao())
 
                 }
 

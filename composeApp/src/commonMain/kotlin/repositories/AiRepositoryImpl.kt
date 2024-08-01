@@ -11,7 +11,7 @@ import Repository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class RepositoryImpl(private val api: Api, private val dao: AnswerDao) : Repository {
+class AiRepositoryImpl(private val api: Api, private val dao: AnswerDao) : Repository {
 
     override suspend fun askQuestion(
         prevQuestion: List<Message>,
