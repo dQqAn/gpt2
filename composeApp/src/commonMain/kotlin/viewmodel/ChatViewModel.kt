@@ -19,6 +19,8 @@ class ChatViewModel() : ViewModel(), KoinComponent {
     private val firebaseMessageRepository: FirebaseMessageRepository by inject()
 
     val currentUserID = firebaseMessageRepository.currentUserID
+    val currentUserMail = firebaseMessageRepository.currentUserMail
+    val friendMail = firebaseMessageRepository.friendMail
 
     val isTitledLoaded = mutableStateOf(false)
 

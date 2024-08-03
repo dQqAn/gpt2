@@ -23,6 +23,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun ToolbarChat(
     modifier: Modifier = Modifier,
     navController: NavController,
+    friendName: String? = "GPT"
 //    viewModel: ChatViewModel = viewModel()
 ) {
     Column(
@@ -55,7 +56,7 @@ fun ToolbarChat(
                 modifier = Modifier.padding(start = 20.dp)
             ) {
                 Text(
-                    text = "GPT",
+                    text = friendName ?: "GPT",
                     fontSize = 20.sp,
                     color = BluePrimary,
                     style = MaterialTheme.typography.titleLarge.copy(

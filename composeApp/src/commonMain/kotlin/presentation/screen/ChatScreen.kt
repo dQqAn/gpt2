@@ -40,7 +40,7 @@ fun ChatScreen(
     Scaffold(
         containerColor = Color.White,
         topBar = {
-            ToolbarChat(navController = navController)
+            ToolbarChat(friendName = viewModel.friendMail, navController = navController)
         },
         floatingActionButton = {
 
