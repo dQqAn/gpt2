@@ -1,8 +1,9 @@
 package org.example.project
 
+import MessageRepository
 import AnswerDatabase
 import Api
-import Repository
+import FirebaseMessageRepositoryImp
 import UserRepository
 import android.app.Application
 import android.content.Context
@@ -12,8 +13,9 @@ import ml.bert.BertHelper
 import ml.bert.BertQaHelper
 import org.koin.dsl.bind
 import org.koin.dsl.module
-import repositories.AiRepositoryImpl
-import repositories.UserInterface
+import presentation.components.UserInterface
+import repositories.MessageRepositoryImpl
+import repositories.FirebaseMessageRepository
 import retrofit2.Retrofit
 import util.initKoin
 
@@ -30,6 +32,7 @@ class AndroidApp : Application() {
                     val retrofit: Retrofit = get()
                     retrofit.create(Api::class.java)
                 }
+
                 single<AnswerDatabase> {
                     Room.databaseBuilder(
                         this@AndroidApp,
@@ -37,12 +40,11 @@ class AndroidApp : Application() {
                         "db_gpt2"
                     ).fallbackToDestructiveMigration(false).build()
                 }
-                single<Repository> {
-                    val api: Api = get()
+
+                single<MessageRepository> {
                     val database: AnswerDatabase = get()
 
-                    AiRepositoryImpl(api = api, dao = database.answerDao())
-
+                    MessageRepositoryImpl(dao = database.answerDao())
                 }
 
                 single<BertHelper> {
@@ -61,6 +63,10 @@ class AndroidApp : Application() {
                         UserDatabase::class.java,
                         "db_user"
                     ).fallbackToDestructiveMigration(false).build()
+                }
+
+                single<FirebaseMessageRepository> {
+                    FirebaseMessageRepositoryImp()
                 }
             }
         )

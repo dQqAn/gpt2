@@ -1,19 +1,15 @@
 package repositories
 
-import Answer
+import MessageRepository
 import AnswerDao
 import AnswerEntity
-import Api
-import BaseModel
 import Message
-import Question
-import Repository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class AiRepositoryImpl(private val api: Api, private val dao: AnswerDao) : Repository {
+class MessageRepositoryImpl(private val dao: AnswerDao) : MessageRepository {
 
-    override suspend fun askQuestion(
+    /*override suspend fun askQuestion(
         prevQuestion: List<Message>,
         chatID: String,
         question: String,
@@ -41,7 +37,7 @@ class AiRepositoryImpl(private val api: Api, private val dao: AnswerDao) : Repos
         } catch (e: Exception) {
             return BaseModel.Error(e.message.toString())
         }
-    }
+    }*/
 
     override suspend fun getMessages(chatID: String): Flow<List<Message>> {
         return dao.getAnswer(chatID).map { value ->
@@ -76,5 +72,9 @@ class AiRepositoryImpl(private val api: Api, private val dao: AnswerDao) : Repos
 
     override suspend fun deleteTable() {
         dao.deleteTable()
+    }
+
+    override suspend fun deleteChat(chatID: String) {
+        dao.deleteChat(chatID = chatID)
     }
 }

@@ -21,4 +21,8 @@ interface AnswerDao {
 
     @Query("DELETE FROM answers")
     suspend fun deleteTable()
+
+    @Query("DELETE FROM answers WHERE chatID = :chatID")
+    suspend fun deleteChat(chatID: String)
+
 }

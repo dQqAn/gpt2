@@ -26,8 +26,11 @@ fun ChatScreen(
 //    gpt2Client: GPT2Client = viewModel()
 ) {
     val chatID = sharedVM.chatID.value!!
-    val isNewChat = sharedVM.isNewChat
-    viewModel.loadMessages(chatID, isNewChat)
+    val isNewChat = sharedVM.isNewChat.value
+    val senderID = viewModel.senderID.value
+    val receiverID = viewModel.receiverID.value
+
+    viewModel.loadMessages(chatID, senderID, receiverID, isNewChat)
 
     val messages by viewModel.messages.collectAsState()
     val loading by viewModel.loading.collectAsState()
@@ -52,42 +55,33 @@ fun ChatScreen(
                 },
                 onClickSend = {
                     if (input.isNotEmpty()) {
-                        var currentDate: String? = null
+                        var _chatID: String? = null
 
                         if (messages.isNotEmpty()) {
-                            currentDate = messages.first().chatID!!
-                            viewModel.askQuestion(
-                                question = input,
-                                chatID = currentDate,
-                                senderID = currentDate,
-                                receiverID = "gpt"
+                            _chatID = messages.first().chatID!!
+                        } else {
+                            _chatID = chatID
+                        }
+
+                        val aiChatControl = _chatID.split(" ").last()
+                        if (aiChatControl != "gpt") {
+                            viewModel.addAnswer(
+                                message = input,
+                                chatID = _chatID,
+                                receiverID = receiverID,
+                                senderID = senderID
                             )
                         } else {
-                            currentDate = chatID
-                            viewModel.askQuestion(
+                            viewModel.newChatAiQuestion(
                                 question = input,
-                                chatID = currentDate,
-                                senderID = currentDate,
-                                receiverID = "gpt"
+                                chatID = _chatID,
+                                senderID = senderID,
+                                receiverID = receiverID
                             )
-//                            viewModel.loadMessages()
                         }
                         setInput("")
 
 //                        gpt2Client.launchAutocomplete()
-
-                        /* val currentDate = sdf.format(Date())
-
-                         viewModel.changeDate(currentDate)
-                         val date = viewModel.date.value
-
-                         viewModel.askQuestion(
-                             question = input,
-                             chatID = "$date gpt",
-                             senderID = date,
-                             receiverID = "gpt"
-                         )
-                         setInput("") */
                     }
                 },
             )

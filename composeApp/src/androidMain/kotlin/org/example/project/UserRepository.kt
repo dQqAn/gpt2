@@ -12,7 +12,7 @@ import kotlinx.coroutines.tasks.await
 import org.example.project.AndroidActivityViewModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import repositories.UserInterface
+import presentation.components.UserInterface
 import java.util.concurrent.TimeUnit
 
 actual class UserRepository(

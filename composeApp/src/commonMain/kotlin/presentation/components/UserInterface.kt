@@ -1,4 +1,4 @@
-package repositories
+package presentation.components
 
 import androidx.compose.runtime.MutableState
 

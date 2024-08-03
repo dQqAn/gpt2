@@ -1,4 +1,4 @@
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -10,11 +10,17 @@ import kotlinx.coroutines.withContext
 import ml.bert.BertHelper
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import repositories.FirebaseMessageRepository
 
 class ChatViewModel() : ViewModel(), KoinComponent {
     private val database: AnswerDatabase by inject()
-    private val repository: Repository by inject()
+    private val messageRepository: MessageRepository by inject()
     private val bertHelper: BertHelper by inject()
+    private val firebaseMessageRepository: FirebaseMessageRepository by inject()
+
+    val currentUserID = firebaseMessageRepository.currentUserID
+
+    val isTitledLoaded = mutableStateOf(false)
 
     private val _messages: MutableStateFlow<List<Message>> = MutableStateFlow(emptyList())
     val messages = _messages.asStateFlow()
@@ -22,13 +28,17 @@ class ChatViewModel() : ViewModel(), KoinComponent {
     private val _loading = MutableStateFlow(false)
     val loading = _loading.asStateFlow()
 
-//    private val _chatID = mutableStateOf<String?>(null)
-//    val chatID = _chatID
-    /*fun changeChatID(chatID: String?) {
-        viewModelScope.launch {
-            _chatID.value = chatID
-        }
-    }*/
+    private val _receiverID = mutableStateOf("")
+    val receiverID = _receiverID
+    fun changeReceiverID(senderID: String) {
+        _receiverID.value = senderID
+    }
+
+    private val _senderID = mutableStateOf("")
+    val senderID = _senderID
+    fun changeSenderID(senderID: String) {
+        _senderID.value = senderID
+    }
 
     private fun getAllTitles(): String {
         var allTitles = ""
@@ -38,26 +48,26 @@ class ChatViewModel() : ViewModel(), KoinComponent {
         return allTitles
     }
 
-    fun loadMessages(chatID: String, isNewChat: MutableState<Boolean>) {
+    fun loadMessages(chatID: String, senderID: String, receiverID: String, isNewChat: Boolean) {
         viewModelScope.launch {
-            repository.getMessages(chatID).collect { data ->
+            messageRepository.getMessages(chatID).collect { data ->
                 _messages.update { data }
             }
         }
-        viewModelScope.launch {
-            if (isNewChat.value) {
+        if (isNewChat && !isTitledLoaded.value) { //for gpt chat
+            viewModelScope.launch {
                 withContext(Dispatchers.IO) {
                     database.answerDao().addAnswer(
                         answerEntity = AnswerEntity(
                             chatID = chatID,
                             role = "assistant",
                             content = getAllTitles(),
-                            senderID = chatID,
-                            receiverID = "gpt"
+                            senderID = senderID,
+                            receiverID = receiverID
                         )
                     )
                 }
-                isNewChat.value = false
+                isTitledLoaded.value = true
             }
         }
     }
@@ -85,22 +95,37 @@ class ChatViewModel() : ViewModel(), KoinComponent {
         return _content
     }
 
-    private suspend fun answerQuestion(question: String?, chatID: String) {
+    private suspend fun answerQuestion(question: String?, senderID: String, receiverID: String, chatID: String) {
         question?.let {
             database.answerDao().addAnswer(
                 answerEntity = AnswerEntity(
                     chatID = chatID,
                     role = "assistant",
                     content = it,
-                    senderID = chatID,
-                    receiverID = "gpt"
+                    senderID = senderID,
+                    receiverID = receiverID
                 )
             )
         }
     }
 
-    fun askQuestion(question: String, chatID: String, senderID: String, receiverID: String) {
+    fun addAnswer(message: String, chatID: String, senderID: String, receiverID: String) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                database.answerDao().addAnswer(
+                    answerEntity = AnswerEntity(
+                        chatID = chatID,
+                        role = "user",
+                        content = message,
+                        senderID = senderID,
+                        receiverID = receiverID
+                    )
+                )
+            }
+        }
+    }
 
+    fun newChatAiQuestion(question: String, chatID: String, senderID: String, receiverID: String) {
         if (_content.isBlank()) { //new chat
             viewModelScope.launch {
                 withContext(Dispatchers.IO) {
@@ -123,8 +148,8 @@ class ChatViewModel() : ViewModel(), KoinComponent {
                                 chatID = chatID,
                                 role = "assistant",
                                 content = getContent(questionIndex),
-                                senderID = chatID,
-                                receiverID = "gpt"
+                                senderID = senderID,
+                                receiverID = receiverID
                             )
                         )
 //                        _titles = emptyList()
@@ -134,8 +159,8 @@ class ChatViewModel() : ViewModel(), KoinComponent {
                                 chatID = chatID,
                                 role = "assistant",
                                 content = getAllTitles(),
-                                senderID = chatID,
-                                receiverID = "gpt"
+                                senderID = senderID,
+                                receiverID = receiverID
                             )
                         )
                     }
@@ -158,15 +183,10 @@ class ChatViewModel() : ViewModel(), KoinComponent {
 
                 //load all prevquestions from database
                 for (item in bertHelper.answer(_content, question)) {
-                    answerQuestion(item, chatID)
+                    answerQuestion(item, senderID, receiverID, chatID)
                 }
 
-                /*if (question.lowercase() == "bert") {
-                    answerQuestion(question)
-                } else if (question.lowercase() == "gpt") {
-                    //gpt
-                } else {
-                    repository.askQuestion(
+                /*repository.askQuestion(
                         prevQuestion = messages.value,
                         question = question,
                         senderID = senderID,
@@ -195,8 +215,7 @@ class ChatViewModel() : ViewModel(), KoinComponent {
 
                             else -> {}
                         }
-                    }
-                }*/
+                    }*/
             }
         }
     }

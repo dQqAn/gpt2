@@ -8,6 +8,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -44,7 +46,7 @@ fun MessageScreen(
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.Bottom
+//                verticalAlignment = Alignment.Bottom
             ) {
                 /*Button(onClick = {
                     gpt2Client.launchAutocomplete()
@@ -68,6 +70,7 @@ fun MessageScreen(
                             val sdf = SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS")
                             val currentDate = sdf.format(Date())
                             sharedVM.changeChatID("$currentDate gpt")
+//                            sharedVM.changeChatID(viewModel.currentUserID + " gpt")
                             sharedVM.changeIsNewChat(true)
                         }
                     }) {
@@ -87,7 +90,7 @@ fun MessageScreen(
                     .fillMaxSize()
                     .padding(top = 8.dp),
                 verticalArrangement = Arrangement.spacedBy(space = 8.dp),
-                horizontalAlignment = Alignment.End
+//                horizontalAlignment = Alignment.End
             ) {
                 items(messages.size) { index ->
                     val message = messages[index]
@@ -102,11 +105,24 @@ fun MessageScreen(
                                 sharedVM.changeIsNewChat(false)
                             }
                         }).fillMaxWidth()
-                            .background(color = Color.Gray)
+                            .background(color = Color.LightGray)
                             .padding(horizontal = 16.dp, vertical = 8.dp),
                     ) {
                         message?.let {
-                            Text(text = message)
+                            Text(modifier = Modifier.align(Alignment.CenterVertically), text = it)
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.End,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                IconButton(
+                                    modifier = Modifier.align(Alignment.CenterVertically),
+                                    onClick = {
+                                        viewModel.deleteChat(chatId = it)
+                                    }) {
+                                    Icon(imageVector = Icons.Default.Delete, contentDescription = null)
+                                }
+                            }
                         }
                     }
                 }

@@ -1,4 +1,4 @@
-import repositories.UserInterface
+import presentation.components.UserInterface
 
 expect class UserRepository : UserInterface {
     interface ScreenListener {

@@ -1,14 +1,14 @@
 import kotlinx.coroutines.flow.Flow
 
-interface Repository {
+interface MessageRepository {
 
-    suspend fun askQuestion(
+    /*suspend fun askQuestion(
         prevQuestion: List<Message>,
         chatID: String,
         question: String,
         senderID: String,
         receiverID: String
-    ): BaseModel<Answer>
+    ): BaseModel<Answer>*/
 
     suspend fun getMessages(chatID: String): Flow<List<Message>>
 
@@ -18,4 +18,6 @@ interface Repository {
     suspend fun getChats(): Flow<List<String>>
 
     suspend fun deleteTable()
+
+    suspend fun deleteChat(chatID: String)
 }
