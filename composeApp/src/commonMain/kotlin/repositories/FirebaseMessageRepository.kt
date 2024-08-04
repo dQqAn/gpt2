@@ -6,4 +6,5 @@ interface FirebaseMessageRepository {
     val friendMail: String?
     val otherUserID: String?
     val messageID: String?
+    fun getMailtoFirestore(mail: String)
 }

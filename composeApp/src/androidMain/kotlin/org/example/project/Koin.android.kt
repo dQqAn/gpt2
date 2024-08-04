@@ -1,9 +1,9 @@
 package org.example.project
 
-import MessageRepository
 import AnswerDatabase
 import Api
 import FirebaseMessageRepositoryImp
+import MessageRepository
 import UserRepository
 import android.app.Application
 import android.content.Context
@@ -14,8 +14,8 @@ import ml.bert.BertQaHelper
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import presentation.components.UserInterface
-import repositories.MessageRepositoryImpl
 import repositories.FirebaseMessageRepository
+import repositories.MessageRepositoryImpl
 import retrofit2.Retrofit
 import util.initKoin
 
@@ -66,7 +66,7 @@ class AndroidApp : Application() {
                 }
 
                 single<FirebaseMessageRepository> {
-                    FirebaseMessageRepositoryImp()
+                    FirebaseMessageRepositoryImp(get())
                 }
             }
         )

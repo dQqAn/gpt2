@@ -60,6 +60,7 @@ tensorflow-gpu-delegate = { module = "org.tensorflow:tensorflow-lite-gpu-delegat
 tensorflow-gpu = { module = "org.tensorflow:tensorflow-lite-gpu", version.ref = "tensorflow_gpu_ref" }
 google-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "google_bom_ref" }
 google-database = { group = "com.google.firebase", name = "firebase-database" }
+google-firestore = { module = "com.google.firebase:firebase-firestore" }
 google-auth = { group = "com.firebaseui", name = "firebase-ui-auth", version.ref = "google_auth_ref" }
 serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization_ref" }
 

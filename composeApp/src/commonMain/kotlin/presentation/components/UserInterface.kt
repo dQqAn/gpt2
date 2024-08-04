@@ -31,4 +31,6 @@ interface UserInterface {
     fun updatePhotoLink(link: String)
     fun sendPasswordReset(email: String)
     fun updatePassword(password: String)
+
+    fun setMailtoFirestore(mail: String)
 }

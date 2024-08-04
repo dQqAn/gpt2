@@ -44,6 +44,7 @@ kotlin {
             implementation(project.dependencies.platform(libs.google.bom))
             implementation(libs.google.auth)
             implementation(libs.google.database)
+            implementation(libs.google.firestore)
         }
         commonMain.dependencies {
             implementation(compose.runtime)

@@ -11,7 +11,7 @@ import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 
 class LoginViewModel : ViewModel(), KoinComponent, UserRepository.ScreenListener {
-    private val repository: UserRepository by inject() {
+    private val repository: UserRepository by inject<UserRepository>() {
         parametersOf(this as UserRepository.ScreenListener)
     }
 

@@ -24,6 +24,7 @@ import viewmodel.MessageToChatViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MessageScreen(
     navController: NavController,
@@ -34,10 +35,43 @@ fun MessageScreen(
 ) {
     val messages by viewModel.messages.collectAsState()
 
+    //Collecting states from ViewModel
+    val searchText by viewModel.searchText.collectAsState()
+    val isSearching by viewModel.isSearching.collectAsState()
+    val searchedList by viewModel.searchedList.collectAsState()
+
     Scaffold(
         containerColor = Color.White,
         topBar = {
-
+            SearchBar(
+                query = searchText,//text showed on SearchBar
+                onQueryChange = viewModel::onSearchTextChange, //update the value of searchText
+                onSearch = viewModel::onSearchTextChange, //the callback to be invoked when the input service triggers the ImeAction.Search action
+                active = isSearching, //whether the user is searching or not
+                onActiveChange = { viewModel.onToogleSearch() }, //the callback to be invoked when this search bar's active state is changed
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                LazyColumn {
+                    items(searchedList.size) { country ->
+                        searchedList[country]?.let {
+                            Text(
+                                text = it,
+                                modifier = Modifier.padding(
+                                    start = 8.dp,
+                                    top = 4.dp,
+                                    end = 8.dp,
+                                    bottom = 4.dp
+                                ).clickable {
+                                    viewModel.changeIsSearching()
+                                    viewModel.changeSearchText(it)
+                                }
+                            )
+                        }
+                    }
+                }
+            }
         },
         floatingActionButton = {
 

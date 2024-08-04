@@ -8,15 +8,18 @@ import com.google.firebase.FirebaseException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.*
 import com.google.firebase.auth.ktx.userProfileChangeRequest
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
 import org.example.project.AndroidActivityViewModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import presentation.components.BasicInformation
 import presentation.components.UserInterface
 import java.util.concurrent.TimeUnit
 
 actual class UserRepository(
-    private val screenListener: ScreenListener
+    private val screenListener: ScreenListener,
 ) : UserInterface, KoinComponent {
 
 //    private val screenListener: ScreenListener by inject()
@@ -27,6 +30,8 @@ actual class UserRepository(
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 //    private val auth : FirebaseAuth = Firebase.auth
+
+    private val firestore = Firebase.firestore
 
     private var storedVerificationId: String? = null
     private var resendToken: PhoneAuthProvider.ForceResendingToken? = null
@@ -325,5 +330,19 @@ actual class UserRepository(
     actual interface ScreenListener {
         actual fun onError(error: String)
         actual fun onResults(screen: Screen)
+    }
+
+    override fun setMailtoFirestore(mail: String) {
+        val user = hashMapOf(
+            "Basic Information" to BasicInformation(mail)
+        )
+        firestore.collection("Users").document(mail)
+            .set(user)
+            .addOnSuccessListener { documentReference ->
+
+            }
+            .addOnFailureListener { e ->
+                println("Error adding document $e")
+            }
     }
 }
