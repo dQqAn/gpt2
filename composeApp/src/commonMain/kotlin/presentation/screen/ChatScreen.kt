@@ -25,11 +25,14 @@ fun ChatScreen(
     sharedVM: MessageToChatViewModel = viewModel(),
 //    gpt2Client: GPT2Client = viewModel()
 ) {
-    val chatID = sharedVM.chatID.value
     val isNewChat = sharedVM.isNewChat.value
     val otherUserMail = sharedVM.otherUserMail.value
     val senderID = viewModel.senderID.value
     val receiverID = viewModel.receiverID.value
+    val friendID by viewModel.friendID.collectAsState()
+    val currentUserMail = viewModel.currentUserMail
+    val currentUserID = viewModel.currentUserID
+    val chatID = sharedVM.chatID.value ?: (currentUserID + friendID)
 
     viewModel.loadMessages(chatID, senderID, receiverID, isNewChat)
 

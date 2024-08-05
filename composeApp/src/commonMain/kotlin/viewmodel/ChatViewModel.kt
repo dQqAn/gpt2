@@ -3,6 +3,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -20,7 +21,7 @@ class ChatViewModel() : ViewModel(), KoinComponent {
 
     val currentUserID = firebaseMessageRepository.currentUserID
     val currentUserMail = firebaseMessageRepository.currentUserMail
-    val friendMail = firebaseMessageRepository.friendMail
+    val friendID: StateFlow<String?> = firebaseMessageRepository.friendID
 
     val isTitledLoaded = mutableStateOf(false)
 

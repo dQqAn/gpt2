@@ -3,6 +3,8 @@ import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import repositories.FirebaseMessageRepository
 
@@ -14,7 +16,7 @@ actual class FirebaseMessageRepositoryImp(
 
     override val currentUserID: String = auth.currentUser!!.uid
     override val currentUserMail: String = auth.currentUser!!.email!!
-    override val friendMail: String? = null
+    override val friendID: StateFlow<String?> = _otherUserID.asStateFlow()
     override val messageID: String? = null
 
     private val firestore = Firebase.firestore
@@ -29,7 +31,7 @@ actual class FirebaseMessageRepositoryImp(
                 if (value?.exists() == true) {
                     val data = value.get("Basic Information") as? HashMap<*, *>
                     _otherUserID.update {
-                        data?.get("mail").toString()
+                        data?.get("id").toString()
                     }
                 }
             }
