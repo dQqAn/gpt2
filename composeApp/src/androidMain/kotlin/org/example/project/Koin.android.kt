@@ -66,7 +66,7 @@ class AndroidApp : Application() {
                 }
 
                 single<FirebaseMessageRepository> {
-                    FirebaseMessageRepositoryImp(get())
+                    FirebaseMessageRepositoryImp(get(), get())
                 }
             }
         )

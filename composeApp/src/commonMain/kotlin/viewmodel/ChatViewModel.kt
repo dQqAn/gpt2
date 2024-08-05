@@ -50,26 +50,28 @@ class ChatViewModel() : ViewModel(), KoinComponent {
         return allTitles
     }
 
-    fun loadMessages(chatID: String, senderID: String, receiverID: String, isNewChat: Boolean) {
-        viewModelScope.launch {
-            messageRepository.getMessages(chatID).collect { data ->
-                _messages.update { data }
-            }
-        }
-        if (isNewChat && !isTitledLoaded.value) { //for gpt chat
+    fun loadMessages(chatID: String?, senderID: String, receiverID: String, isNewChat: Boolean) {
+        chatID?.let {
             viewModelScope.launch {
-                withContext(Dispatchers.IO) {
-                    database.answerDao().addAnswer(
-                        answerEntity = AnswerEntity(
-                            chatID = chatID,
-                            role = "assistant",
-                            content = getAllTitles(),
-                            senderID = senderID,
-                            receiverID = receiverID
-                        )
-                    )
+                messageRepository.getMessages(it).collect { data ->
+                    _messages.update { data }
                 }
-                isTitledLoaded.value = true
+            }
+            if (isNewChat && !isTitledLoaded.value) { //for gpt chat
+                viewModelScope.launch {
+                    withContext(Dispatchers.IO) {
+                        database.answerDao().addAnswer(
+                            answerEntity = AnswerEntity(
+                                chatID = it,
+                                role = "assistant",
+                                content = getAllTitles(),
+                                senderID = senderID,
+                                receiverID = receiverID
+                            )
+                        )
+                    }
+                    isTitledLoaded.value = true
+                }
             }
         }
     }

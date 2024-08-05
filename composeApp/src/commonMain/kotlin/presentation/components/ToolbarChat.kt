@@ -67,24 +67,26 @@ fun ToolbarChat(
 
                 Spacer(modifier = Modifier.height(2.dp))
 
-                Row {
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically)
-                            .size(6.dp)
-                            .background(color = GreenColor, shape = CircleShape)
-                    )
-
-                    Spacer(modifier = Modifier.width(4.dp))
-
-                    Text(
-                        text = "Online",
-                        color = GreenColor,
-                        style = MaterialTheme.typography.labelSmall.copy(
-                            fontWeight = FontWeight.Medium,
-                            fontSize = 12.sp
+                if (friendName == "GPT") {
+                    Row {
+                        Box(
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically)
+                                .size(6.dp)
+                                .background(color = GreenColor, shape = CircleShape)
                         )
-                    )
+
+                        Spacer(modifier = Modifier.width(4.dp))
+
+                        Text(
+                            text = "Online",
+                            color = GreenColor,
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 12.sp
+                            )
+                        )
+                    }
                 }
             }
         }

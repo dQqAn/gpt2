@@ -25,8 +25,9 @@ fun ChatScreen(
     sharedVM: MessageToChatViewModel = viewModel(),
 //    gpt2Client: GPT2Client = viewModel()
 ) {
-    val chatID = sharedVM.chatID.value!!
+    val chatID = sharedVM.chatID.value
     val isNewChat = sharedVM.isNewChat.value
+    val otherUserMail = sharedVM.otherUserMail.value
     val senderID = viewModel.senderID.value
     val receiverID = viewModel.receiverID.value
 
@@ -40,7 +41,7 @@ fun ChatScreen(
     Scaffold(
         containerColor = Color.White,
         topBar = {
-            ToolbarChat(friendName = viewModel.friendMail, navController = navController)
+            ToolbarChat(friendName = otherUserMail, navController = navController)
         },
         floatingActionButton = {
 
@@ -54,7 +55,7 @@ fun ChatScreen(
                     setInput(value)
                 },
                 onClickSend = {
-                    if (input.isNotEmpty()) {
+                    if (input.isNotEmpty() && chatID != null) {
                         var _chatID: String? = null
 
                         if (messages.isNotEmpty()) {

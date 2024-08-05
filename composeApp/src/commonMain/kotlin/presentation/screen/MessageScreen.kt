@@ -54,8 +54,8 @@ fun MessageScreen(
                     .padding(16.dp)
             ) {
                 LazyColumn {
-                    items(searchedList.size) { country ->
-                        searchedList[country]?.let {
+                    items(searchedList.size) { mail ->
+                        searchedList[mail]?.let {
                             Text(
                                 text = it,
                                 modifier = Modifier.padding(
@@ -66,6 +66,14 @@ fun MessageScreen(
                                 ).clickable {
                                     viewModel.changeIsSearching()
                                     viewModel.changeSearchText(it)
+                                    sharedVM.changeIsNewChat(false)
+                                    sharedVM.changeOtherUserMail(it)
+                                    sharedVM.changeChatID(null)
+                                    navController.navigate(route = Screen.Chat.route) {
+                                        popUpTo(Screen.Chat.route) {
+                                            inclusive = true
+                                        }
+                                    }
                                 }
                             )
                         }
@@ -104,8 +112,8 @@ fun MessageScreen(
                             val sdf = SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS")
                             val currentDate = sdf.format(Date())
                             sharedVM.changeChatID("$currentDate gpt")
-//                            sharedVM.changeChatID(viewModel.currentUserID + " gpt")
                             sharedVM.changeIsNewChat(true)
+                            sharedVM.changeOtherUserMail("GPT")
                         }
                     }) {
                     Text(modifier = Modifier, text = "New chat")

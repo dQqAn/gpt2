@@ -11,13 +11,18 @@ import repositories.FirebaseMessageRepository
 
 class MessageViewModel : ViewModel(), KoinComponent {
     private val _filteredList: MutableStateFlow<List<String?>> = MutableStateFlow(emptyList())
+    private val _otherUserID: MutableStateFlow<String?> = MutableStateFlow(null)
+    val otherUserID: StateFlow<String?> = _otherUserID.asStateFlow()
     private val firebaseMessageRepository: FirebaseMessageRepository by inject<FirebaseMessageRepository>() {
-        parametersOf(_filteredList)
+        parametersOf(_filteredList, _otherUserID)
     }
 
     private val messageRepository: MessageRepository by inject()
 
     val currentUserID = firebaseMessageRepository.currentUserID
+    fun otherUserID(mail: String) {
+        firebaseMessageRepository.otherUserID(mail)
+    }
 
     private val _messages: MutableStateFlow<List<String?>> = MutableStateFlow(emptyList())
     val messages = _messages.asStateFlow()
@@ -34,6 +39,7 @@ class MessageViewModel : ViewModel(), KoinComponent {
     val searchText = _searchText.asStateFlow()
     fun changeSearchText(text: String) {
         _searchText.value = text
+        otherUserID(text)
     }
 
     private val _searchedList = MutableStateFlow(emptyList<String>())

@@ -91,6 +91,7 @@ actual class UserRepository(
                         Log.v("Firebase", "createUserWithEmail:success")
                         screenListener.onResults(Screen.MailVerification)
                         auth.firebaseAuthSettings.forceRecaptchaFlowForTesting(true)
+                        setUserInfoToFirestore(auth.currentUser!!.email!!, auth.currentUser!!.uid)
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.v("Firebase", "createUserWithEmail:failure", task.exception)
@@ -332,9 +333,9 @@ actual class UserRepository(
         actual fun onResults(screen: Screen)
     }
 
-    override fun setMailtoFirestore(mail: String) {
+    private fun setUserInfoToFirestore(mail: String, id: String) {
         val user = hashMapOf(
-            "Basic Information" to BasicInformation(mail)
+            "Basic Information" to BasicInformation(mail, id)
         )
         firestore.collection("Users").document(mail)
             .set(user)

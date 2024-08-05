@@ -25,6 +25,14 @@ class MessageToChatViewModel : ViewModel(), KoinComponent {
         }
     }
 
+    private val _otherUserMail = mutableStateOf<String?>(null)
+    val otherUserMail = _otherUserMail
+    fun changeOtherUserMail(mail: String) {
+        viewModelScope.launch {
+            _otherUserMail.value = mail
+        }
+    }
+
     init {
 
     }

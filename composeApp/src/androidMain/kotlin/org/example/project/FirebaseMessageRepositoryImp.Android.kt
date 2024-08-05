@@ -7,17 +7,33 @@ import kotlinx.coroutines.flow.update
 import repositories.FirebaseMessageRepository
 
 actual class FirebaseMessageRepositoryImp(
-    val filteredList: MutableStateFlow<List<String?>>
+    val filteredList: MutableStateFlow<List<String?>>,
+    val _otherUserID: MutableStateFlow<String?>
 ) : FirebaseMessageRepository {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     override val currentUserID: String = auth.currentUser!!.uid
     override val currentUserMail: String = auth.currentUser!!.email!!
     override val friendMail: String? = null
-    override val otherUserID: String? = null
     override val messageID: String? = null
 
     private val firestore = Firebase.firestore
+
+    override fun otherUserID(mail: String) {
+        firestore.collection("Users").document(mail)
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    println(error.message)
+                    return@addSnapshotListener
+                }
+                if (value?.exists() == true) {
+                    val data = value.get("Basic Information") as? HashMap<*, *>
+                    _otherUserID.update {
+                        data?.get("mail").toString()
+                    }
+                }
+            }
+    }
 
     override fun getMailtoFirestore(mail: String) {
         firestore.collection("Users").orderBy(FieldPath.documentId())
@@ -26,6 +42,7 @@ actual class FirebaseMessageRepositoryImp(
             .addSnapshotListener { value, error ->
                 if (error != null) {
                     println(error.message)
+                    return@addSnapshotListener
                 }
                 val tempList = ArrayList<String?>()
                 if (!value?.documents.isNullOrEmpty()) {
