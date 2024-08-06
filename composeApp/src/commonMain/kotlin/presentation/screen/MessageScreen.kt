@@ -20,9 +20,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import util.GetCurrentDate
 import viewmodel.MessageToChatViewModel
-import java.text.SimpleDateFormat
-import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -109,8 +108,7 @@ fun MessageScreen(
                                 inclusive = true
                             }
                         }.apply {
-                            val sdf = SimpleDateFormat("dd/MM/yyyy hh:mm:ss.SSS")
-                            val currentDate = sdf.format(Date())
+                            val currentDate = GetCurrentDate()
                             sharedVM.changeChatID("$currentDate gpt")
                             sharedVM.changeIsNewChat(true)
                             sharedVM.changeOtherUserMail("GPT")

@@ -6,6 +6,8 @@ import androidx.room.PrimaryKey
 data class AnswerEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
+    @ColumnInfo(name = "messageID")
+    val messageID: String = "",
     @ColumnInfo("chatID")
     val chatID: String,
     @ColumnInfo("role")
@@ -15,5 +17,7 @@ data class AnswerEntity(
     @ColumnInfo("senderID")
     val senderID: String,
     @ColumnInfo("receiverID")
-    val receiverID: String
+    val receiverID: String,
+    @ColumnInfo("date")
+    val date: String
 )

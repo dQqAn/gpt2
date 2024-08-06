@@ -67,20 +67,28 @@ fun ChatScreen(
                             _chatID = chatID
                         }
 
+//                        println("1: "+currentUserID)
+//                        println("2: "+friendID)
+//                        viewModel.changeSenderID(currentUserID)
+//                        viewModel.changeReceiverID(friendID!!)
+//                        println("3: "+senderID)
+//                        println("4: "+receiverID)
+
+
                         val aiChatControl = _chatID.split(" ").last()
                         if (aiChatControl != "gpt") {
                             viewModel.addAnswer(
                                 message = input,
                                 chatID = _chatID,
-                                receiverID = receiverID,
-                                senderID = senderID
+                                senderID = currentUserID,
+                                receiverID = friendID!!
                             )
                         } else {
                             viewModel.newChatAiQuestion(
                                 question = input,
                                 chatID = _chatID,
-                                senderID = senderID,
-                                receiverID = receiverID
+                                senderID = currentUserID,
+                                receiverID = friendID!!
                             )
                         }
                         setInput("")

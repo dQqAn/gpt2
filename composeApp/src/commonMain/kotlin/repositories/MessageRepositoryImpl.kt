@@ -6,6 +6,7 @@ import Message
 import MessageRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import util.GetCurrentDate
 
 class MessageRepositoryImpl(private val dao: AnswerDao) : MessageRepository {
 
@@ -57,7 +58,7 @@ class MessageRepositoryImpl(private val dao: AnswerDao) : MessageRepository {
         dao.addAnswer(
             AnswerEntity(
                 chatID = answer.chatID!!, role = answer.role, content = answer.content,
-                senderID = senderID, receiverID = receiverID
+                senderID = senderID, receiverID = receiverID, date = GetCurrentDate()
             )
         )
     }

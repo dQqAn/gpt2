@@ -12,6 +12,7 @@ import ml.bert.BertHelper
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import repositories.FirebaseMessageRepository
+import util.GetCurrentDate
 
 class ChatViewModel() : ViewModel(), KoinComponent {
     private val database: AnswerDatabase by inject()
@@ -67,7 +68,8 @@ class ChatViewModel() : ViewModel(), KoinComponent {
                                 role = "assistant",
                                 content = getAllTitles(),
                                 senderID = senderID,
-                                receiverID = receiverID
+                                receiverID = receiverID,
+                                date = GetCurrentDate()
                             )
                         )
                     }
@@ -108,7 +110,8 @@ class ChatViewModel() : ViewModel(), KoinComponent {
                     role = "assistant",
                     content = it,
                     senderID = senderID,
-                    receiverID = receiverID
+                    receiverID = receiverID,
+                    date = GetCurrentDate()
                 )
             )
         }
@@ -117,15 +120,7 @@ class ChatViewModel() : ViewModel(), KoinComponent {
     fun addAnswer(message: String, chatID: String, senderID: String, receiverID: String) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                database.answerDao().addAnswer(
-                    answerEntity = AnswerEntity(
-                        chatID = chatID,
-                        role = "user",
-                        content = message,
-                        senderID = senderID,
-                        receiverID = receiverID
-                    )
-                )
+                firebaseMessageRepository.addAnswer(message, chatID, senderID, receiverID)
             }
         }
     }
@@ -140,7 +135,8 @@ class ChatViewModel() : ViewModel(), KoinComponent {
                             role = "user",
                             content = question,
                             senderID = senderID,
-                            receiverID = receiverID
+                            receiverID = receiverID,
+                            date = GetCurrentDate()
                         )
                     )
                     if (_titles.isEmpty()) {
@@ -154,10 +150,10 @@ class ChatViewModel() : ViewModel(), KoinComponent {
                                 role = "assistant",
                                 content = getContent(questionIndex),
                                 senderID = senderID,
-                                receiverID = receiverID
+                                receiverID = receiverID,
+                                date = GetCurrentDate()
                             )
                         )
-//                        _titles = emptyList()
                     } else {
                         database.answerDao().addAnswer(
                             answerEntity = AnswerEntity(
@@ -165,7 +161,8 @@ class ChatViewModel() : ViewModel(), KoinComponent {
                                 role = "assistant",
                                 content = getAllTitles(),
                                 senderID = senderID,
-                                receiverID = receiverID
+                                receiverID = receiverID,
+                                date = GetCurrentDate()
                             )
                         )
                     }
@@ -180,7 +177,8 @@ class ChatViewModel() : ViewModel(), KoinComponent {
                             role = "user",
                             content = question,
                             senderID = senderID,
-                            receiverID = receiverID
+                            receiverID = receiverID,
+                            date = GetCurrentDate()
                         )
                     )
                 }

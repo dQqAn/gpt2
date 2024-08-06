@@ -89,9 +89,9 @@ actual class UserRepository(
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.v("Firebase", "createUserWithEmail:success")
+                        setUserInfoToFirestore(auth.currentUser!!.email!!, auth.currentUser!!.uid)
                         screenListener.onResults(Screen.MailVerification)
                         auth.firebaseAuthSettings.forceRecaptchaFlowForTesting(true)
-                        setUserInfoToFirestore(auth.currentUser!!.email!!, auth.currentUser!!.uid)
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.v("Firebase", "createUserWithEmail:failure", task.exception)
