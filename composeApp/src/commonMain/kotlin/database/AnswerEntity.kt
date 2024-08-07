@@ -9,15 +9,15 @@ data class AnswerEntity(
     @ColumnInfo(name = "messageID")
     val messageID: String = "",
     @ColumnInfo("chatID")
-    val chatID: String,
+    val chatID: String = "",
     @ColumnInfo("role")
-    val role: String,
+    val role: String = "",
     @ColumnInfo("content")
-    val content: String,
+    val content: String = "",
     @ColumnInfo("senderID")
-    val senderID: String,
+    val senderID: String = "",
     @ColumnInfo("receiverID")
-    val receiverID: String,
+    val receiverID: String = "",
     @ColumnInfo("date")
-    val date: String
+    val date: String = ""
 )

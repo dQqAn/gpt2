@@ -18,7 +18,12 @@ class ChatViewModel() : ViewModel(), KoinComponent {
     private val database: AnswerDatabase by inject()
     private val messageRepository: MessageRepository by inject()
     private val bertHelper: BertHelper by inject()
-    private val firebaseMessageRepository: FirebaseMessageRepository by inject()
+
+    private val firebaseMessageRepository: FirebaseMessageRepository by inject<FirebaseMessageRepository>()
+
+    //    private val _messageList: MutableStateFlow<List<AnswerEntity?>> = MutableStateFlow(emptyList())
+    //    val messageList: StateFlow<List<AnswerEntity?>> = _messageList.asStateFlow()
+    val messageList: StateFlow<List<AnswerEntity?>> = firebaseMessageRepository.messageList.asStateFlow()
 
     val currentUserID = firebaseMessageRepository.currentUserID
     val currentUserMail = firebaseMessageRepository.currentUserMail
@@ -123,6 +128,10 @@ class ChatViewModel() : ViewModel(), KoinComponent {
                 firebaseMessageRepository.addAnswer(message, chatID, senderID, receiverID)
             }
         }
+    }
+
+    fun getAnswer(chatID: String, senderID: String, receiverID: String) {
+        firebaseMessageRepository.getAnswer(chatID, senderID, receiverID)
     }
 
     fun newChatAiQuestion(question: String, chatID: String, senderID: String, receiverID: String) {

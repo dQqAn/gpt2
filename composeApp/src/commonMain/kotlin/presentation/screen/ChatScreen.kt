@@ -36,6 +36,18 @@ fun ChatScreen(
 
     viewModel.loadMessages(chatID, senderID, receiverID, isNewChat)
 
+    val messageList by viewModel.messageList.collectAsState()
+    friendID?.let {
+        viewModel.getAnswer(chatID, currentUserID, it)
+    }
+    DisposableEffect(messageList) {
+        onDispose {
+            messageList.dropWhile {
+                true
+            }
+        }
+    }
+
     val messages by viewModel.messages.collectAsState()
     val loading by viewModel.loading.collectAsState()
 
@@ -111,15 +123,30 @@ fun ChatScreen(
                 verticalArrangement = Arrangement.spacedBy(space = 8.dp),
                 horizontalAlignment = Alignment.End
             ) {
-                items(messages.size) { index ->
-                    val message = messages[index]
-                    if (message.fromUser) {
-                        MessengerItemCard(
-                            modifier = Modifier.align(Alignment.End),
-                            message = message.content
-                        )
-                    } else {
-                        ReceiverMessageItemCard(message = message.content)
+                if (isNewChat) {
+                    items(messages.size) { index ->
+                        val message = messages[index]
+                        if (message.fromUser) {
+                            MessengerItemCard(
+                                modifier = Modifier.align(Alignment.End),
+                                message = message.content
+                            )
+                        } else {
+                            ReceiverMessageItemCard(message = message.content)
+                        }
+                    }
+                } else {
+                    items(messageList.size) { index ->
+                        messageList[index]?.let {
+                            if (it.senderID == currentUserID) {
+                                MessengerItemCard(
+                                    modifier = Modifier.align(Alignment.End),
+                                    message = it.content
+                                )
+                            } else {
+                                ReceiverMessageItemCard(message = it.content)
+                            }
+                        }
                     }
                 }
             }

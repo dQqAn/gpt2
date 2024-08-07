@@ -1,5 +1,7 @@
 package repositories
 
+import AnswerEntity
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 interface FirebaseMessageRepository {
@@ -7,6 +9,7 @@ interface FirebaseMessageRepository {
     val currentUserMail: String
     val friendID: StateFlow<String?>
     val messageID: String?
+    val messageList: MutableStateFlow<List<AnswerEntity?>>
     fun otherUserID(mail: String)
     fun getMailtoFirestore(mail: String)
 

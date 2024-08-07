@@ -1,6 +1,5 @@
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -14,8 +13,8 @@ import repositories.FirebaseMessageRepository
 import util.GetCurrentDate
 
 actual class FirebaseMessageRepositoryImp(
-    val filteredList: MutableStateFlow<List<String?>>,
-    val _otherUserID: MutableStateFlow<String?>
+    val _filteredList: MutableStateFlow<List<String?>>,
+    val _otherUserID: MutableStateFlow<String?>,
 ) : FirebaseMessageRepository, KoinComponent {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
@@ -25,6 +24,8 @@ actual class FirebaseMessageRepositoryImp(
     override val currentUserMail: String = auth.currentUser!!.email!!
     override val friendID: StateFlow<String?> = _otherUserID.asStateFlow()
     override val messageID: String? = null
+
+    override val messageList: MutableStateFlow<List<AnswerEntity?>> = MutableStateFlow(emptyList())
 
     private val firestore = Firebase.firestore
 
@@ -62,7 +63,7 @@ actual class FirebaseMessageRepositoryImp(
                     for (data in value!!.documentChanges) {
                         if (data?.document?.id != null) {
                             tempList.add(data.document.id)
-                            filteredList.update {
+                            _filteredList.update {
                                 tempList
                             }
                         }
@@ -106,6 +107,24 @@ actual class FirebaseMessageRepositoryImp(
     }
 
     override fun getAnswer(chatID: String, senderID: String, receiverID: String) {
+        databaseMessaging.child(senderID).child(receiverID)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val tempList = ArrayList<AnswerEntity?>()
+                    for (postSnapshot in snapshot.children) {
+                        val message: AnswerEntity? = postSnapshot?.getValue(AnswerEntity::class.java)
+                        if (message != null) {
+                            tempList.add(message)
+                            messageList.update {
+                                tempList
+                            }
+                        }
+                    }
+                }
 
+                override fun onCancelled(error: DatabaseError) {
+                    println(error.message)
+                }
+            })
     }
 }

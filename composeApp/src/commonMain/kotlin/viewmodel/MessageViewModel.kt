@@ -11,9 +11,12 @@ import repositories.FirebaseMessageRepository
 
 class MessageViewModel : ViewModel(), KoinComponent {
     private val _filteredList: MutableStateFlow<List<String?>> = MutableStateFlow(emptyList())
+
+    //    private val _messageList: MutableStateFlow<List<AnswerEntity?>> = MutableStateFlow(emptyList())
     private val _otherUserID: MutableStateFlow<String?> = MutableStateFlow(null)
     val otherUserID: StateFlow<String?> = _otherUserID.asStateFlow()
-    private val firebaseMessageRepository: FirebaseMessageRepository by inject<FirebaseMessageRepository>() {
+    private val firebaseMessageRepository: FirebaseMessageRepository by inject<FirebaseMessageRepository> {
+//        parametersOf(_filteredList, _messageList, _otherUserID)
         parametersOf(_filteredList, _otherUserID)
     }
 
