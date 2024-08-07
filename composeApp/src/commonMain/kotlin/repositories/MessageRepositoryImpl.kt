@@ -2,11 +2,9 @@ package repositories
 
 import AnswerDao
 import AnswerEntity
-import Message
 import MessageRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import util.GetCurrentDate
 
 class MessageRepositoryImpl(private val dao: AnswerDao) : MessageRepository {
 
@@ -40,28 +38,30 @@ class MessageRepositoryImpl(private val dao: AnswerDao) : MessageRepository {
         }
     }*/
 
-    override suspend fun getMessages(chatID: String): Flow<List<Message>> {
+    override suspend fun getMessages(chatID: String): Flow<List<AnswerEntity?>> {
         return dao.getAnswer(chatID).map { value ->
             value.map { entity ->
-                Message(
+                AnswerEntity(
                     chatID = entity.chatID,
                     role = entity.role,
                     content = entity.content,
                     senderID = entity.senderID,
-                    receiverID = entity.receiverID
+                    receiverID = entity.receiverID,
+                    date = entity.date,
+                    messageID = entity.messageID
                 )
             }
         }
     }
 
-    override suspend fun addAnswer(answer: Message, senderID: String, receiverID: String) {
+    /*override suspend fun addAnswer(answer: Message, senderID: String, receiverID: String) {
         dao.addAnswer(
             AnswerEntity(
                 chatID = answer.chatID!!, role = answer.role, content = answer.content,
                 senderID = senderID, receiverID = receiverID, date = GetCurrentDate()
             )
         )
-    }
+    }*/
 
     override suspend fun getChats(): Flow<List<String>> {
         return dao.getChats().map { value ->

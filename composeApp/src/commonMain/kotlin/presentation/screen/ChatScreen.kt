@@ -70,11 +70,11 @@ fun ChatScreen(
                     setInput(value)
                 },
                 onClickSend = {
-                    if (input.isNotEmpty() && chatID != null) {
+                    if (input.isNotEmpty()) {
                         var _chatID: String? = null
 
                         if (messages.isNotEmpty()) {
-                            _chatID = messages.first().chatID!!
+                            _chatID = messages.first()?.chatID!!
                         } else {
                             _chatID = chatID
                         }
@@ -100,7 +100,7 @@ fun ChatScreen(
                                 question = input,
                                 chatID = _chatID,
                                 senderID = currentUserID,
-                                receiverID = friendID!!
+                                receiverID = "gpt"
                             )
                         }
                         setInput("")
@@ -123,10 +123,10 @@ fun ChatScreen(
                 verticalArrangement = Arrangement.spacedBy(space = 8.dp),
                 horizontalAlignment = Alignment.End
             ) {
-                if (isNewChat) {
+                if (isNewChat) { // todo: Problem of message list
                     items(messages.size) { index ->
                         val message = messages[index]
-                        if (message.fromUser) {
+                        if (message!!.fromUser) {
                             MessengerItemCard(
                                 modifier = Modifier.align(Alignment.End),
                                 message = message.content

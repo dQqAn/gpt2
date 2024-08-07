@@ -31,7 +31,7 @@ class ChatViewModel() : ViewModel(), KoinComponent {
 
     val isTitledLoaded = mutableStateOf(false)
 
-    private val _messages: MutableStateFlow<List<Message>> = MutableStateFlow(emptyList())
+    private val _messages: MutableStateFlow<List<AnswerEntity?>> = MutableStateFlow(emptyList())
     val messages = _messages.asStateFlow()
 
     private val _loading = MutableStateFlow(false)

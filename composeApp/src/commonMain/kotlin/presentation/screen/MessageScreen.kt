@@ -143,6 +143,7 @@ fun MessageScreen(
                             }.apply {
                                 sharedVM.changeChatID(message)
                                 sharedVM.changeIsNewChat(false)
+                                sharedVM.changeOtherUserMail("Holder") // todo: get friend name
                             }
                         }).fillMaxWidth()
                             .background(color = Color.LightGray)

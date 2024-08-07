@@ -21,3 +21,8 @@ data class AnswerEntity(
     @ColumnInfo("date")
     val date: String = ""
 )
+
+val AnswerEntity.fromUser: Boolean
+    get() {
+        return role == "user"
+    }
