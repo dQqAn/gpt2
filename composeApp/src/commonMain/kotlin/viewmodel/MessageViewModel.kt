@@ -20,6 +20,13 @@ class MessageViewModel : ViewModel(), KoinComponent {
         parametersOf(_filteredList, _otherUserID)
     }
 
+    private val _remoteMessageList = firebaseMessageRepository.messageList
+    fun deleteMessageList() {
+        _remoteMessageList.update {
+            emptyList()
+        }
+    }
+
     private val messageRepository: MessageRepository by inject()
 
     val currentUserID = firebaseMessageRepository.currentUserID
@@ -27,8 +34,8 @@ class MessageViewModel : ViewModel(), KoinComponent {
         firebaseMessageRepository.otherUserID(mail)
     }
 
-    private val _messages: MutableStateFlow<List<String?>> = MutableStateFlow(emptyList())
-    val messages = _messages.asStateFlow()
+    private val _chats: MutableStateFlow<List<String?>> = MutableStateFlow(emptyList())
+    val chats = _chats.asStateFlow()
 
     //first state whether the search is happening or not
     private val _isSearching = MutableStateFlow(false)
@@ -78,7 +85,7 @@ class MessageViewModel : ViewModel(), KoinComponent {
         viewModelScope.launch {
 //            repository.deleteTable()
             messageRepository.getChats().collect { data ->
-                _messages.update { data }
+                _chats.update { data }
             }
         }
     }

@@ -32,7 +32,9 @@ fun MessageScreen(
     loginViewModel: LoginViewModel = viewModel()
 //    gpt2Client: GPT2Client = viewModel()
 ) {
-    val messages by viewModel.messages.collectAsState()
+    viewModel.deleteMessageList()
+
+    val chats by viewModel.chats.collectAsState()
 
     //Collecting states from ViewModel
     val searchText by viewModel.searchText.collectAsState()
@@ -132,8 +134,8 @@ fun MessageScreen(
                 verticalArrangement = Arrangement.spacedBy(space = 8.dp),
 //                horizontalAlignment = Alignment.End
             ) {
-                items(messages.size) { index ->
-                    val message = messages[index]
+                items(chats.size) { index ->
+                    val message = chats[index]
                     Row(
                         modifier = Modifier.clickable(onClick = {
                             navController.navigate(route = Screen.Chat.route) {

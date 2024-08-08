@@ -19,6 +19,7 @@ actual class FirebaseMessageRepositoryImp(
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     private val database: AnswerDatabase by inject()
+    private val messageRepository: MessageRepository by inject()
 
     override val currentUserID: String = auth.currentUser!!.uid
     override val currentUserMail: String = auth.currentUser!!.email!!
@@ -106,25 +107,29 @@ actual class FirebaseMessageRepositoryImp(
         }
     }
 
-    override fun getAnswer(chatID: String, senderID: String, receiverID: String) {
-        databaseMessaging.child(senderID).child(receiverID)
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val tempList = ArrayList<AnswerEntity?>()
-                    for (postSnapshot in snapshot.children) {
-                        val message: AnswerEntity? = postSnapshot?.getValue(AnswerEntity::class.java)
-                        if (message != null) {
-                            tempList.add(message)
-                            messageList.update {
-                                tempList
+    override suspend fun getAnswer(chatID: String, senderID: String, receiverID: String?) {
+        receiverID?.let {
+            databaseMessaging.child(senderID).child(receiverID)
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val tempList = ArrayList<AnswerEntity?>(messageList.value)
+                        for (postSnapshot in snapshot.children) {
+                            val message: AnswerEntity? = postSnapshot?.getValue(AnswerEntity::class.java)
+                            if (message != null) {
+                                if (message.messageID != messageList.value.find { it?.messageID == message.messageID }?.messageID) {
+                                    tempList.add(message)
+                                    messageList.update {
+                                        tempList
+                                    }
+                                }
                             }
                         }
                     }
-                }
 
-                override fun onCancelled(error: DatabaseError) {
-                    println(error.message)
-                }
-            })
+                    override fun onCancelled(error: DatabaseError) {
+                        println(error.message)
+                    }
+                })
+        }
     }
 }

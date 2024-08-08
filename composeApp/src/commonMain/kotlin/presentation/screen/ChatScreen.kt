@@ -36,19 +36,11 @@ fun ChatScreen(
 
     viewModel.loadMessages(chatID, senderID, receiverID, isNewChat)
 
-    val messageList by viewModel.messageList.collectAsState()
+    val messageList by viewModel.remoteMessageList.collectAsState()
     friendID?.let {
-        viewModel.getAnswer(chatID, currentUserID, it)
-    }
-    DisposableEffect(messageList) {
-        onDispose {
-            messageList.dropWhile {
-                true
-            }
-        }
+        viewModel.getAnswer(chatID, currentUserID, friendID)
     }
 
-    val messages by viewModel.messages.collectAsState()
     val loading by viewModel.loading.collectAsState()
 
     val (input, setInput) = remember { mutableStateOf("") }
@@ -73,8 +65,8 @@ fun ChatScreen(
                     if (input.isNotEmpty()) {
                         var _chatID: String? = null
 
-                        if (messages.isNotEmpty()) {
-                            _chatID = messages.first()?.chatID!!
+                        if (messageList.isNotEmpty()) {
+                            _chatID = messageList.first()?.chatID!!
                         } else {
                             _chatID = chatID
                         }
@@ -123,7 +115,20 @@ fun ChatScreen(
                 verticalArrangement = Arrangement.spacedBy(space = 8.dp),
                 horizontalAlignment = Alignment.End
             ) {
-                if (isNewChat) { // todo: Problem of message list
+                items(messageList.size) { index ->
+                    messageList[index]?.let {
+                        if (it.senderID == currentUserID && it.fromUser) {
+                            MessengerItemCard(
+                                modifier = Modifier.align(Alignment.End),
+                                message = it.content
+                            )
+                        } else {
+                            ReceiverMessageItemCard(message = it.content)
+                        }
+                    }
+                }
+
+                /*if (isNewChat) {
                     items(messages.size) { index ->
                         val message = messages[index]
                         if (message!!.fromUser) {
@@ -148,7 +153,7 @@ fun ChatScreen(
                             }
                         }
                     }
-                }
+                }*/
             }
         }
     }

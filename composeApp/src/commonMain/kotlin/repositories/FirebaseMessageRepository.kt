@@ -11,10 +11,9 @@ interface FirebaseMessageRepository {
     val messageID: String?
     val messageList: MutableStateFlow<List<AnswerEntity?>>
 
-    //    val _messages: MutableStateFlow<List<Message>> // todo: common message list
     fun otherUserID(mail: String)
     fun getMailtoFirestore(mail: String)
 
     suspend fun addAnswer(message: String, chatID: String, senderID: String, receiverID: String)
-    fun getAnswer(chatID: String, senderID: String, receiverID: String)
+    suspend fun getAnswer(chatID: String, senderID: String, receiverID: String?)
 }

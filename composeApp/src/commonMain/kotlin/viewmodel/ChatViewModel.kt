@@ -23,16 +23,14 @@ class ChatViewModel() : ViewModel(), KoinComponent {
 
     //    private val _messageList: MutableStateFlow<List<AnswerEntity?>> = MutableStateFlow(emptyList())
     //    val messageList: StateFlow<List<AnswerEntity?>> = _messageList.asStateFlow()
-    val messageList: StateFlow<List<AnswerEntity?>> = firebaseMessageRepository.messageList.asStateFlow()
+    val _remoteMessageList = firebaseMessageRepository.messageList
+    val remoteMessageList = _remoteMessageList.asStateFlow()
 
     val currentUserID = firebaseMessageRepository.currentUserID
     val currentUserMail = firebaseMessageRepository.currentUserMail
     val friendID: StateFlow<String?> = firebaseMessageRepository.friendID
 
     val isTitledLoaded = mutableStateOf(false)
-
-    private val _messages: MutableStateFlow<List<AnswerEntity?>> = MutableStateFlow(emptyList())
-    val messages = _messages.asStateFlow()
 
     private val _loading = MutableStateFlow(false)
     val loading = _loading.asStateFlow()
@@ -59,11 +57,15 @@ class ChatViewModel() : ViewModel(), KoinComponent {
 
     fun loadMessages(chatID: String?, senderID: String, receiverID: String, isNewChat: Boolean) {
         chatID?.let {
-            viewModelScope.launch {
-                messageRepository.getMessages(it).collect { data ->
-                    _messages.update { data }
+            /*viewModelScope.launch {
+                withContext(Dispatchers.Main) {
+                    messageRepository.getMessages(it).collect { data ->
+                        if (data.isNotEmpty()) {
+                            _remoteMessageList.update { data }
+                        }
+                    }
                 }
-            }
+            }*/
             if (isNewChat && !isTitledLoaded.value) { //for gpt chat
                 viewModelScope.launch {
                     withContext(Dispatchers.IO) {
@@ -130,8 +132,12 @@ class ChatViewModel() : ViewModel(), KoinComponent {
         }
     }
 
-    fun getAnswer(chatID: String, senderID: String, receiverID: String) {
-        firebaseMessageRepository.getAnswer(chatID, senderID, receiverID)
+    fun getAnswer(chatID: String, senderID: String, receiverID: String?) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                firebaseMessageRepository.getAnswer(chatID, senderID, receiverID)
+            }
+        }
     }
 
     fun newChatAiQuestion(question: String, chatID: String, senderID: String, receiverID: String) {
