@@ -114,6 +114,7 @@ fun MessageScreen(
                             sharedVM.changeChatID("$currentDate gpt")
                             sharedVM.changeIsNewChat(true)
                             sharedVM.changeOtherUserMail("GPT")
+                            viewModel.otherUserID(null)
                         }
                     }) {
                     Text(modifier = Modifier, text = "New chat")
@@ -146,6 +147,7 @@ fun MessageScreen(
                                 sharedVM.changeChatID(message)
                                 sharedVM.changeIsNewChat(false)
                                 sharedVM.changeOtherUserMail("Holder") // todo: get friend name
+                                viewModel.otherUserID(null)
                             }
                         }).fillMaxWidth()
                             .background(color = Color.LightGray)

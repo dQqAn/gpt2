@@ -34,20 +34,26 @@ actual class FirebaseMessageRepositoryImp(
         FirebaseDatabase.getInstance("https://gpt-chat-6c38c-default-rtdb.europe-west1.firebasedatabase.app")
             .reference.child("Message")
 
-    override fun otherUserID(mail: String) {
-        firestore.collection("Users").document(mail)
-            .addSnapshotListener { value, error ->
-                if (error != null) {
-                    println(error.message)
-                    return@addSnapshotListener
-                }
-                if (value?.exists() == true) {
-                    val data = value.get("Basic Information") as? HashMap<*, *>
-                    _otherUserID.update {
-                        data?.get("id").toString()
+    override fun otherUserID(mail: String?) {
+        if (mail != null) {
+            firestore.collection("Users").document(mail)
+                .addSnapshotListener { value, error ->
+                    if (error != null) {
+                        println(error.message)
+                        return@addSnapshotListener
+                    }
+                    if (value?.exists() == true) {
+                        val data = value.get("Basic Information") as? HashMap<*, *>
+                        _otherUserID.update {
+                            data?.get("id").toString()
+                        }
                     }
                 }
+        } else {
+            _otherUserID.update {
+                null
             }
+        }
     }
 
     override fun getMailtoFirestore(mail: String) {

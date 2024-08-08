@@ -30,7 +30,7 @@ class MessageViewModel : ViewModel(), KoinComponent {
     private val messageRepository: MessageRepository by inject()
 
     val currentUserID = firebaseMessageRepository.currentUserID
-    fun otherUserID(mail: String) {
+    fun otherUserID(mail: String?) {
         firebaseMessageRepository.otherUserID(mail)
     }
 
