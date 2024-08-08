@@ -118,14 +118,12 @@ actual class FirebaseMessageRepositoryImp(
             databaseMessaging.child(senderID).child(receiverID)
                 .addValueEventListener(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
-                        val tempList = ArrayList<AnswerEntity?>(messageList.value)
                         for (postSnapshot in snapshot.children) {
                             val message: AnswerEntity? = postSnapshot?.getValue(AnswerEntity::class.java)
                             if (message != null) {
                                 if (!messageList.value.contains(message)) {
-                                    tempList.add(message)
                                     messageList.update {
-                                        tempList
+                                        messageList.value + message
                                     }
                                 }
                             }
