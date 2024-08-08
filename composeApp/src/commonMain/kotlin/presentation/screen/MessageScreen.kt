@@ -137,36 +137,30 @@ fun MessageScreen(
             ) {
                 items(chats.size) { index ->
                     val message = chats[index]
-                    Row(
-                        modifier = Modifier.clickable(onClick = {
-                            navController.navigate(route = Screen.Chat.route) {
-                                popUpTo(Screen.Chat.route) {
-                                    inclusive = true
+                    message?.let {
+                        Box(
+                            modifier = Modifier.clickable(onClick = {
+                                navController.navigate(route = Screen.Chat.route) {
+                                    popUpTo(Screen.Chat.route) {
+                                        inclusive = true
+                                    }
+                                }.apply {
+                                    sharedVM.changeChatID(message)
+                                    sharedVM.changeIsNewChat(false)
+                                    sharedVM.changeOtherUserMail("Holder") // todo: get friend name
+                                    viewModel.otherUserID(null)
                                 }
-                            }.apply {
-                                sharedVM.changeChatID(message)
-                                sharedVM.changeIsNewChat(false)
-                                sharedVM.changeOtherUserMail("Holder") // todo: get friend name
-                                viewModel.otherUserID(null)
-                            }
-                        }).fillMaxWidth()
-                            .background(color = Color.LightGray)
-                            .padding(horizontal = 16.dp, vertical = 8.dp),
-                    ) {
-                        message?.let {
-                            Text(modifier = Modifier.align(Alignment.CenterVertically), text = it)
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.End,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                IconButton(
-                                    modifier = Modifier.align(Alignment.CenterVertically),
-                                    onClick = {
-                                        viewModel.deleteChat(chatId = it)
-                                    }) {
-                                    Icon(imageVector = Icons.Default.Delete, contentDescription = null)
-                                }
+                            }).fillMaxWidth()
+                                .background(color = Color.LightGray)
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                        ) {
+                            Text(modifier = Modifier.align(Alignment.CenterStart), text = it)
+                            IconButton(
+                                modifier = Modifier.align(Alignment.CenterEnd),
+                                onClick = {
+                                    viewModel.deleteChat(chatId = it)
+                                }) {
+                                Icon(imageVector = Icons.Default.Delete, contentDescription = null)
                             }
                         }
                     }
