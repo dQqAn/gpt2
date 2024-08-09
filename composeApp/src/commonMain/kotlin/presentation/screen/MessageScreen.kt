@@ -148,10 +148,15 @@ fun MessageScreen(
                                     sharedVM.changeChatID(chatID)
                                     sharedVM.changeIsNewChat(false)
                                     val tempMail = chatID.split("_")
-                                    val friendMail =
-                                        if (tempMail.last() != viewModel.currentUserMail) tempMail.last() else tempMail.first()
-                                    sharedVM.changeOtherUserMail(friendMail)
-                                    viewModel.otherUserID(friendMail)
+                                    if (tempMail.contains(viewModel.currentUserMail)) {
+                                        val friendMail =
+                                            if (tempMail.last() != viewModel.currentUserMail) tempMail.last() else tempMail.first()
+                                        sharedVM.changeOtherUserMail(friendMail)
+                                        viewModel.otherUserID(friendMail)
+                                    } else {
+                                        viewModel.otherUserID(null)
+                                        sharedVM.changeOtherUserMail(null)
+                                    }
                                 }
                             }).fillMaxWidth()
                                 .background(color = Color.LightGray)
