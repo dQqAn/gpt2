@@ -71,7 +71,7 @@ class MessageViewModel : ViewModel(), KoinComponent {
 
     fun onSearchTextChange(text: String) {
         _searchText.value = text
-        if (text.isNotBlank() || text.isNotEmpty()) {
+        if (text.isNotBlank() && text.isNotEmpty()) {
             firebaseMessageRepository.getMailtoFirestore(text)
         }
     }
