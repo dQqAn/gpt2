@@ -152,11 +152,11 @@ class LoginViewModel : ViewModel(), KoinComponent, UserRepository.ScreenListener
         val phoneNumberStatus: String? = phoneNumber()
         val userId: String? = repository.userID()
 
-        return if (isEmailVerified == true && phoneNumberStatus!!.isNotEmpty()) {
+        return if (isEmailVerified == true && phoneNumberStatus!!.isNotEmpty() && !userId.isNullOrEmpty()) {
             Screen.Message
-        } else if (isEmailVerified == true && phoneNumberStatus!!.isEmpty()) {
+        } else if (isEmailVerified == true && phoneNumberStatus!!.isEmpty() && !userId.isNullOrEmpty()) {
             Screen.PhoneVerification
-        } else if (isEmailVerified == false && userId != null) {
+        } else if (isEmailVerified == false && !userId.isNullOrEmpty()) {
             Screen.MailVerification
         } else {
             Screen.SignIn

@@ -230,7 +230,7 @@ fun BoxWithConstraintsScope.MailVerificationContent(
 
             Button(onClick = {
                 loginViewModel.reloadUser().apply {
-                    if (loginViewModel.isEmailVerified() == true) {
+                    if (loginViewModel.isEmailVerified() == true && !loginViewModel.email().isNullOrEmpty()) {
                         navController.navigate(route = Screen.PhoneVerification.route)
                     }
                 }
