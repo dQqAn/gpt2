@@ -65,8 +65,8 @@ actual class FirebaseMessageRepositoryImp(
                     println(error.message)
                     return@addSnapshotListener
                 }
-                val tempList = ArrayList<String?>()
                 if (!value?.documents.isNullOrEmpty()) {
+                    val tempList = ArrayList<String?>()
                     for (data in value!!.documentChanges) {
                         if (data?.document?.id != null) {
                             tempList.add(data.document.id)
