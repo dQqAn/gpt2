@@ -151,7 +151,7 @@ fun MessageScreen(
                                     val friendMail =
                                         if (tempMail.last() != viewModel.currentUserMail) tempMail.last() else tempMail.first()
                                     sharedVM.changeOtherUserMail(friendMail)
-                                    viewModel.otherUserID(viewModel.otherUserID.value)
+                                    viewModel.otherUserID(friendMail)
                                 }
                             }).fillMaxWidth()
                                 .background(color = Color.LightGray)
