@@ -136,8 +136,8 @@ fun MessageScreen(
 //                horizontalAlignment = Alignment.End
             ) {
                 items(chats.size) { index ->
-                    val message = chats[index]
-                    message?.let {
+                    val chatID = chats[index]
+                    chatID?.let {
                         Box(
                             modifier = Modifier.clickable(onClick = {
                                 navController.navigate(route = Screen.Chat.route) {
@@ -145,10 +145,13 @@ fun MessageScreen(
                                         inclusive = true
                                     }
                                 }.apply {
-                                    sharedVM.changeChatID(message)
+                                    sharedVM.changeChatID(chatID)
                                     sharedVM.changeIsNewChat(false)
-                                    sharedVM.changeOtherUserMail("Holder") // todo: get friend name
-                                    viewModel.otherUserID(null)
+                                    val tempMail = chatID.split("_")
+                                    val friendMail =
+                                        if (tempMail.last() != viewModel.currentUserMail) tempMail.last() else tempMail.first()
+                                    sharedVM.changeOtherUserMail(friendMail)
+                                    viewModel.otherUserID(viewModel.otherUserID.value)
                                 }
                             }).fillMaxWidth()
                                 .background(color = Color.LightGray)

@@ -32,7 +32,7 @@ fun ChatScreen(
     val friendID by viewModel.friendID.collectAsState()
     val currentUserMail = viewModel.currentUserMail
     val currentUserID = viewModel.currentUserID
-    val chatID = sharedVM.chatID.value ?: (currentUserID + friendID)
+    val chatID = sharedVM.chatID.value ?: (currentUserMail + "_" + otherUserMail)
 
     viewModel.loadMessages(chatID, senderID, receiverID, isNewChat)
 
