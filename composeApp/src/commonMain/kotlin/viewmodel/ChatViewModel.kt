@@ -57,30 +57,32 @@ class ChatViewModel() : ViewModel(), KoinComponent {
 
     fun loadMessages(chatID: String?, senderID: String, receiverID: String, isNewChat: Boolean) {
         chatID?.let {
-            /*viewModelScope.launch {
-                withContext(Dispatchers.Main) {
-                    messageRepository.getMessages(it).collect { data ->
-                        if (data.isNotEmpty()) {
-                            _remoteMessageList.update { data }
+            if (isNewChat) {
+                viewModelScope.launch {
+                    withContext(Dispatchers.Main) {
+                        messageRepository.getMessages(it).collect { data ->
+                            if (data.isNotEmpty()) {
+                                _remoteMessageList.update { data }
+                            }
                         }
                     }
                 }
-            }*/
-            if (isNewChat && !isTitledLoaded.value) { //for gpt chat
-                viewModelScope.launch {
-                    withContext(Dispatchers.IO) {
-                        database.answerDao().addAnswer(
-                            answerEntity = AnswerEntity(
-                                chatID = it,
-                                role = "assistant",
-                                content = getAllTitles(),
-                                senderID = senderID,
-                                receiverID = receiverID,
-                                date = GetCurrentDate()
+                if (!isTitledLoaded.value) { //for gpt chat
+                    viewModelScope.launch {
+                        withContext(Dispatchers.IO) {
+                            database.answerDao().addAnswer(
+                                answerEntity = AnswerEntity(
+                                    chatID = it,
+                                    role = "assistant",
+                                    content = getAllTitles(),
+                                    senderID = senderID,
+                                    receiverID = receiverID,
+                                    date = GetCurrentDate()
+                                )
                             )
-                        )
+                        }
+                        isTitledLoaded.value = true
                     }
-                    isTitledLoaded.value = true
                 }
             }
         }
