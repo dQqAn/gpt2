@@ -65,6 +65,7 @@ kotlin {
             implementation(libs.lifecycle.livedata)
             implementation(libs.tensorflow.lite)
             implementation(libs.tensorflow.text)
+            implementation(libs.tensorflow.sup)
             implementation(libs.tensorflow.gpu.delegate)
             implementation(libs.tensorflow.gpu)
             implementation(libs.serialization)

@@ -23,6 +23,7 @@ retrofit_ref = "2.11.0"
 lifecycle_ref = "2.8.4"
 tensorflow_lite_ref = "2.16.1"
 tensorflow_text_ref = "0.4.4"
+tensorflow_sup_ref = "0.4.4"
 tensorflow_gpu_delegate_ref = "0.4.4"
 tensorflow_gpu_ref = "2.16.1"
 undercouch_ref = "5.6.0"
@@ -55,6 +56,7 @@ retrofit-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref 
 lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle_ref" }
 lifecycle-livedata = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle_ref" }
 tensorflow-lite = { module = "org.tensorflow:tensorflow-lite", version.ref = "tensorflow_lite_ref" }
+tensorflow-sup = { module = "org.tensorflow:tensorflow-lite-support", version.ref = "tensorflow_sup_ref" }
 tensorflow-text = { module = "org.tensorflow:tensorflow-lite-task-text", version.ref = "tensorflow_text_ref" }
 tensorflow-gpu-delegate = { module = "org.tensorflow:tensorflow-lite-gpu-delegate-plugin", version.ref = "tensorflow_gpu_delegate_ref" }
 tensorflow-gpu = { module = "org.tensorflow:tensorflow-lite-gpu", version.ref = "tensorflow_gpu_ref" }
