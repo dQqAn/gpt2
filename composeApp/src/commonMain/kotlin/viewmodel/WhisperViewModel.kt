@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import ml.whisper.Recorder
+import ml.whisper.RecorderInterface
 import ml.whisper.WhisperContextInterface
 import ml.whisper.decodeWaveFile
 import org.koin.core.component.KoinComponent
@@ -35,7 +35,7 @@ class WhisperViewModel() : ViewModel(), KoinComponent {
 
     private val modelsPath = File(whisperContext.getFilesDir, "models")
     private val samplesPath = File(whisperContext.getFilesDir, "samples")
-    private val recorder: Recorder by inject()
+    private val recorder: RecorderInterface by inject()
 
     private var recordedFile: File? = null
 

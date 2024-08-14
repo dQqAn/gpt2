@@ -58,6 +58,7 @@ fun ChatScreen(
         floatingActionButtonPosition = FabPosition.Center,
         bottomBar = {
             WriteMessageCard(
+                whisperViewModel = whisperViewModel,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
                 value = input,
                 onValueChange = { value ->
