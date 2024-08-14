@@ -80,7 +80,7 @@ fun ChatScreen(
 //                        println("3: "+senderID)
 //                        println("4: "+receiverID)
 
-
+                        //Todo: merge the common message list
                         val aiChatControl = _chatID.split(" ").last()
                         if (aiChatControl != "gpt") {
                             chatViewModel.addAnswer(
