@@ -15,33 +15,35 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import viewmodel.MessageToChatViewModel
+import viewmodel.WhisperViewModel
 
 //import ml.gpt2.*
 
 @Composable
 fun ChatScreen(
     navController: NavController,
-    viewModel: ChatViewModel = viewModel(),
+    chatViewModel: ChatViewModel = viewModel(),
+    whisperViewModel: WhisperViewModel = viewModel(),
     sharedVM: MessageToChatViewModel = viewModel(),
 //    gpt2Client: GPT2Client = viewModel()
 ) {
     val isNewChat = sharedVM.isNewChat.value
     val otherUserMail = sharedVM.otherUserMail.value
-    val senderID = viewModel.senderID.value
-    val receiverID = viewModel.receiverID.value
-    val friendID by viewModel.friendID.collectAsState()
-    val currentUserMail = viewModel.currentUserMail
-    val currentUserID = viewModel.currentUserID
+    val senderID = chatViewModel.senderID.value
+    val receiverID = chatViewModel.receiverID.value
+    val friendID by chatViewModel.friendID.collectAsState()
+    val currentUserMail = chatViewModel.currentUserMail
+    val currentUserID = chatViewModel.currentUserID
     val chatID = sharedVM.chatID.value ?: (currentUserMail + "_" + otherUserMail)
 
-    viewModel.loadMessages(chatID, senderID, receiverID, isNewChat)
+    chatViewModel.loadMessages(chatID, senderID, receiverID, isNewChat)
 
-    val messageList by viewModel.remoteMessageList.collectAsState()
+    val messageList by chatViewModel.remoteMessageList.collectAsState()
     friendID?.let {
-        viewModel.getAnswer(chatID, currentUserID, friendID)
+        chatViewModel.getAnswer(chatID, currentUserID, friendID)
     }
 
-    val loading by viewModel.loading.collectAsState()
+    val loading by chatViewModel.loading.collectAsState()
 
     val (input, setInput) = remember { mutableStateOf("") }
 
@@ -81,14 +83,14 @@ fun ChatScreen(
 
                         val aiChatControl = _chatID.split(" ").last()
                         if (aiChatControl != "gpt") {
-                            viewModel.addAnswer(
+                            chatViewModel.addAnswer(
                                 message = input,
                                 chatID = _chatID,
                                 senderID = currentUserID,
                                 receiverID = friendID!!
                             )
                         } else {
-                            viewModel.newChatAiQuestion(
+                            chatViewModel.newChatAiQuestion(
                                 question = input,
                                 chatID = _chatID,
                                 senderID = currentUserID,

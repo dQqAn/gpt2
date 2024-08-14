@@ -11,6 +11,10 @@ import androidx.room.Room
 import database.UserDatabase
 import ml.bert.BertHelper
 import ml.bert.BertQaHelper
+import ml.whisper.Recorder
+import ml.whisper.RecorderInterface
+import ml.whisper.WhisperContext
+import ml.whisper.WhisperContextInterface
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import presentation.components.UserInterface
@@ -67,6 +71,14 @@ class AndroidApp : Application() {
 
                 single<FirebaseMessageRepository> {
                     FirebaseMessageRepositoryImp(get(), get())
+                }
+
+                single<WhisperContextInterface> {
+                    WhisperContext(get(), get())
+                }
+
+                single<RecorderInterface> {
+                    Recorder()
                 }
             }
         )

@@ -79,6 +79,7 @@ android {
     namespace = "org.example.project"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
+    sourceSets["main"].java.srcDir("src/androidMain/java")
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].res.srcDirs("src/androidMain/res")
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")
@@ -89,6 +90,42 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+
+        ndk {
+            abiFilters.addAll(listOf("arm64-v8a", "armeabi-v7a", "x86", "x86_64"))
+        }
+        externalNativeBuild {
+            cmake {
+                // When set, builds whisper.android against the version located
+                // at GGML_HOME instead of the copy bundled with whisper.cpp.
+                if (
+                    project.hasProperty("GGML_HOME") &&
+                    project.findProperty("GGML_CLBLAST") == "ON"
+                ) {
+                    // Turning on CLBlast requires GGML_HOME
+                    arguments.addAll(
+                        listOf(
+                            "-DGGML_HOME=${project.property("GGML_HOME")}",
+                            "-DGGML_CLBLAST=ON",
+                            "-DOPENCL_LIB=${project.property("OPENCL_LIB")}",
+                            "-DCLBLAST_HOME=${project.property("CLBLAST_HOME")}",
+                            "-DOPENCL_ROOT=${project.property("OPENCL_ROOT")}",
+                            "-DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=BOTH",
+                            "-DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=BOTH"
+                        )
+                    )
+                } else if (project.hasProperty("GGML_HOME")) {
+                    arguments.add("-DGGML_HOME=${project.property("GGML_HOME")}")
+                }
+
+            }
+        }
+    }
+    ndkVersion = "25.2.9519653"
+    externalNativeBuild {
+        cmake {
+            path = file("src/androidMain/jni/whisper/CMakeLists.txt")
+        }
     }
     packaging {
         resources {
