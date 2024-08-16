@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import ml.bert.BertHelper
 import org.koin.core.component.KoinComponent
@@ -236,6 +237,15 @@ class ChatViewModel() : ViewModel(), KoinComponent {
                             else -> {}
                         }
                     }*/
+            }
+        }
+    }
+
+    override fun onCleared() {
+        runBlocking {
+            bertHelper.clearBertQuestionAnswerer()
+            _remoteMessageList.update {
+                emptyList()
             }
         }
     }
