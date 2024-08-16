@@ -181,7 +181,7 @@ class WhisperViewModel() : ViewModel(), KoinComponent {
     override fun onCleared() {
         runBlocking {
             whisperContext.release()
-            stopPlayback()
+//            stopPlayback() //the problem when you're using this
         }
     }
 
