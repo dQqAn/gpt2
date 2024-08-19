@@ -46,7 +46,7 @@ fun ChatScreen(
     val loading by chatViewModel.loading.collectAsState()
 
 //    val (input, setInput) = remember { mutableStateOf("") }
-    val input = chatViewModel.messageText
+    val input = chatViewModel.messageText.collectAsState()
 
     Scaffold(
         containerColor = Color.White,
@@ -61,12 +61,12 @@ fun ChatScreen(
             WriteMessageCard(
                 chatViewModel = chatViewModel,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
-                value = input.value,
+                value = input.value ?: "",
                 onValueChange = { value ->
                     chatViewModel.changeMessageText(value)
                 },
                 onClickSend = {
-                    if (input.value.isNotEmpty()) {
+                    if (!input.value.isNullOrEmpty() && input.value!!.isNotBlank()) {
                         var _chatID: String? = null
 
                         if (messageList.isNotEmpty()) {
@@ -86,14 +86,14 @@ fun ChatScreen(
                         val aiChatControl = _chatID.split(" ").last()
                         if (aiChatControl != "gpt") {
                             chatViewModel.addAnswer(
-                                message = input.value,
+                                message = input.value!!,
                                 chatID = _chatID,
                                 senderID = currentUserID,
                                 receiverID = friendID!!
                             )
                         } else {
                             chatViewModel.newChatAiQuestion(
-                                question = input.value,
+                                question = input.value!!,
                                 chatID = _chatID,
                                 senderID = currentUserID,
                                 receiverID = "gpt"

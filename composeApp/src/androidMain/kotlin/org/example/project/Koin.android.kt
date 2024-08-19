@@ -72,7 +72,7 @@ class AndroidApp : Application() {
                 }
 
                 single<SpeechInterface> {
-                    SpeechRepository(get(), get())
+                    SpeechRepository(get())
                 }
             }
         )

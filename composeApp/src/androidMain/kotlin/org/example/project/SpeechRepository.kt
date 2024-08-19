@@ -5,11 +5,11 @@ import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import androidx.compose.runtime.MutableState
 import androidx.core.bundle.Bundle
+import kotlinx.coroutines.flow.MutableStateFlow
 import presentation.components.SpeechInterface
 import java.util.*
 
 actual class SpeechRepository(
-    val messageText: MutableState<String>,
     private val context: Context
 ) : SpeechInterface {
 
@@ -78,4 +78,6 @@ actual class SpeechRepository(
     override fun textToSpeech(text: String) {
 //        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
     }
+
+    override val messageText: MutableStateFlow<String?> = MutableStateFlow(null)
 }

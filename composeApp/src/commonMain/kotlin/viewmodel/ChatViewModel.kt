@@ -11,7 +11,6 @@ import kotlinx.coroutines.withContext
 import ml.bert.BertHelper
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import org.koin.core.parameter.parametersOf
 import presentation.components.SpeechInterface
 import repositories.FirebaseMessageRepository
 import util.GetCurrentDate
@@ -21,14 +20,18 @@ class ChatViewModel() : ViewModel(), KoinComponent {
     private val messageRepository: MessageRepository by inject()
     private val bertHelper: BertHelper by inject()
 
-    private val _messageText = mutableStateOf("")
-    val messageText = _messageText
+    private val speech: SpeechInterface by inject()
+
+    private val _messageText = speech.messageText
+    val messageText = _messageText.asStateFlow()
     fun changeMessageText(text: String) {
-        _messageText.value = text
+        _messageText.update {
+            text
+        }
     }
 
-    private val speech: SpeechInterface by inject<SpeechInterface> {
-        parametersOf(_messageText)
+    init {
+        changeMessageText("")
     }
 
     private val _isListening = mutableStateOf(false)
