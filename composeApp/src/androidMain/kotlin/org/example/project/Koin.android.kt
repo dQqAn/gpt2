@@ -4,6 +4,7 @@ import AnswerDatabase
 import Api
 import FirebaseMessageRepositoryImp
 import MessageRepository
+import SpeechRepository
 import UserRepository
 import android.app.Application
 import android.content.Context
@@ -13,6 +14,7 @@ import ml.bert.BertHelper
 import ml.bert.BertQaHelper
 import org.koin.dsl.bind
 import org.koin.dsl.module
+import presentation.components.SpeechInterface
 import presentation.components.UserInterface
 import repositories.FirebaseMessageRepository
 import repositories.MessageRepositoryImpl
@@ -67,6 +69,10 @@ class AndroidApp : Application() {
 
                 single<FirebaseMessageRepository> {
                     FirebaseMessageRepositoryImp(get(), get())
+                }
+
+                single<SpeechInterface> {
+                    SpeechRepository(get(), get())
                 }
             }
         )

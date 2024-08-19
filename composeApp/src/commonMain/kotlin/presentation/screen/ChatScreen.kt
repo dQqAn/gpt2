@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,29 +23,30 @@ import viewmodel.MessageToChatViewModel
 @Composable
 fun ChatScreen(
     navController: NavController,
-    viewModel: ChatViewModel = viewModel(),
+    chatViewModel: ChatViewModel = viewModel(),
     sharedVM: MessageToChatViewModel = viewModel(),
 //    gpt2Client: GPT2Client = viewModel()
 ) {
     val isNewChat = sharedVM.isNewChat.value
     val otherUserMail = sharedVM.otherUserMail.value
-    val senderID = viewModel.senderID.value
-    val receiverID = viewModel.receiverID.value
-    val friendID by viewModel.friendID.collectAsState()
-    val currentUserMail = viewModel.currentUserMail
-    val currentUserID = viewModel.currentUserID
+    val senderID = chatViewModel.senderID.value
+    val receiverID = chatViewModel.receiverID.value
+    val friendID by chatViewModel.friendID.collectAsState()
+    val currentUserMail = chatViewModel.currentUserMail
+    val currentUserID = chatViewModel.currentUserID
     val chatID = sharedVM.chatID.value ?: (currentUserMail + "_" + otherUserMail)
 
-    viewModel.loadMessages(chatID, senderID, receiverID, isNewChat)
+    chatViewModel.loadMessages(chatID, senderID, receiverID, isNewChat)
 
-    val messageList by viewModel.remoteMessageList.collectAsState()
+    val messageList by chatViewModel.remoteMessageList.collectAsState()
     friendID?.let {
-        viewModel.getAnswer(chatID, currentUserID, friendID)
+        chatViewModel.getAnswer(chatID, currentUserID, friendID)
     }
 
-    val loading by viewModel.loading.collectAsState()
+    val loading by chatViewModel.loading.collectAsState()
 
-    val (input, setInput) = remember { mutableStateOf("") }
+//    val (input, setInput) = remember { mutableStateOf("") }
+    val input = chatViewModel.messageText
 
     Scaffold(
         containerColor = Color.White,
@@ -56,13 +59,14 @@ fun ChatScreen(
         floatingActionButtonPosition = FabPosition.Center,
         bottomBar = {
             WriteMessageCard(
+                chatViewModel = chatViewModel,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
-                value = input,
+                value = input.value,
                 onValueChange = { value ->
-                    setInput(value)
+                    chatViewModel.changeMessageText(value)
                 },
                 onClickSend = {
-                    if (input.isNotEmpty()) {
+                    if (input.value.isNotEmpty()) {
                         var _chatID: String? = null
 
                         if (messageList.isNotEmpty()) {
@@ -81,21 +85,21 @@ fun ChatScreen(
 
                         val aiChatControl = _chatID.split(" ").last()
                         if (aiChatControl != "gpt") {
-                            viewModel.addAnswer(
-                                message = input,
+                            chatViewModel.addAnswer(
+                                message = input.value,
                                 chatID = _chatID,
                                 senderID = currentUserID,
                                 receiverID = friendID!!
                             )
                         } else {
-                            viewModel.newChatAiQuestion(
-                                question = input,
+                            chatViewModel.newChatAiQuestion(
+                                question = input.value,
                                 chatID = _chatID,
                                 senderID = currentUserID,
                                 receiverID = "gpt"
                             )
                         }
-                        setInput("")
+                        chatViewModel.changeMessageText("")
 
 //                        gpt2Client.launchAutocomplete()
                     }
