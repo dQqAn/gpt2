@@ -41,6 +41,13 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
+
+            //Camera
+            implementation(libs.camera.view)
+            implementation(libs.camera.lifecycle)
+            implementation(libs.camera.camera2)
+
+            //Firebase
             implementation(project.dependencies.platform(libs.google.bom))
             implementation(libs.google.auth)
             implementation(libs.google.database)
@@ -54,6 +61,8 @@ kotlin {
             implementation(compose.preview)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+
+            //Utils
             implementation(libs.viewmodel)
             implementation(libs.navigation)
             implementation(libs.koin)
@@ -63,8 +72,11 @@ kotlin {
             implementation(libs.retrofit.gson)
             implementation(libs.lifecycle)
             implementation(libs.lifecycle.livedata)
+
+            //Tensorflow
             implementation(libs.tensorflow.lite)
             implementation(libs.tensorflow.text)
+            implementation(libs.tensorflow.vision)
             implementation(libs.tensorflow.gpu.delegate)
             implementation(libs.tensorflow.gpu)
             implementation(libs.serialization)

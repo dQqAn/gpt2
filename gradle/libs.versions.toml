@@ -3,13 +3,13 @@ agp = "8.2.0"
 android-compileSdk = "34"
 android-minSdk = "24"
 android-targetSdk = "34"
-androidx-activityCompose = "1.9.0"
+androidx-activityCompose = "1.9.1"
 androidx-appcompat = "1.7.0"
 androidx-constraintlayout = "2.1.4"
 androidx-core-ktx = "1.13.1"
-androidx-espresso-core = "3.6.0"
+androidx-espresso-core = "3.6.1"
 androidx-material = "1.12.0"
-androidx-test-junit = "1.2.0"
+androidx-test-junit = "1.2.1"
 compose-plugin = "1.6.11"
 junit = "4.13.2"
 kotlin = "2.0.0"
@@ -17,12 +17,13 @@ viewmodel_ref = "2.8.0"
 navigation_ref = "2.8.0-alpha08"
 koin_ref = "3.6.0-wasm-alpha2"
 gson_ref = "2.11.0"
-room = "2.7.0-alpha05"
+room = "2.7.0-alpha06"
 ksp = "2.0.0-1.0.23"
 retrofit_ref = "2.11.0"
 lifecycle_ref = "2.8.4"
 tensorflow_lite_ref = "2.16.1"
 tensorflow_text_ref = "0.4.4"
+tensorflow_vision_ref = "0.4.4"
 tensorflow_gpu_delegate_ref = "0.4.4"
 tensorflow_gpu_ref = "2.16.1"
 undercouch_ref = "5.6.0"
@@ -31,6 +32,7 @@ google_bom_ref = "33.1.2"
 google_auth_ref = "7.2.0"
 serialization_ref = "1.7.1"
 serialization_plugin_ref = "2.0.0"
+camerax_version = "1.4.0-rc01"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -56,6 +58,7 @@ lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.r
 lifecycle-livedata = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle_ref" }
 tensorflow-lite = { module = "org.tensorflow:tensorflow-lite", version.ref = "tensorflow_lite_ref" }
 tensorflow-text = { module = "org.tensorflow:tensorflow-lite-task-text", version.ref = "tensorflow_text_ref" }
+tensorflow-vision = { module = "org.tensorflow:tensorflow-lite-task-vision", version.ref = "tensorflow_vision_ref" }
 tensorflow-gpu-delegate = { module = "org.tensorflow:tensorflow-lite-gpu-delegate-plugin", version.ref = "tensorflow_gpu_delegate_ref" }
 tensorflow-gpu = { module = "org.tensorflow:tensorflow-lite-gpu", version.ref = "tensorflow_gpu_ref" }
 google-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "google_bom_ref" }
@@ -63,6 +66,9 @@ google-database = { group = "com.google.firebase", name = "firebase-database" }
 google-firestore = { module = "com.google.firebase:firebase-firestore" }
 google-auth = { group = "com.firebaseui", name = "firebase-ui-auth", version.ref = "google_auth_ref" }
 serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization_ref" }
+camera-view = { module = "androidx.camera:camera-view", version.ref = "camerax_version" }
+camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "camerax_version" }
+camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "camerax_version" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
