@@ -53,6 +53,7 @@ kotlin {
             implementation(libs.google.auth)
             implementation(libs.google.database)
             implementation(libs.google.firestore)
+            implementation(libs.google.storage)
         }
         commonMain.dependencies {
             implementation(compose.runtime)

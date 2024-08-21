@@ -1,7 +1,7 @@
 import androidx.room.Database
 import androidx.room.RoomDatabase
 
-@Database(entities = [AnswerEntity::class], version = 4)
+@Database(entities = [AnswerEntity::class], version = 6)
 abstract class AnswerDatabase : RoomDatabase() {
     abstract fun answerDao(): AnswerDao
 }

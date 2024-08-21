@@ -117,6 +117,7 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
                                 answerEntity = AnswerEntity(
                                     chatID = it,
                                     role = "assistant",
+                                    contentType = contentTypeMessage,
                                     content = getAllTitles(),
                                     senderID = senderID,
                                     receiverID = receiverID,
@@ -160,6 +161,7 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
                 answerEntity = AnswerEntity(
                     chatID = chatID,
                     role = "assistant",
+                    contentType = contentTypeMessage,
                     content = it,
                     senderID = senderID,
                     receiverID = receiverID,
@@ -169,10 +171,10 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
         }
     }
 
-    fun addAnswer(message: String, chatID: String, senderID: String, receiverID: String) {
+    fun addAnswer(content: String, contentType: String, chatID: String, senderID: String, receiverID: String) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                firebaseMessageRepository.addAnswer(message, chatID, senderID, receiverID)
+                firebaseMessageRepository.addAnswer(content, contentType, chatID, senderID, receiverID)
             }
         }
     }
@@ -185,7 +187,7 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
         }
     }
 
-    fun newChatAiQuestion(question: String, chatID: String, senderID: String, receiverID: String) {
+    fun newChatAiQuestion(question: String, contentType: String, chatID: String, senderID: String, receiverID: String) {
         if (_content.isBlank()) { //new chat
             viewModelScope.launch {
                 withContext(Dispatchers.IO) {
@@ -193,6 +195,7 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
                         answerEntity = AnswerEntity(
                             chatID = chatID,
                             role = "user",
+                            contentType = contentType,
                             content = question,
                             senderID = senderID,
                             receiverID = receiverID,
@@ -208,6 +211,7 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
                             answerEntity = AnswerEntity(
                                 chatID = chatID,
                                 role = "assistant",
+                                contentType = contentType,
                                 content = getContent(questionIndex),
                                 senderID = senderID,
                                 receiverID = receiverID,
@@ -219,6 +223,7 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
                             answerEntity = AnswerEntity(
                                 chatID = chatID,
                                 role = "assistant",
+                                contentType = contentType,
                                 content = getAllTitles(),
                                 senderID = senderID,
                                 receiverID = receiverID,
@@ -235,6 +240,7 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
                         answerEntity = AnswerEntity(
                             chatID = chatID,
                             role = "user",
+                            contentType = contentType,
                             content = question,
                             senderID = senderID,
                             receiverID = receiverID,

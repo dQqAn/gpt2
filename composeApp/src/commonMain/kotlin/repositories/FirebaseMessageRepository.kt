@@ -14,6 +14,6 @@ interface FirebaseMessageRepository {
     fun otherUserID(mail: String?)
     fun getMailtoFirestore(mail: String)
 
-    suspend fun addAnswer(message: String, chatID: String, senderID: String, receiverID: String)
+    suspend fun addAnswer(content: String, contentType: String, chatID: String, senderID: String, receiverID: String)
     suspend fun getAnswer(chatID: String, senderID: String, receiverID: String?)
 }

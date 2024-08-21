@@ -12,6 +12,8 @@ data class AnswerEntity(
     val chatID: String = "",
     @ColumnInfo("role")
     val role: String = "",
+    @ColumnInfo("contentType")
+    val contentType: String = "",
     @ColumnInfo("content")
     val content: String = "",
     @ColumnInfo("senderID")
@@ -21,6 +23,10 @@ data class AnswerEntity(
     @ColumnInfo("date")
     val date: String = ""
 )
+
+const val contentTypeMessage: String = "Message"
+
+const val contentTypeImage: String = "Image"
 
 val AnswerEntity.fromUser: Boolean
     get() {

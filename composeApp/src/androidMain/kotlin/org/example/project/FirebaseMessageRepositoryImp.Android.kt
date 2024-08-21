@@ -79,14 +79,21 @@ actual class FirebaseMessageRepositoryImp(
             }
     }
 
-    override suspend fun addAnswer(message: String, chatID: String, senderID: String, receiverID: String) {
+    override suspend fun addAnswer(
+        content: String,
+        contentType: String,
+        chatID: String,
+        senderID: String,
+        receiverID: String
+    ) {
         val key = databaseMessaging.child(senderID)
             .child(receiverID).push().key
         if (key != null) {
             val messageObject = AnswerEntity(
                 chatID = chatID,
                 role = "user",
-                content = message,
+                contentType = contentTypeMessage,
+                content = content,
                 senderID = senderID,
                 receiverID = receiverID,
                 date = GetCurrentDate(),

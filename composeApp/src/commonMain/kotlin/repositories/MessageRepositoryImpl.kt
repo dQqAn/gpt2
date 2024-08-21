@@ -44,6 +44,7 @@ class MessageRepositoryImpl(private val dao: AnswerDao) : MessageRepository {
                 AnswerEntity(
                     chatID = entity.chatID,
                     role = entity.role,
+                    contentType = entity.contentType,
                     content = entity.content,
                     senderID = entity.senderID,
                     receiverID = entity.receiverID,

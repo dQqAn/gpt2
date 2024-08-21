@@ -1,4 +1,3 @@
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -75,18 +74,11 @@ fun ChatScreen(
                             _chatID = chatID
                         }
 
-//                        println("1: "+currentUserID)
-//                        println("2: "+friendID)
-//                        viewModel.changeSenderID(currentUserID)
-//                        viewModel.changeReceiverID(friendID!!)
-//                        println("3: "+senderID)
-//                        println("4: "+receiverID)
-
-
                         val aiChatControl = _chatID.split(" ").last()
                         if (aiChatControl != "gpt") {
                             chatViewModel.addAnswer(
-                                message = input.value!!,
+                                content = input.value!!,
+                                contentType = contentTypeMessage,
                                 chatID = _chatID,
                                 senderID = currentUserID,
                                 receiverID = friendID!!
@@ -94,6 +86,7 @@ fun ChatScreen(
                         } else {
                             chatViewModel.newChatAiQuestion(
                                 question = input.value!!,
+                                contentType = contentTypeMessage,
                                 chatID = _chatID,
                                 senderID = currentUserID,
                                 receiverID = "gpt"
@@ -115,8 +108,8 @@ fun ChatScreen(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(space = 8.dp),
+                /*.padding(top = 8.dp)*/,
+//                verticalArrangement = Arrangement.spacedBy(space = 8.dp),
                 horizontalAlignment = Alignment.End
             ) {
                 items(messageList.size) { index ->
@@ -124,10 +117,14 @@ fun ChatScreen(
                         if (it.senderID == currentUserID && it.fromUser) {
                             MessengerItemCard(
                                 modifier = Modifier.align(Alignment.End),
-                                message = it.content
+                                contentType = it.contentType,
+                                content = it.content
                             )
                         } else {
-                            ReceiverMessageItemCard(message = it.content)
+                            ReceiverMessageItemCard(
+                                contentType = it.contentType,
+                                content = it.content
+                            )
                         }
                     }
                 }

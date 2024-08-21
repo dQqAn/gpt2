@@ -9,31 +9,40 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MessengerItemCard(
     modifier: Modifier = Modifier,
-    message: String = ""
+    content: String,
+    contentType: String
 ) {
-    Surface(
-        modifier = modifier,
-        color = BluePrimary,
-        shape = RoundedCornerShape(topStart = 25.dp, bottomEnd = 25.dp, bottomStart = 25.dp)
-    ) {
-        Text(
-            modifier = Modifier
-                .wrapContentSize()
-                .padding(horizontal = 24.dp, vertical = 18.dp),
-            text = message,
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.labelLarge.copy(color = Color.White)
-        )
+    when (contentType) {
+        contentTypeImage -> {
+
+        }
+
+        contentTypeMessage -> {
+            Surface(
+                modifier = modifier.padding(4.dp),
+                color = BluePrimary,
+                shape = RoundedCornerShape(topStart = 25.dp, bottomEnd = 25.dp, bottomStart = 25.dp)
+            ) {
+                Text(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .padding(horizontal = 24.dp, vertical = 18.dp),
+                    text = content,
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.labelLarge.copy(color = Color.White)
+                )
+            }
+        }
     }
 }
 
+/*
 @Preview
 @Composable
 fun MessengerItemPreview() {
     MessengerItemCard()
-}
+}*/
