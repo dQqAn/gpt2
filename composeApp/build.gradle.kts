@@ -16,6 +16,7 @@ plugins {
 project.ext.set("ASSET_DIR", "$projectDir/src/androidMain/assets")
 //project.ext.set("TEST_ASSETS_DIR", "$projectDir/src/androidTest/assets")
 apply("download_models.gradle")
+apply("download_models2.gradle")
 //apply("download.gradle")
 
 kotlin {
@@ -72,6 +73,7 @@ kotlin {
             implementation(libs.retrofit.gson)
             implementation(libs.lifecycle)
             implementation(libs.lifecycle.livedata)
+            implementation(libs.serialization)
 
             //Tensorflow
             implementation(libs.tensorflow.lite)
@@ -79,7 +81,6 @@ kotlin {
             implementation(libs.tensorflow.vision)
             implementation(libs.tensorflow.gpu.delegate)
             implementation(libs.tensorflow.gpu)
-            implementation(libs.serialization)
         }
         /*desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

@@ -12,6 +12,8 @@ import androidx.room.Room
 import database.UserDatabase
 import ml.bert.BertHelper
 import ml.bert.BertQaHelper
+import ml.image_classification.ImageClassifierHelper
+import ml.image_classification.ImageClassifierHelperInterface
 import org.koin.dsl.bind
 import org.koin.dsl.module
 import presentation.components.SpeechInterface
@@ -73,6 +75,10 @@ class AndroidApp : Application() {
 
                 single<SpeechInterface> {
                     SpeechRepository(get())
+                }
+
+                single<ImageClassifierHelperInterface> {
+                    ImageClassifierHelper(context = get(), imageClassifierListener = get())
                 }
             }
         )

@@ -1,6 +1,8 @@
+import android.graphics.BitmapFactory
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gpt2.composeapp.generated.resources.Res
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -9,18 +11,26 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ml.bert.BertHelper
+import ml.image_classification.ImageClassifierHelper
+import ml.image_classification.ImageClassifierHelperInterface
+import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.koin.core.parameter.parametersOf
 import presentation.components.SpeechInterface
 import repositories.FirebaseMessageRepository
 import util.GetCurrentDate
 
-class ChatViewModel() : ViewModel(), KoinComponent {
+class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.ClassifierListener {
     private val database: AnswerDatabase by inject()
     private val messageRepository: MessageRepository by inject()
     private val bertHelper: BertHelper by inject()
 
     private val speech: SpeechInterface by inject()
+
+    private val imageClassifier: ImageClassifierHelperInterface by inject {
+        parametersOf(this as ImageClassifierHelper.ClassifierListener)
+    }
 
     private val _messageText = speech.messageText
     val messageText = _messageText.asStateFlow()
@@ -32,9 +42,13 @@ class ChatViewModel() : ViewModel(), KoinComponent {
 
     init {
         changeMessageText("")
+        viewModelScope.launch {
+            imageClassify()
+        }
     }
 
     private val _isListening = mutableStateOf(false)
+
     /*val isListening = _isListening
     fun changeIsListening() {
         _isListening.value = !_isListening.value
@@ -267,6 +281,38 @@ class ChatViewModel() : ViewModel(), KoinComponent {
                     }*/
             }
         }
+    }
+
+    /*@RequiresApi(Build.VERSION_CODES.O)
+    fun createBitmapFromFile(filepath: String): Bitmap? {
+        val file = File(filepath)
+        return if (file.exists()) {
+            val imageBytes = Base64.getDecoder().decode(filepath)
+            val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+            return bitmap
+        } else {
+            null
+        }
+    }*/
+
+    @OptIn(ExperimentalResourceApi::class)
+    suspend//    fun imageClassify(image: Bitmap) {
+    fun imageClassify() {
+        val bitmap = BitmapFactory.decodeByteArray(
+            Res.readBytes("drawable/images/Car.png"),
+            0,
+            Res.readBytes("drawable/images/Car.png").size
+        )
+        imageClassifier.classify(bitmap)
+    }
+
+    override fun onError(error: String) {
+        imageClassifier.clearImageClassifier()
+        println(error)
+    }
+
+    override fun onResults(results: List<Any>?, inferenceTime: Long) {
+        println("Result: " + results)
     }
 
 }
