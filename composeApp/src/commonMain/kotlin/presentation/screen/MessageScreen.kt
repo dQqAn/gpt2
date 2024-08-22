@@ -14,6 +14,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,6 +33,10 @@ fun MessageScreen(
     loginViewModel: LoginViewModel = viewModel()
 //    gpt2Client: GPT2Client = viewModel()
 ) {
+    val openGallery = mutableStateOf(false)
+    val showRationalDialog = mutableStateOf(false)
+    viewModel.permissionManager(openGallery, showRationalDialog)
+
     viewModel.deleteMessageList()
 
     val chats by viewModel.chats.collectAsState()
@@ -101,6 +106,13 @@ fun MessageScreen(
                     navController.navigate(route = Screen.SignIn.route)
                 }) {
                     Text("Sign Out")
+                }
+                Button(
+                    onClick = {
+                        openGallery.value = true
+                    }
+                ) {
+                    Text("Take Permissions")
                 }
                 Button(
                     colors = ButtonDefaults.buttonColors(containerColor = BluePrimary),

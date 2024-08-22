@@ -43,7 +43,7 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
     init {
         changeMessageText("")
         viewModelScope.launch {
-            imageClassify()
+//            imageClassify()
         }
     }
 

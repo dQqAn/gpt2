@@ -1,3 +1,6 @@
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
@@ -8,6 +11,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import repositories.FirebaseMessageRepository
+import java.io.File
 
 class MessageViewModel : ViewModel(), KoinComponent {
     private val _filteredList: MutableStateFlow<List<String?>> = MutableStateFlow(emptyList())
@@ -19,6 +23,8 @@ class MessageViewModel : ViewModel(), KoinComponent {
 //        parametersOf(_filteredList, _messageList, _otherUserID)
         parametersOf(_filteredList, _otherUserID)
     }
+
+    val selectedImages: MutableState<List<File?>> = mutableStateOf(listOf(null))
 
     private val _remoteMessageList = firebaseMessageRepository.messageList
     fun deleteMessageList() {
@@ -98,5 +104,10 @@ class MessageViewModel : ViewModel(), KoinComponent {
                 messageRepository.deleteChat(chatID = chatId)
             }
         }
+    }
+
+    @Composable
+    fun permissionManager(openGallery: MutableState<Boolean>, showRationalDialog: MutableState<Boolean>) {
+        firebaseMessageRepository.permissionManager(openGallery, showRationalDialog, selectedImages)
     }
 }

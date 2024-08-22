@@ -1,8 +1,11 @@
 package repositories
 
 import AnswerEntity
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import java.io.File
 
 interface FirebaseMessageRepository {
     val currentUserID: String
@@ -16,4 +19,12 @@ interface FirebaseMessageRepository {
 
     suspend fun addAnswer(content: String, contentType: String, chatID: String, senderID: String, receiverID: String)
     suspend fun getAnswer(chatID: String, senderID: String, receiverID: String?)
+    suspend fun uploadFile()
+
+    @Composable
+    fun permissionManager(
+        openGallery: MutableState<Boolean>,
+        showRationalDialog: MutableState<Boolean>,
+        selectedImages: MutableState<List<File?>>
+    )
 }

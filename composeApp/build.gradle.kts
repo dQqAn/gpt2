@@ -15,8 +15,8 @@ plugins {
 
 project.ext.set("ASSET_DIR", "$projectDir/src/androidMain/assets")
 //project.ext.set("TEST_ASSETS_DIR", "$projectDir/src/androidTest/assets")
-apply("download_models.gradle")
-apply("download_models2.gradle")
+//apply("download_models.gradle")
+//apply("download_models2.gradle")
 //apply("download.gradle")
 
 kotlin {
@@ -42,6 +42,9 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
+
+            //Utils
+            implementation(libs.android.permission)
 
             //Camera
             implementation(libs.camera.view)

@@ -1,16 +1,22 @@
+import android.content.Context
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import org.example.project.AndroidActivityViewModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import repositories.FirebaseMessageRepository
 import util.GetCurrentDate
+import java.io.File
 
 actual class FirebaseMessageRepositoryImp(
     val _filteredList: MutableStateFlow<List<String?>>,
@@ -20,6 +26,8 @@ actual class FirebaseMessageRepositoryImp(
 
     private val database: AnswerDatabase by inject()
     private val messageRepository: MessageRepository by inject()
+    private val context: Context by inject()
+    private val androidActivityViewModel: AndroidActivityViewModel by inject()
 
     override val currentUserID: String = auth.currentUser!!.uid
     override val currentUserMail: String = auth.currentUser!!.email!!
@@ -29,6 +37,7 @@ actual class FirebaseMessageRepositoryImp(
     override val messageList: MutableStateFlow<List<AnswerEntity?>> = MutableStateFlow(emptyList())
 
     private val firestore = Firebase.firestore
+    private val storageRef = Firebase.storage.reference
 
     private val databaseMessaging: DatabaseReference =
         FirebaseDatabase.getInstance("https://gpt-chat-6c38c-default-rtdb.europe-west1.firebasedatabase.app")
@@ -92,7 +101,7 @@ actual class FirebaseMessageRepositoryImp(
             val messageObject = AnswerEntity(
                 chatID = chatID,
                 role = "user",
-                contentType = contentTypeMessage,
+                contentType = contentType,
                 content = content,
                 senderID = senderID,
                 receiverID = receiverID,
@@ -142,5 +151,18 @@ actual class FirebaseMessageRepositoryImp(
                     }
                 })
         }
+    }
+
+    override suspend fun uploadFile() {
+
+    }
+
+    @Composable
+    override fun permissionManager(
+        openGallery: MutableState<Boolean>,
+        showRationalDialog: MutableState<Boolean>,
+        selectedImages: MutableState<List<File?>>
+    ) {
+        androidActivityViewModel.permissionManager(openGallery, showRationalDialog, selectedImages)
     }
 }
