@@ -19,10 +19,16 @@ interface FirebaseMessageRepository {
 
     suspend fun addAnswer(content: String, contentType: String, chatID: String, senderID: String, receiverID: String)
     suspend fun getAnswer(chatID: String, senderID: String, receiverID: String?)
-    suspend fun uploadFile()
+    fun uploadFiles(files: MutableState<List<File?>>)
 
     @Composable
-    fun permissionManager(
+    fun takePermission(
+        openGallery: MutableState<Boolean>,
+        showRationalDialog: MutableState<Boolean>,
+    )
+
+    @Composable
+    fun launchGallery(
         openGallery: MutableState<Boolean>,
         showRationalDialog: MutableState<Boolean>,
         selectedImages: MutableState<List<File?>>

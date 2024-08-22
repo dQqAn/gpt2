@@ -1,4 +1,6 @@
 import android.graphics.BitmapFactory
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,6 +22,7 @@ import org.koin.core.parameter.parametersOf
 import presentation.components.SpeechInterface
 import repositories.FirebaseMessageRepository
 import util.GetCurrentDate
+import java.io.File
 
 class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.ClassifierListener {
     private val database: AnswerDatabase by inject()
@@ -63,6 +66,17 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
     }
 
     private val firebaseMessageRepository: FirebaseMessageRepository by inject<FirebaseMessageRepository>()
+
+    val selectedImages: MutableState<List<File?>> = mutableStateOf(listOf())
+
+    @Composable
+    fun launchGallery(openGallery: MutableState<Boolean>, showRationalDialog: MutableState<Boolean>) {
+        firebaseMessageRepository.launchGallery(openGallery, showRationalDialog, selectedImages)
+    }
+
+    fun uploadFiles() {
+        firebaseMessageRepository.uploadFiles(selectedImages)
+    }
 
     //    private val _messageList: MutableStateFlow<List<AnswerEntity?>> = MutableStateFlow(emptyList())
     //    val messageList: StateFlow<List<AnswerEntity?>> = _messageList.asStateFlow()

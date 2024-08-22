@@ -7,6 +7,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +27,10 @@ fun ChatScreen(
     sharedVM: MessageToChatViewModel = viewModel(),
 //    gpt2Client: GPT2Client = viewModel()
 ) {
+    val openGallery = mutableStateOf(false)
+    val showRationalDialog = mutableStateOf(false)
+    chatViewModel.launchGallery(openGallery, showRationalDialog)
+
     val isNewChat = sharedVM.isNewChat.value
     val otherUserMail = sharedVM.otherUserMail.value
     val senderID = chatViewModel.senderID.value
@@ -63,6 +68,9 @@ fun ChatScreen(
                 value = input.value ?: "",
                 onValueChange = { value ->
                     chatViewModel.changeMessageText(value)
+                },
+                onClickGallery = {
+                    openGallery.value = true
                 },
                 onClickSend = {
                     if (!input.value.isNullOrEmpty() && input.value!!.isNotBlank()) {

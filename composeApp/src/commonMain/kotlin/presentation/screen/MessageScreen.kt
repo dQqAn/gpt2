@@ -35,7 +35,7 @@ fun MessageScreen(
 ) {
     val openGallery = mutableStateOf(false)
     val showRationalDialog = mutableStateOf(false)
-    viewModel.permissionManager(openGallery, showRationalDialog)
+    viewModel.takePermission(openGallery, showRationalDialog)
 
     viewModel.deleteMessageList()
 
