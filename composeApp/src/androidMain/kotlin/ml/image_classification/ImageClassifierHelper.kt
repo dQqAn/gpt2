@@ -47,7 +47,7 @@ actual class ImageClassifierHelper(
                 if (CompatibilityList().isDelegateSupportedOnThisDevice) {
                     baseOptionsBuilder.useGpu()
                 } else {
-                    imageClassifierListener?.onError("GPU is not supported on this device")
+                    imageClassifierListener?.onClassifierError("GPU is not supported on this device")
                 }
             }
 
@@ -71,7 +71,7 @@ actual class ImageClassifierHelper(
             imageClassifier =
                 ImageClassifier.createFromFileAndOptions(context, modelName, optionsBuilder.build())
         } catch (e: IllegalStateException) {
-            imageClassifierListener?.onError(
+            imageClassifierListener?.onClassifierError(
                 "Image classifier failed to initialize. See error logs for details"
             )
             Log.e(TAG, "TFLite failed to load model with error: " + e.message)
@@ -103,7 +103,7 @@ actual class ImageClassifierHelper(
 
         val results = imageClassifier?.classify(tensorImage, imageProcessingOptions)
         inferenceTime = SystemClock.uptimeMillis() - inferenceTime
-        imageClassifierListener?.onResults(
+        imageClassifierListener?.onClassifierResults(
             results,
             inferenceTime
         )
@@ -128,8 +128,8 @@ actual class ImageClassifierHelper(
     }
 
     actual interface ClassifierListener {
-        actual fun onError(error: String)
-        actual fun onResults(
+        actual fun onClassifierError(error: String)
+        actual fun onClassifierResults(
             results: List<Any>?, // results: List<Classifications>?,
             inferenceTime: Long
         )

@@ -26,10 +26,12 @@ import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.withContext
 import org.example.project.AndroidActivityViewModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -45,6 +47,7 @@ import java.util.*
 actual class FirebaseMessageRepositoryImp(
     val _filteredList: MutableStateFlow<List<String?>>,
     val _otherUserID: MutableStateFlow<String?>,
+    private val fileUploadListener: FileUploadListener
 ) : FirebaseMessageRepository, KoinComponent {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
@@ -169,16 +172,26 @@ actual class FirebaseMessageRepositoryImp(
         }
     }
 
-    override fun uploadFiles(files: MutableState<List<File?>>) {
+    override suspend fun uploadFiles(
+        files: MutableState<List<File?>>,
+        content: String,
+        contentType: String,
+        chatID: String,
+        senderID: String,
+        receiverID: String
+    ) {
         if (files.value.isNotEmpty()) {
             for ((index, item) in files.value.withIndex()) {
                 val imageRef = storageRef.child("images/${item!!.name}")
-                val stream = FileInputStream(item)
+                val stream = withContext(Dispatchers.IO) {
+                    FileInputStream(item)
+                }
                 val uploadTask = imageRef.putStream(stream)
                 uploadTask.addOnSuccessListener {
-                    println("file uploaded")
+                    println("${item.name} uploaded.")
+                    fileUploadListener.onFileUploadResults(content, contentType, chatID, senderID, receiverID)
                 }.addOnFailureListener { taskSnapshot ->
-                    println(taskSnapshot.message)
+                    fileUploadListener.onFileUploadError(taskSnapshot.message!!)
                 }
             }
             files.value = listOf()
@@ -377,6 +390,17 @@ actual class FirebaseMessageRepositoryImp(
                     Text("Cancel", style = TextStyle(color = Color.Black))
                 }
             },
+        )
+    }
+
+    actual interface FileUploadListener {
+        actual fun onFileUploadError(error: String)
+        actual fun onFileUploadResults(
+            content: String,
+            contentType: String,
+            chatID: String,
+            senderID: String,
+            receiverID: String
         )
     }
 }

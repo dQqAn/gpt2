@@ -11,15 +11,17 @@ import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import repositories.FirebaseMessageRepository
 
-class MessageViewModel : ViewModel(), KoinComponent {
+class MessageViewModel : ViewModel(), KoinComponent, FirebaseMessageRepositoryImp.FileUploadListener {
     private val _filteredList: MutableStateFlow<List<String?>> = MutableStateFlow(emptyList())
 
     //    private val _messageList: MutableStateFlow<List<AnswerEntity?>> = MutableStateFlow(emptyList())
     private val _otherUserID: MutableStateFlow<String?> = MutableStateFlow(null)
     val otherUserID: StateFlow<String?> = _otherUserID.asStateFlow()
+
+    // todo(change this invocation(FirebaseMessageRepository))
     private val firebaseMessageRepository: FirebaseMessageRepository by inject<FirebaseMessageRepository> {
 //        parametersOf(_filteredList, _messageList, _otherUserID)
-        parametersOf(_filteredList, _otherUserID)
+        parametersOf(_filteredList, _otherUserID, this as FirebaseMessageRepositoryImp.FileUploadListener)
     }
 
     private val _remoteMessageList = firebaseMessageRepository.messageList
@@ -105,5 +107,19 @@ class MessageViewModel : ViewModel(), KoinComponent {
     @Composable
     fun takePermission(openGallery: MutableState<Boolean>, showRationalDialog: MutableState<Boolean>) {
         firebaseMessageRepository.takePermission(openGallery, showRationalDialog)
+    }
+
+    override fun onFileUploadError(error: String) {
+
+    }
+
+    override fun onFileUploadResults(
+        content: String,
+        contentType: String,
+        chatID: String,
+        senderID: String,
+        receiverID: String
+    ) {
+
     }
 }

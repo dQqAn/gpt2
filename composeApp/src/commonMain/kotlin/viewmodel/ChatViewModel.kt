@@ -24,7 +24,8 @@ import repositories.FirebaseMessageRepository
 import util.GetCurrentDate
 import java.io.File
 
-class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.ClassifierListener {
+class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.ClassifierListener,
+    FirebaseMessageRepositoryImp.FileUploadListener {
     private val database: AnswerDatabase by inject()
     private val messageRepository: MessageRepository by inject()
     private val bertHelper: BertHelper by inject()
@@ -65,7 +66,9 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
         speech.stopSpeechToText(_isListening)
     }
 
-    private val firebaseMessageRepository: FirebaseMessageRepository by inject<FirebaseMessageRepository>()
+    private val firebaseMessageRepository: FirebaseMessageRepository by inject {
+        parametersOf(this as FirebaseMessageRepositoryImp.FileUploadListener)
+    }
 
     val selectedImages: MutableState<List<File?>> = mutableStateOf(listOf())
 
@@ -74,8 +77,19 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
         firebaseMessageRepository.launchGallery(openGallery, showRationalDialog, selectedImages)
     }
 
-    fun uploadFiles() {
-        firebaseMessageRepository.uploadFiles(selectedImages)
+    fun uploadFiles(content: String, contentType: String, chatID: String, senderID: String, receiverID: String) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                firebaseMessageRepository.uploadFiles(
+                    selectedImages,
+                    content,
+                    contentType,
+                    chatID,
+                    senderID,
+                    receiverID
+                )
+            }
+        }
     }
 
     //    private val _messageList: MutableStateFlow<List<AnswerEntity?>> = MutableStateFlow(emptyList())
@@ -326,13 +340,26 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
         imageClassifier.classify(bitmap)
     }
 
-    override fun onError(error: String) {
+    override fun onClassifierError(error: String) {
         imageClassifier.clearImageClassifier()
         println(error)
     }
 
-    override fun onResults(results: List<Any>?, inferenceTime: Long) {
+    override fun onClassifierResults(results: List<Any>?, inferenceTime: Long) {
         println("Result: " + results)
     }
 
+    override fun onFileUploadError(error: String) {
+        println(error)
+    }
+
+    override fun onFileUploadResults(
+        content: String,
+        contentType: String,
+        chatID: String,
+        senderID: String,
+        receiverID: String
+    ) {
+        addAnswer(content, contentType, chatID, senderID, receiverID)
+    }
 }

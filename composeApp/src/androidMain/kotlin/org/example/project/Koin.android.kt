@@ -70,7 +70,7 @@ class AndroidApp : Application() {
                 }
 
                 single<FirebaseMessageRepository> {
-                    FirebaseMessageRepositoryImp(get(), get())
+                    FirebaseMessageRepositoryImp(get(), get(), get())
                 }
 
                 single<SpeechInterface> {
