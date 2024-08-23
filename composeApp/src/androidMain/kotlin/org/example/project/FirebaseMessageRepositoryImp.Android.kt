@@ -182,7 +182,7 @@ actual class FirebaseMessageRepositoryImp(
     ) {
         if (files.value.isNotEmpty()) {
             for ((index, item) in files.value.withIndex()) {
-                val imageRef = storageRef.child("images/${item!!.name}")
+                val imageRef = storageRef.child("images/${chatID}/${item!!.name}")
                 val stream = withContext(Dispatchers.IO) {
                     FileInputStream(item)
                 }
