@@ -1,4 +1,7 @@
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -24,8 +27,7 @@ import repositories.FirebaseMessageRepository
 import util.GetCurrentDate
 import java.io.File
 
-class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.ClassifierListener,
-    FirebaseMessageRepositoryImp.FileUploadListener {
+class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.ClassifierListener {
     private val database: AnswerDatabase by inject()
     private val messageRepository: MessageRepository by inject()
     private val bertHelper: BertHelper by inject()
@@ -66,9 +68,7 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
         speech.stopSpeechToText(_isListening)
     }
 
-    private val firebaseMessageRepository: FirebaseMessageRepository by inject {
-        parametersOf(this as FirebaseMessageRepositoryImp.FileUploadListener)
-    }
+    private val firebaseMessageRepository: FirebaseMessageRepository by inject()
 
     val selectedImages: MutableState<List<File?>> = mutableStateOf(listOf())
 
@@ -77,19 +77,26 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
         firebaseMessageRepository.launchGallery(openGallery, showRationalDialog, selectedImages)
     }
 
-    fun uploadFiles(content: String, contentType: String, chatID: String, senderID: String, receiverID: String) {
+    fun uploadFiles(contentType: String, chatID: String, senderID: String, receiverID: String) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 firebaseMessageRepository.uploadFiles(
                     selectedImages,
-                    content,
                     contentType,
                     chatID,
                     senderID,
-                    receiverID
+                    receiverID,
+                    viewModelScope
                 )
             }
         }
+    }
+
+    private val _selectedByteArrayImages = mutableStateOf<ByteArray?>(null)
+    val selectedByteArrayImages = _selectedByteArrayImages.value
+
+    fun getFile(path: String): ByteArray? {
+        return firebaseMessageRepository.getOnlineFile(path, _selectedByteArrayImages)
     }
 
     //    private val _messageList: MutableStateFlow<List<AnswerEntity?>> = MutableStateFlow(emptyList())
@@ -318,7 +325,7 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
     }
 
     /*@RequiresApi(Build.VERSION_CODES.O)
-    fun createBitmapFromFile(filepath: String): Bitmap? {
+    fun createBitmapFromFileByteArray(filepath: String): Bitmap? {
         val file = File(filepath)
         return if (file.exists()) {
             val imageBytes = Base64.getDecoder().decode(filepath)
@@ -328,6 +335,16 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
             null
         }
     }*/
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun createBitmapFromFilePath(filepath: String): Bitmap? {
+        val file = File(filepath)
+        return if (file.exists()) {
+            return BitmapFactory.decodeFile(filepath)
+        } else {
+            null
+        }
+    }
 
     @OptIn(ExperimentalResourceApi::class)
     suspend//    fun imageClassify(image: Bitmap) {
@@ -347,19 +364,5 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
 
     override fun onClassifierResults(results: List<Any>?, inferenceTime: Long) {
         println("Result: " + results)
-    }
-
-    override fun onFileUploadError(error: String) {
-        println(error)
-    }
-
-    override fun onFileUploadResults(
-        content: String,
-        contentType: String,
-        chatID: String,
-        senderID: String,
-        receiverID: String
-    ) {
-        addAnswer(content, contentType, chatID, senderID, receiverID)
     }
 }

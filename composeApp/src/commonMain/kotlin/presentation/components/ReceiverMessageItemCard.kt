@@ -15,7 +15,8 @@ import androidx.compose.ui.unit.dp
 fun ReceiverMessageItemCard(
     modifier: Modifier = Modifier,
     content: String,
-    contentType: String
+    contentType: String,
+    chatViewModel: ChatViewModel
 ) {
     when (contentType) {
         contentTypeImage -> {

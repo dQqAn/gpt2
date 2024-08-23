@@ -14,11 +14,15 @@ import androidx.compose.ui.unit.dp
 fun MessengerItemCard(
     modifier: Modifier = Modifier,
     content: String,
-    contentType: String
+    contentType: String,
+    chatViewModel: ChatViewModel
 ) {
     when (contentType) {
         contentTypeImage -> {
-
+//            println(chatViewModel.getFile(content))
+            /*chatViewModel.selectedByteArrayImages?.let {
+                Text(content)
+            }*/
         }
 
         contentTypeMessage -> {

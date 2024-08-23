@@ -1,3 +1,5 @@
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -20,6 +22,7 @@ import viewmodel.MessageToChatViewModel
 
 //import ml.gpt2.*
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ChatScreen(
     navController: NavController,
@@ -63,6 +66,7 @@ fun ChatScreen(
         floatingActionButtonPosition = FabPosition.Center,
         bottomBar = {
             WriteMessageCard(
+                galleryImages = chatViewModel.selectedImages,
                 chatViewModel = chatViewModel,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
                 value = input.value ?: "",
@@ -73,15 +77,14 @@ fun ChatScreen(
                     openGallery.value = true
                 },
                 onClickSend = {
+                    var _chatID: String? = null
+                    if (messageList.isNotEmpty()) {
+                        _chatID = messageList.first()?.chatID!!
+                    } else {
+                        _chatID = chatID
+                    }
+
                     if (!input.value.isNullOrEmpty() && input.value!!.isNotBlank()) {
-                        var _chatID: String? = null
-
-                        if (messageList.isNotEmpty()) {
-                            _chatID = messageList.first()?.chatID!!
-                        } else {
-                            _chatID = chatID
-                        }
-
                         val aiChatControl = _chatID.split(" ").last()
                         if (aiChatControl != "gpt") {
                             chatViewModel.addAnswer(
@@ -103,6 +106,13 @@ fun ChatScreen(
                         chatViewModel.changeMessageText("")
 
 //                        gpt2Client.launchAutocomplete()
+                    } else if (chatViewModel.selectedImages.value.isNotEmpty()) {
+                        chatViewModel.uploadFiles(
+                            contentType = contentTypeImage,
+                            chatID = _chatID,
+                            senderID = currentUserID,
+                            receiverID = friendID!!
+                        )
                     }
                 },
             )
@@ -126,12 +136,14 @@ fun ChatScreen(
                             MessengerItemCard(
                                 modifier = Modifier.align(Alignment.End),
                                 contentType = it.contentType,
-                                content = it.content
+                                content = it.content,
+                                chatViewModel = chatViewModel
                             )
                         } else {
                             ReceiverMessageItemCard(
                                 contentType = it.contentType,
-                                content = it.content
+                                content = it.content,
+                                chatViewModel = chatViewModel
                             )
                         }
                     }
@@ -168,6 +180,7 @@ fun ChatScreen(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun ChatScreenPreview() {

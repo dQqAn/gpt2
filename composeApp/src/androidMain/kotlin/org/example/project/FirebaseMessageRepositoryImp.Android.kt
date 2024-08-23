@@ -26,11 +26,13 @@ import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.example.project.AndroidActivityViewModel
 import org.koin.core.component.KoinComponent
@@ -45,10 +47,20 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 actual class FirebaseMessageRepositoryImp(
-    val _filteredList: MutableStateFlow<List<String?>>,
-    val _otherUserID: MutableStateFlow<String?>,
-    private val fileUploadListener: FileUploadListener
+//    val fileUploadListener: FileUploadListener
 ) : FirebaseMessageRepository, KoinComponent {
+
+    /*actual interface FileUploadListener {
+        actual fun onFileUploadError(error: String)
+        actual fun onFileUploadResults(
+            content: String,
+            contentType: String,
+            chatID: String,
+            senderID: String,
+            receiverID: String
+        )
+    }*/
+
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     private val database: AnswerDatabase by inject()
@@ -56,9 +68,12 @@ actual class FirebaseMessageRepositoryImp(
     private val context: Context by inject()
     private val androidActivityViewModel: AndroidActivityViewModel by inject()
 
+    override val filteredList: MutableStateFlow<List<String?>> = MutableStateFlow(emptyList())
+    override val otherUserID: MutableStateFlow<String?> = MutableStateFlow(null)
+
     override val currentUserID: String = auth.currentUser!!.uid
     override val currentUserMail: String = auth.currentUser!!.email!!
-    override val friendID: StateFlow<String?> = _otherUserID.asStateFlow()
+    override val friendID: StateFlow<String?> = otherUserID.asStateFlow()
     override val messageID: String? = null
 
     override val messageList: MutableStateFlow<List<AnswerEntity?>> = MutableStateFlow(emptyList())
@@ -80,13 +95,13 @@ actual class FirebaseMessageRepositoryImp(
                 }
                 if (value?.exists() == true) {
                     val data = value.get("Basic Information") as? HashMap<*, *>
-                    _otherUserID.update {
+                    otherUserID.update {
                         data?.get("id").toString()
                     }
                 }
             }
         } else {
-            _otherUserID.update {
+            otherUserID.update {
                 null
             }
         }
@@ -104,7 +119,7 @@ actual class FirebaseMessageRepositoryImp(
                     for (data in value!!.documentChanges) {
                         if (data?.document?.id != null) {
                             tempList.add(data.document.id)
-                            _filteredList.update {
+                            filteredList.update {
                                 tempList
                             }
                         }
@@ -172,13 +187,24 @@ actual class FirebaseMessageRepositoryImp(
         }
     }
 
+    override fun getOnlineFile(path: String, list: MutableState<ByteArray?>): ByteArray? {
+        val oneMegabyte: Long = 1024 * 1024
+        val islandRef = storageRef.child(path)
+        islandRef.getBytes(oneMegabyte).addOnSuccessListener { byteArray ->
+            list.value = byteArray
+        }.addOnFailureListener {
+            println(it.message)
+        }
+        return list.value
+    }
+
     override suspend fun uploadFiles(
         files: MutableState<List<File?>>,
-        content: String,
         contentType: String,
         chatID: String,
         senderID: String,
-        receiverID: String
+        receiverID: String,
+        viewModelScope: CoroutineScope
     ) {
         if (files.value.isNotEmpty()) {
             for ((index, item) in files.value.withIndex()) {
@@ -189,9 +215,14 @@ actual class FirebaseMessageRepositoryImp(
                 val uploadTask = imageRef.putStream(stream)
                 uploadTask.addOnSuccessListener {
                     println("${item.name} uploaded.")
-                    fileUploadListener.onFileUploadResults(content, contentType, chatID, senderID, receiverID)
+                    viewModelScope.launch {
+                        withContext(Dispatchers.IO) {
+                            addAnswer(it.storage.path, contentType, chatID, senderID, receiverID)
+                        }
+                    }
+//                    fileUploadListener.onFileUploadResults(it.storage.path, contentType, chatID, senderID, receiverID)
                 }.addOnFailureListener { taskSnapshot ->
-                    fileUploadListener.onFileUploadError(taskSnapshot.message!!)
+                    println(taskSnapshot.message)
                 }
             }
             files.value = listOf()
@@ -393,14 +424,5 @@ actual class FirebaseMessageRepositoryImp(
         )
     }
 
-    actual interface FileUploadListener {
-        actual fun onFileUploadError(error: String)
-        actual fun onFileUploadResults(
-            content: String,
-            contentType: String,
-            chatID: String,
-            senderID: String,
-            receiverID: String
-        )
-    }
+
 }

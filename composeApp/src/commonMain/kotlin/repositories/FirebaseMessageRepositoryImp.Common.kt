@@ -1,7 +1,7 @@
 import repositories.FirebaseMessageRepository
 
 expect class FirebaseMessageRepositoryImp : FirebaseMessageRepository {
-    interface FileUploadListener {
+    /*interface FileUploadListener {
         fun onFileUploadError(error: String)
         fun onFileUploadResults(
             content: String,
@@ -10,5 +10,5 @@ expect class FirebaseMessageRepositoryImp : FirebaseMessageRepository {
             senderID: String,
             receiverID: String
         )
-    }
+    }*/
 }

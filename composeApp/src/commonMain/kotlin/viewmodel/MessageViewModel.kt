@@ -8,21 +8,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
-import org.koin.core.parameter.parametersOf
 import repositories.FirebaseMessageRepository
 
-class MessageViewModel : ViewModel(), KoinComponent, FirebaseMessageRepositoryImp.FileUploadListener {
-    private val _filteredList: MutableStateFlow<List<String?>> = MutableStateFlow(emptyList())
-
-    //    private val _messageList: MutableStateFlow<List<AnswerEntity?>> = MutableStateFlow(emptyList())
-    private val _otherUserID: MutableStateFlow<String?> = MutableStateFlow(null)
-    val otherUserID: StateFlow<String?> = _otherUserID.asStateFlow()
-
-    // todo(change this invocation(FirebaseMessageRepository))
-    private val firebaseMessageRepository: FirebaseMessageRepository by inject<FirebaseMessageRepository> {
-//        parametersOf(_filteredList, _messageList, _otherUserID)
-        parametersOf(_filteredList, _otherUserID, this as FirebaseMessageRepositoryImp.FileUploadListener)
-    }
+class MessageViewModel : ViewModel(), KoinComponent {
+    private val firebaseMessageRepository: FirebaseMessageRepository by inject()
 
     private val _remoteMessageList = firebaseMessageRepository.messageList
     fun deleteMessageList() {
@@ -62,9 +51,9 @@ class MessageViewModel : ViewModel(), KoinComponent, FirebaseMessageRepositoryIm
     val searchedList = searchText
         .combine(_searchedList) { text, mails ->//combine searchText with _contriesList
             if (text.isBlank()) { //return the entery list of countries if not is typed
-                _filteredList.value
+                firebaseMessageRepository.filteredList.value
             }
-            _filteredList.value.filter { country ->// filter and return a list of countries based on the text the user typed
+            firebaseMessageRepository.filteredList.value.filter { country ->// filter and return a list of countries based on the text the user typed
                 country?.uppercase()?.contains(text.trim().uppercase()) == true
             }
         }.stateIn(//basically convert the Flow returned from combine operator to StateFlow
@@ -107,19 +96,5 @@ class MessageViewModel : ViewModel(), KoinComponent, FirebaseMessageRepositoryIm
     @Composable
     fun takePermission(openGallery: MutableState<Boolean>, showRationalDialog: MutableState<Boolean>) {
         firebaseMessageRepository.takePermission(openGallery, showRationalDialog)
-    }
-
-    override fun onFileUploadError(error: String) {
-
-    }
-
-    override fun onFileUploadResults(
-        content: String,
-        contentType: String,
-        chatID: String,
-        senderID: String,
-        receiverID: String
-    ) {
-
     }
 }
