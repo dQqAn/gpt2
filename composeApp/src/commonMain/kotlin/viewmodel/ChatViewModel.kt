@@ -1,7 +1,5 @@
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -92,11 +90,11 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
         }
     }
 
-    private val _selectedByteArrayImages = mutableStateOf<ByteArray?>(null)
-    val selectedByteArrayImages = _selectedByteArrayImages.value
+//    private val _selectedByteArrayImages = MutableStateFlow<ByteArray?>(null)
+//    val selectedByteArrayImages = _selectedByteArrayImages.asStateFlow()
 
-    fun getFile(path: String) {
-        firebaseMessageRepository.getOnlineFile(path, _selectedByteArrayImages)
+    fun getFile(path: String): ByteArray? {
+        return firebaseMessageRepository.getOnlineFile(path)
     }
 
     //    private val _messageList: MutableStateFlow<List<AnswerEntity?>> = MutableStateFlow(emptyList())
@@ -324,19 +322,22 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
         }
     }
 
-    /*@RequiresApi(Build.VERSION_CODES.O)
-    fun createBitmapFromFileByteArray(filepath: String): Bitmap? {
-        val file = File(filepath)
+    fun createBitmapFromFileByteArray(byteArray: ByteArray?): Bitmap? {
+        return if (byteArray != null) {
+            return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+        } else {
+            null
+        }
+        /*val file = File(filepath)
         return if (file.exists()) {
             val imageBytes = Base64.getDecoder().decode(filepath)
             val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
             return bitmap
         } else {
             null
-        }
-    }*/
+        }*/
+    }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun createBitmapFromFilePath(filepath: String): Bitmap? {
         val file = File(filepath)
         return if (file.exists()) {

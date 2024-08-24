@@ -1,5 +1,3 @@
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -22,7 +20,6 @@ import viewmodel.MessageToChatViewModel
 
 //import ml.gpt2.*
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ChatScreen(
     navController: NavController,
@@ -180,7 +177,6 @@ fun ChatScreen(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun ChatScreenPreview() {

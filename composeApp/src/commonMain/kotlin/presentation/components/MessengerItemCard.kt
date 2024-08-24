@@ -19,9 +19,11 @@ fun MessengerItemCard(
 ) {
     when (contentType) {
         contentTypeImage -> {
-//            println(chatViewModel.getFile(content))
-            /*chatViewModel.selectedByteArrayImages?.let {
-                Text(content)
+            /*chatViewModel.createBitmapFromFileByteArray(chatViewModel.getFile(content))?.let {
+                Image(
+                    contentDescription = "",
+                    bitmap = it.asImageBitmap()
+                )
             }*/
         }
 

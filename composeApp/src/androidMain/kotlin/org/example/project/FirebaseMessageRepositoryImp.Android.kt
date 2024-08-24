@@ -187,14 +187,21 @@ actual class FirebaseMessageRepositoryImp(
         }
     }
 
-    override fun getOnlineFile(path: String, list: MutableState<ByteArray?>) {
+    override fun getOnlineFile(path: String): ByteArray? {
         val oneMegabyte: Long = 1024 * 1024
         val islandRef = storageRef.child(path)
-        islandRef.getBytes(oneMegabyte).addOnSuccessListener { byteArray ->
-            list.value = byteArray
+        return try {
+            islandRef.getBytes(oneMegabyte).result
+        } catch (e: Exception) {
+            null
+        }
+        /*islandRef.getBytes(oneMegabyte).addOnSuccessListener { byteArray ->
+            list.update {
+                byteArray
+            }
         }.addOnFailureListener {
             println(it.message)
-        }
+        }*/
     }
 
     override suspend fun uploadFiles(
