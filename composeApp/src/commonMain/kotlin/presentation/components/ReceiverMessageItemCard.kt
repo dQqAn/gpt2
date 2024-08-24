@@ -1,4 +1,5 @@
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -12,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -19,14 +21,15 @@ fun ReceiverMessageItemCard(
     modifier: Modifier = Modifier,
     content: String,
     contentType: String,
-    chatViewModel: ChatViewModel
+    chatViewModel: ChatViewModel,
+    maxWidth: Dp
 ) {
     when (contentType) {
         contentTypeImage -> {
             val imageBytes by chatViewModel.selectedByteArrayImages.collectAsState()
 
             Row(
-                modifier = modifier.padding(4.dp)
+                modifier = modifier.padding(4.dp).width((maxWidth / 100 * 70))
             ) {
                 Surface(
                     modifier = Modifier
@@ -56,10 +59,22 @@ fun ReceiverMessageItemCard(
                 ) {
                     imageBytes?.let {
                         chatViewModel.createBitmapFromFileByteArray(it)?.let { bitmap ->
-                            Image(
-                                contentDescription = "",
-                                bitmap = bitmap.asImageBitmap()
-                            )
+                            Column(
+//                                modifier = Modifier.fillMaxSize().width((maxWidth / 100 * 70)),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center
+                            ) {
+                                Image(
+                                    modifier = Modifier.clickable {
+                                        chatViewModel.imageClassify(bitmap)
+                                    },
+                                    contentDescription = "",
+                                    bitmap = bitmap.asImageBitmap()
+                                )
+                                chatViewModel.imageClassifierResult.value?.let { classifierResult ->
+                                    Text(classifierResult)
+                                }
+                            }
                         }
                     }
                 }

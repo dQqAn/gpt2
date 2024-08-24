@@ -1,3 +1,4 @@
+import androidx.compose.foundation.layout.BoxWithConstraintsScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -14,19 +15,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import org.jetbrains.compose.ui.tooling.preview.Preview
 import viewmodel.MessageToChatViewModel
 
 //import ml.gpt2.*
 
 @Composable
-fun ChatScreen(
+fun BoxWithConstraintsScope.ChatScreen(
     navController: NavController,
     chatViewModel: ChatViewModel = viewModel(),
     sharedVM: MessageToChatViewModel = viewModel(),
 //    gpt2Client: GPT2Client = viewModel()
 ) {
+    val maxWidth = maxWidth
+
     val openGallery = mutableStateOf(false)
     val showRationalDialog = mutableStateOf(false)
     chatViewModel.launchGallery(openGallery, showRationalDialog)
@@ -137,13 +138,15 @@ fun ChatScreen(
                                 modifier = Modifier.align(Alignment.End),
                                 contentType = it.contentType,
                                 content = it.content,
-                                chatViewModel = chatViewModel
+                                chatViewModel = chatViewModel,
+                                maxWidth = maxWidth
                             )
                         } else {
                             ReceiverMessageItemCard(
                                 contentType = it.contentType,
                                 content = it.content,
-                                chatViewModel = chatViewModel
+                                chatViewModel = chatViewModel,
+                                maxWidth = maxWidth
                             )
                         }
                     }
@@ -180,10 +183,11 @@ fun ChatScreen(
     }
 }
 
+/*
 @Preview
 @Composable
 fun ChatScreenPreview() {
     ChatScreen(
         navController = rememberNavController(),
     )
-}
+}*/

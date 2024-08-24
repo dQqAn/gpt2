@@ -5,7 +5,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import gpt2.composeapp.generated.resources.Res
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +15,6 @@ import kotlinx.coroutines.withContext
 import ml.bert.BertHelper
 import ml.image_classification.ImageClassifierHelper
 import ml.image_classification.ImageClassifierHelperInterface
-import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
@@ -346,15 +344,8 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
         }
     }
 
-    @OptIn(ExperimentalResourceApi::class)
-    suspend//    fun imageClassify(image: Bitmap) {
-    fun imageClassify() {
-        val bitmap = BitmapFactory.decodeByteArray(
-            Res.readBytes("drawable/images/Car.png"),
-            0,
-            Res.readBytes("drawable/images/Car.png").size
-        )
-        imageClassifier.classify(bitmap)
+    fun imageClassify(image: Bitmap) {
+        imageClassifier.classify(image)
     }
 
     override fun onClassifierError(error: String) {
@@ -362,7 +353,10 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
         println(error)
     }
 
+    private val _imageClassifierResult = mutableStateOf<String?>(null)
+    val imageClassifierResult = _imageClassifierResult
+
     override fun onClassifierResults(results: List<Any>?, inferenceTime: Long) {
-        println("Result: " + results)
+        _imageClassifierResult.value = results.toString()
     }
 }
