@@ -95,8 +95,8 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
     private val _selectedByteArrayImages = mutableStateOf<ByteArray?>(null)
     val selectedByteArrayImages = _selectedByteArrayImages.value
 
-    fun getFile(path: String): ByteArray? {
-        return firebaseMessageRepository.getOnlineFile(path, _selectedByteArrayImages)
+    fun getFile(path: String) {
+        firebaseMessageRepository.getOnlineFile(path, _selectedByteArrayImages)
     }
 
     //    private val _messageList: MutableStateFlow<List<AnswerEntity?>> = MutableStateFlow(emptyList())
