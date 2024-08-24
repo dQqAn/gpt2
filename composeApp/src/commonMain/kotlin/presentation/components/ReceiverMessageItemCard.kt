@@ -6,9 +6,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -20,7 +23,47 @@ fun ReceiverMessageItemCard(
 ) {
     when (contentType) {
         contentTypeImage -> {
+            val imageBytes by chatViewModel.selectedByteArrayImages.collectAsState()
 
+            Row(
+                modifier = modifier.padding(4.dp)
+            ) {
+                Surface(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .align(Alignment.Bottom),
+                    shape = CircleShape,
+                    color = Color.White,
+                    shadowElevation = 4.dp
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp, vertical = 6.dp)
+                            .size(18.dp),
+                        painter = painterResource(id = MppR.drawable.ic_launcher),
+                        contentDescription = ""
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 24.dp),
+                    shape = RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp, bottomEnd = 25.dp),
+                    color = GrayColor
+                ) {
+                    imageBytes?.let {
+                        chatViewModel.createBitmapFromFileByteArray(it)?.let { bitmap ->
+                            Image(
+                                contentDescription = "",
+                                bitmap = bitmap.asImageBitmap()
+                            )
+                        }
+                    }
+                }
+            }
         }
 
         contentTypeMessage -> {

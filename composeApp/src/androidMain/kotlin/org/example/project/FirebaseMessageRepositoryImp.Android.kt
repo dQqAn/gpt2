@@ -26,14 +26,11 @@ import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.example.project.AndroidActivityViewModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -187,21 +184,16 @@ actual class FirebaseMessageRepositoryImp(
         }
     }
 
-    override fun getOnlineFile(path: String): ByteArray? {
+    override fun getOnlineFile(path: String, list: MutableStateFlow<ByteArray?>) {
         val oneMegabyte: Long = 1024 * 1024
         val islandRef = storageRef.child(path)
-        return try {
-            islandRef.getBytes(oneMegabyte).result
-        } catch (e: Exception) {
-            null
-        }
-        /*islandRef.getBytes(oneMegabyte).addOnSuccessListener { byteArray ->
+        islandRef.getBytes(oneMegabyte).addOnSuccessListener { byteArray ->
             list.update {
                 byteArray
             }
         }.addOnFailureListener {
             println(it.message)
-        }*/
+        }
     }
 
     override suspend fun uploadFiles(

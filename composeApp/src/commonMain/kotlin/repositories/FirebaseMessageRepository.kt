@@ -31,7 +31,7 @@ interface FirebaseMessageRepository {
         viewModelScope: CoroutineScope
     )
 
-    fun getOnlineFile(path: String): ByteArray?
+    fun getOnlineFile(path: String, list: MutableStateFlow<ByteArray?>)
 
     @Composable
     fun takePermission(

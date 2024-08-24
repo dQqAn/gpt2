@@ -90,11 +90,10 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
         }
     }
 
-//    private val _selectedByteArrayImages = MutableStateFlow<ByteArray?>(null)
-//    val selectedByteArrayImages = _selectedByteArrayImages.asStateFlow()
-
-    fun getFile(path: String): ByteArray? {
-        return firebaseMessageRepository.getOnlineFile(path)
+    private val _selectedByteArrayImages: MutableStateFlow<ByteArray?> = MutableStateFlow(null)
+    val selectedByteArrayImages = _selectedByteArrayImages.asStateFlow()
+    fun getFile(path: String) {
+        firebaseMessageRepository.getOnlineFile(path, _selectedByteArrayImages)
     }
 
     //    private val _messageList: MutableStateFlow<List<AnswerEntity?>> = MutableStateFlow(emptyList())

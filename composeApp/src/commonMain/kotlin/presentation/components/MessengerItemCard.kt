@@ -1,3 +1,4 @@
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -5,8 +6,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
@@ -19,12 +23,22 @@ fun MessengerItemCard(
 ) {
     when (contentType) {
         contentTypeImage -> {
-            /*chatViewModel.createBitmapFromFileByteArray(chatViewModel.getFile(content))?.let {
-                Image(
-                    contentDescription = "",
-                    bitmap = it.asImageBitmap()
-                )
-            }*/
+            val imageBytes by chatViewModel.selectedByteArrayImages.collectAsState()
+
+            Surface(
+                modifier = modifier.padding(4.dp),
+                color = BluePrimary,
+                shape = RoundedCornerShape(topStart = 25.dp, bottomEnd = 25.dp, bottomStart = 25.dp)
+            ) {
+                imageBytes?.let {
+                    chatViewModel.createBitmapFromFileByteArray(it)?.let { bitmap ->
+                        Image(
+                            contentDescription = "",
+                            bitmap = bitmap.asImageBitmap()
+                        )
+                    }
+                }
+            }
         }
 
         contentTypeMessage -> {
