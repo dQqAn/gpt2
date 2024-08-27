@@ -7,8 +7,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,7 +26,10 @@ fun ReceiverMessageItemCard(
 ) {
     when (contentType) {
         contentTypeImage -> {
-            val imageBytes by chatViewModel.selectedByteArrayImages.collectAsState()
+            val selectedByteArrayImages: MutableState<ByteArray?> = mutableStateOf(null)
+            chatViewModel.getFile(content, selectedByteArrayImages)
+
+            val classifyText: MutableState<String?> = mutableStateOf(null)
 
             Row(
                 modifier = modifier.padding(4.dp).width((maxWidth / 100 * 70))
@@ -57,7 +60,7 @@ fun ReceiverMessageItemCard(
                     shape = RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp, bottomEnd = 25.dp),
                     color = GrayColor
                 ) {
-                    imageBytes?.let {
+                    selectedByteArrayImages.value?.let {
                         chatViewModel.createBitmapFromFileByteArray(it)?.let { bitmap ->
                             Column(
 //                                modifier = Modifier.fillMaxSize().width((maxWidth / 100 * 70)),
@@ -66,12 +69,12 @@ fun ReceiverMessageItemCard(
                             ) {
                                 Image(
                                     modifier = Modifier.clickable {
-                                        chatViewModel.imageClassify(bitmap)
+                                        chatViewModel.imageClassify(bitmap, classifyText)
                                     },
                                     contentDescription = "",
                                     bitmap = bitmap.asImageBitmap()
                                 )
-                                chatViewModel.imageClassifierResult.value?.let { classifierResult ->
+                                classifyText.value?.let { classifierResult ->
                                     Text(classifierResult)
                                 }
                             }

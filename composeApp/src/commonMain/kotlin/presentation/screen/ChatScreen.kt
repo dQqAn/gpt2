@@ -130,9 +130,6 @@ fun BoxWithConstraintsScope.ChatScreen(
             ) {
                 items(messageList.size) { index ->
                     messageList[index]?.let {
-                        if (it.contentType == contentTypeImage) {
-                            chatViewModel.getFile(it.content)
-                        }
                         if (it.senderID == currentUserID && it.fromUser) {
                             MessengerItemCard(
                                 modifier = Modifier.align(Alignment.End),

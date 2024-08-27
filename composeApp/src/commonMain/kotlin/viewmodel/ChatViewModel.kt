@@ -88,10 +88,8 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
         }
     }
 
-    private val _selectedByteArrayImages: MutableStateFlow<ByteArray?> = MutableStateFlow(null)
-    val selectedByteArrayImages = _selectedByteArrayImages.asStateFlow()
-    fun getFile(path: String) {
-        firebaseMessageRepository.getOnlineFile(path, _selectedByteArrayImages)
+    fun getFile(path: String, selectedByteArrayImages: MutableState<ByteArray?>) {
+        firebaseMessageRepository.getOnlineFile(path, selectedByteArrayImages)
     }
 
     //    private val _messageList: MutableStateFlow<List<AnswerEntity?>> = MutableStateFlow(emptyList())
@@ -344,8 +342,8 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
         }
     }
 
-    fun imageClassify(image: Bitmap) {
-        imageClassifier.classify(image)
+    fun imageClassify(image: Bitmap, text: MutableState<String?>) {
+        imageClassifier.classify(image, text)
     }
 
     override fun onClassifierError(error: String) {
@@ -353,15 +351,16 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
         println(error)
     }
 
-    private val _imageClassifierResult = mutableStateOf<String?>(null)
-    val imageClassifierResult = _imageClassifierResult
-
-    override fun onClassifierResults(results: List<List<ImageClassifierHelper.MyImageCategory>>?, inferenceTime: Long) {
+    override fun onClassifierResults(
+        text: MutableState<String?>,
+        results: List<List<ImageClassifierHelper.MyImageCategory>>?,
+        inferenceTime: Long
+    ) {
         results?.let {
-            _imageClassifierResult.value = ""
+            text.value = ""
             for (result in it) {
                 for (category in result) {
-                    _imageClassifierResult.value += category.getLabel() + " "
+                    text.value += category.getLabel() + " "
                 }
             }
         }

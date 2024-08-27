@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.os.SystemClock
 import android.util.Log
 import android.view.Surface
+import androidx.compose.runtime.MutableState
 import org.tensorflow.lite.gpu.CompatibilityList
 import org.tensorflow.lite.support.image.ImageProcessor
 import org.tensorflow.lite.support.image.TensorImage
@@ -78,7 +79,7 @@ actual class ImageClassifierHelper(
         }
     }
 
-    override fun classify(image: Bitmap, rotation: Int) {
+    override fun classify(image: Bitmap, text: MutableState<String?>, rotation: Int) {
         if (imageClassifier == null) {
             setupImageClassifier()
         }
@@ -106,6 +107,7 @@ actual class ImageClassifierHelper(
         inferenceTime = SystemClock.uptimeMillis() - inferenceTime
 
         imageClassifierListener?.onClassifierResults(
+            text,
             results?.map {
                 it.categories.map {
                     MyImageCategory(
@@ -141,6 +143,7 @@ actual class ImageClassifierHelper(
     actual interface ClassifierListener {
         actual fun onClassifierError(error: String)
         actual fun onClassifierResults(
+            text: MutableState<String?>,
             results: List<List<MyImageCategory>>?,
             inferenceTime: Long
         )
