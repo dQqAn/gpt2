@@ -356,7 +356,14 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
     private val _imageClassifierResult = mutableStateOf<String?>(null)
     val imageClassifierResult = _imageClassifierResult
 
-    override fun onClassifierResults(results: List<Any>?, inferenceTime: Long) {
-        _imageClassifierResult.value = results.toString()
+    override fun onClassifierResults(results: List<List<ImageClassifierHelper.MyImageCategory>>?, inferenceTime: Long) {
+        results?.let {
+            _imageClassifierResult.value = ""
+            for (result in it) {
+                for (category in result) {
+                    _imageClassifierResult.value += category.getLabel() + " "
+                }
+            }
+        }
     }
 }

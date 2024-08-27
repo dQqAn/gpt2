@@ -102,9 +102,20 @@ actual class ImageClassifierHelper(
             .build()
 
         val results = imageClassifier?.classify(tensorImage, imageProcessingOptions)
+
         inferenceTime = SystemClock.uptimeMillis() - inferenceTime
+
         imageClassifierListener?.onClassifierResults(
-            results,
+            results?.map {
+                it.categories.map {
+                    MyImageCategory(
+                        label = it.label,
+                        displayName = it.displayName,
+                        score = it.score,
+                        index = it.index,
+                    )
+                }
+            },
             inferenceTime
         )
     }
@@ -130,9 +141,45 @@ actual class ImageClassifierHelper(
     actual interface ClassifierListener {
         actual fun onClassifierError(error: String)
         actual fun onClassifierResults(
-            results: List<Any>?, // results: List<Classifications>?,
+            results: List<List<MyImageCategory>>?,
             inferenceTime: Long
         )
+    }
+
+    /*actual class MyImageClassifier actual constructor(
+        list: List<MyImageCategory>,
+        headIndex: Int
+    ) {
+        actual fun getCategories(): List<MyImageCategory> {
+            return this.getCategories()
+        }
+
+        actual fun getHeadIndex(): Int {
+            return this.getHeadIndex()
+        }
+    }*/
+
+    actual class MyImageCategory actual constructor(
+        private val label: String,
+        private val displayName: String,
+        private val score: Float,
+        private val index: Int
+    ) {
+        actual fun getLabel(): String {
+            return this.label
+        }
+
+        actual fun getDisplayName(): String {
+            return this.displayName
+        }
+
+        actual fun getScore(): Float {
+            return this.score
+        }
+
+        actual fun getIndex(): Int {
+            return this.index
+        }
     }
 
     companion object {
