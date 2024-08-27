@@ -140,6 +140,7 @@ fun BoxWithConstraintsScope.ChatScreen(
                             )
                         } else {
                             ReceiverMessageItemCard(
+                                modifier = Modifier.align(Alignment.Start),
                                 contentType = it.contentType,
                                 content = it.content,
                                 chatViewModel = chatViewModel,
