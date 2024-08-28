@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import util.Localization
 import viewmodel.MessageToChatViewModel
 
 //import ml.gpt2.*
@@ -22,6 +23,7 @@ import viewmodel.MessageToChatViewModel
 @Composable
 fun BoxWithConstraintsScope.ChatScreen(
     navController: NavController,
+    localization: Localization,
     chatViewModel: ChatViewModel = viewModel(),
     sharedVM: MessageToChatViewModel = viewModel(),
 //    gpt2Client: GPT2Client = viewModel()
@@ -64,6 +66,7 @@ fun BoxWithConstraintsScope.ChatScreen(
         floatingActionButtonPosition = FabPosition.Center,
         bottomBar = {
             WriteMessageCard(
+                localization = localization,
                 galleryImages = chatViewModel.selectedImages,
                 chatViewModel = chatViewModel,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),

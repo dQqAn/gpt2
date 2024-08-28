@@ -23,7 +23,7 @@ import util.Localization
 fun BoxWithConstraintsScope.SignInContent(
     navController: NavController,
     loginViewModel: LoginViewModel = viewModel(),
-    localization: Localization?
+    localization: Localization
 ) {
     val maxWidth = maxWidth
 
@@ -49,11 +49,11 @@ fun BoxWithConstraintsScope.SignInContent(
         PasswordOutlinedTextField(
             text = loginViewModel.signInPasswordText.value,
             onTextChanged = loginViewModel::signInPasswordTextSetName,
-            placeHolderText = "Your password",
+            placeHolderText = localization.yourPassword,
             keyboardType = KeyboardType.Password,
             leadingIcon = Icons.Default.Lock,
-            leadingDescription = "Password icon",
-            trailingDescription = "Visibility icon",
+            leadingDescription = localization.passwordIcon,
+            trailingDescription = localization.visibilityIcon,
             maxWidth
         )
 
@@ -61,7 +61,7 @@ fun BoxWithConstraintsScope.SignInContent(
 
         Button(onClick = {
             loginViewModel.signIn()
-        }) { Text("Sign in") }
+        }) { Text(localization.signIn) }
 
         Spacer(modifier = Modifier.height(14.dp))
 
@@ -71,7 +71,7 @@ fun BoxWithConstraintsScope.SignInContent(
                     inclusive = true
                 }
             }
-        }) { Text("Forgot password") }
+        }) { Text(localization.forgotPassword) }
 
         Spacer(modifier = Modifier.height(14.dp))
 
@@ -81,7 +81,7 @@ fun BoxWithConstraintsScope.SignInContent(
                     inclusive = true
                 }
             }
-        }) { Text("Create new account") }
+        }) { Text(localization.createNewAccount) }
 
         Spacer(modifier = Modifier.height(28.dp))
 
@@ -92,13 +92,14 @@ fun BoxWithConstraintsScope.SignInContent(
                         inclusive = true
                     }
                 }
-            }) { Text(text = "Select your language") }
+            }) { Text(text = localization.selectYourLanguage) }
     }
 }
 
 @Composable
 fun BoxWithConstraintsScope.SignUpContent(
     navController: NavController,
+    localization: Localization,
     loginViewModel: LoginViewModel = viewModel(),
 ) {
     val maxWidth = maxWidth
@@ -112,11 +113,11 @@ fun BoxWithConstraintsScope.SignUpContent(
         MyOutlinedTextField(
             text = loginViewModel.signUpFirstMailText.value,
             onTextChanged = loginViewModel::signUpFirstMailTextSetName,
-            placeHolderText = "Your email",
+            placeHolderText = localization.yourMail,
             keyboardType = KeyboardType.Email,
             leadingIcon = Icons.Default.Email,
-            leadingDescription = "Email icon",
-            trailingDescription = "Clear icon",
+            leadingDescription = localization.mailIcon,
+            trailingDescription = localization.clearIcon,
             maxWidth
         )
 
@@ -125,11 +126,11 @@ fun BoxWithConstraintsScope.SignUpContent(
         MyOutlinedTextField(
             text = loginViewModel.signUpSecondMailText.value,
             onTextChanged = loginViewModel::signUpSecondMailTextSetName,
-            placeHolderText = "Confirm your email",
+            placeHolderText = localization.confirmYourMail,
             keyboardType = KeyboardType.Email,
             leadingIcon = Icons.Default.Email,
-            leadingDescription = "Email icon",
-            trailingDescription = "Clear icon",
+            leadingDescription = localization.mailIcon,
+            trailingDescription = localization.clearIcon,
             maxWidth
         )
 
@@ -138,11 +139,11 @@ fun BoxWithConstraintsScope.SignUpContent(
         PasswordOutlinedTextField(
             text = loginViewModel.signUpFirstPasswordText.value,
             onTextChanged = loginViewModel::signUpFirstPasswordTextSetName,
-            placeHolderText = "Your password",
+            placeHolderText = localization.yourPassword,
             keyboardType = KeyboardType.Password,
             leadingIcon = Icons.Default.Lock,
-            leadingDescription = "Password icon",
-            trailingDescription = "Visibility icon",
+            leadingDescription = localization.passwordIcon,
+            trailingDescription = localization.visibilityIcon,
             maxWidth
         )
 
@@ -151,11 +152,11 @@ fun BoxWithConstraintsScope.SignUpContent(
         PasswordOutlinedTextField(
             text = loginViewModel.signUpSecondPasswordText.value,
             onTextChanged = loginViewModel::signUpSecondPasswordTextSetName,
-            placeHolderText = "Confirm your password",
+            placeHolderText = localization.confirmYourPassword,
             keyboardType = KeyboardType.Password,
             leadingIcon = Icons.Default.Lock,
-            leadingDescription = "Password icon",
-            trailingDescription = "Visibility icon",
+            leadingDescription = localization.passwordIcon,
+            trailingDescription = localization.visibilityIcon,
             maxWidth
         )
 
@@ -163,13 +164,13 @@ fun BoxWithConstraintsScope.SignUpContent(
 
         Button(onClick = {
             loginViewModel.signUp()
-        }) { Text("Next") }
+        }) { Text(localization.next) }
 
         Spacer(modifier = Modifier.height(14.dp))
 
         TextButton(onClick = {
             navController.popBackStack()
-        }) { Text("Do you already have an account?") }
+        }) { Text(localization.youAlreadyHaveAnAccount) }
 
         Spacer(modifier = Modifier.height(14.dp))
     }
@@ -178,6 +179,7 @@ fun BoxWithConstraintsScope.SignUpContent(
 @Composable
 fun BoxWithConstraintsScope.MailVerificationContent(
     navController: NavController,
+    localization: Localization,
     loginViewModel: LoginViewModel = viewModel(),
 ) {
     val isEmailSent by remember { loginViewModel.isEmailVerificationSent() }
@@ -195,7 +197,7 @@ fun BoxWithConstraintsScope.MailVerificationContent(
 
         if (isEmailSent) {
             Spacer(modifier = Modifier.height(14.dp))
-            Text("Check your email")
+            Text(localization.checkYourMail)
         }
 
         Spacer(modifier = Modifier.height(28.dp))
@@ -204,9 +206,9 @@ fun BoxWithConstraintsScope.MailVerificationContent(
             loginViewModel.sendEmailVerification()
         }) {
             if (!isEmailSent) {
-                Text("Send")
+                Text(localization.send)
             } else {
-                Text("Resend")
+                Text(localization.resend)
             }
         }
 
@@ -224,7 +226,7 @@ fun BoxWithConstraintsScope.MailVerificationContent(
                     }*/
                     loginViewModel.changeIsEmailVerificationSent(false)
                 }
-            }) { Text("Back") }
+            }) { Text(localization.back) }
 
             Spacer(modifier = Modifier.width(28.dp))
 
@@ -234,7 +236,7 @@ fun BoxWithConstraintsScope.MailVerificationContent(
                         navController.navigate(route = Screen.PhoneVerification.route)
                     }
                 }
-            }) { Text("Next") }
+            }) { Text(localization.next) }
         }
     }
 }
@@ -242,6 +244,7 @@ fun BoxWithConstraintsScope.MailVerificationContent(
 @Composable
 fun BoxWithConstraintsScope.PhoneVerificationContent(
     navController: NavController,
+    localization: Localization,
     loginViewModel: LoginViewModel = viewModel(),
 ) {
     val maxWidth = maxWidth
@@ -263,11 +266,11 @@ fun BoxWithConstraintsScope.PhoneVerificationContent(
             MyOutlinedTextField( //phone number text field
                 text = loginViewModel.phoneNumberText.value,
                 onTextChanged = loginViewModel::changePhoneNumberTextSetName,
-                placeHolderText = "Phone Number",
+                placeHolderText = localization.phoneNumber,
                 keyboardType = KeyboardType.Number,
                 leadingIcon = Icons.Default.Star,
-                leadingDescription = "Phone number icon",
-                trailingDescription = "Clear icon",
+                leadingDescription = localization.phoneNumberIcon,
+                trailingDescription = localization.clearIcon,
                 maxWidth
             )
 
@@ -277,18 +280,18 @@ fun BoxWithConstraintsScope.PhoneVerificationContent(
                 MyOutlinedTextField( //verification code text field
                     text = loginViewModel.phoneVerificationCodeText.value,
                     onTextChanged = loginViewModel::changePhoneVerificationCodeTextSetName,
-                    placeHolderText = "Phone verification code",
+                    placeHolderText = localization.phoneVerificationCode,
                     keyboardType = KeyboardType.Number,
                     leadingIcon = Icons.Default.Star,
-                    leadingDescription = "Verification code icon",
-                    trailingDescription = "Clear icon",
+                    leadingDescription = localization.verificationCodeIcon,
+                    trailingDescription = localization.clearIcon,
                     maxWidth
                 )
             }
 
             if (isCodeSent) {
                 Spacer(modifier = Modifier.height(7.dp))
-                Text("Check your phone")
+                Text(localization.checkYourPhone)
             }
 
             Spacer(modifier = Modifier.height(28.dp))
@@ -301,9 +304,9 @@ fun BoxWithConstraintsScope.PhoneVerificationContent(
                 }
             }) {
                 if (!isCodeSent) {
-                    Text("Send")
+                    Text(localization.send)
                 } else {
-                    Text("Resend")
+                    Text(localization.resend)
                 }
             }
 
@@ -314,13 +317,13 @@ fun BoxWithConstraintsScope.PhoneVerificationContent(
                     loginViewModel.signOut()
                     navController.navigate(route = Screen.SignIn.route)
                     loginViewModel.changeIsPhoneCodeSent(false)
-                }) { Text("Back") }
+                }) { Text(localization.back) }
 
                 if (isCodeSent) {
                     Spacer(modifier = Modifier.width(28.dp))
                     Button(onClick = {
                         loginViewModel.verifyPhoneNumberWithCode()
-                    }) { Text("Next") }
+                    }) { Text(localization.next) }
                 }
             }
         }
@@ -330,6 +333,7 @@ fun BoxWithConstraintsScope.PhoneVerificationContent(
 @Composable
 fun BoxWithConstraintsScope.ForgotPasswordContent(
     navController: NavController,
+    localization: Localization,
     loginViewModel: LoginViewModel = viewModel(),
 ) {
     val maxWidth = maxWidth
@@ -345,24 +349,24 @@ fun BoxWithConstraintsScope.ForgotPasswordContent(
         MyOutlinedTextField(
             text = loginViewModel.signInMailText.value,
             onTextChanged = loginViewModel::signInMailTextSetName,
-            placeHolderText = "Your email",
+            placeHolderText = localization.yourMail,
             keyboardType = KeyboardType.Email,
             leadingIcon = Icons.Default.Email,
-            leadingDescription = "Email icon",
-            trailingDescription = "Clear icon",
+            leadingDescription = localization.mailIcon,
+            trailingDescription = localization.clearIcon,
             maxWidth
         )
 
         Spacer(modifier = Modifier.height(14.dp))
 
         if (isEmailSent) {
-            Text("Check your email")
+            Text(localization.checkYourMail)
         }
 
         Spacer(modifier = Modifier.height(28.dp))
 
         Button(onClick = { loginViewModel.forgotPassword() }) {
-            Text("Send")
+            Text(localization.send)
         }
 
         Spacer(modifier = Modifier.height(28.dp))
@@ -371,7 +375,7 @@ fun BoxWithConstraintsScope.ForgotPasswordContent(
             navController.popBackStack()
             loginViewModel.changeIsEmailForgotPasswordSent(false)
         }) {
-            Text("Back")
+            Text(localization.back)
         }
     }
 }

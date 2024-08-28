@@ -30,12 +30,18 @@ fun MainNavGraph() {
             ) {
                 //intro screen
                 composable(route = Screen.Splash.route) {
-                    SplashScreen(navController = navController)
+                    SplashScreen(
+                        navController = navController,
+                        localization = localization
+                    )
                 }
 
                 //entrance screen
                 composable(route = Screen.OnBoarding.route) {
-                    OnBoardingScreen(navController = navController)
+                    OnBoardingScreen(
+                        navController = navController,
+                        localization = localization
+                    )
                 }
 
                 //message screen
@@ -48,7 +54,8 @@ fun MainNavGraph() {
                     MessageScreen(
                         navController = navController,
                         sharedVM = messageToChatViewModel,
-                        loginViewModel = loginViewModel
+                        loginViewModel = loginViewModel,
+                        localization = localization
                     )
                 }
 
@@ -60,7 +67,8 @@ fun MainNavGraph() {
 //            val args = it.toRoute<Screen.Message>()
                     ChatScreen(
                         navController = navController,
-                        sharedVM = messageToChatViewModel
+                        sharedVM = messageToChatViewModel,
+                        localization = localization
 //                argument = chatID
 //                chatID=args.chatID
                     )
@@ -71,7 +79,7 @@ fun MainNavGraph() {
                     SignInContent(
                         navController = navController,
                         loginViewModel = loginViewModel,
-                        localization
+                        localization = localization
                     )
                 }
 
@@ -79,7 +87,8 @@ fun MainNavGraph() {
                 composable(route = Screen.SignUp.route) {
                     SignUpContent(
                         navController = navController,
-                        loginViewModel = loginViewModel
+                        loginViewModel = loginViewModel,
+                        localization = localization
                     )
                 }
 
@@ -87,7 +96,8 @@ fun MainNavGraph() {
                 composable(route = Screen.MailVerification.route) {
                     MailVerificationContent(
                         navController = navController,
-                        loginViewModel = loginViewModel
+                        loginViewModel = loginViewModel,
+                        localization = localization
                     )
                 }
 
@@ -95,7 +105,8 @@ fun MainNavGraph() {
                 composable(route = Screen.PhoneVerification.route) {
                     PhoneVerificationContent(
                         navController = navController,
-                        loginViewModel = loginViewModel
+                        loginViewModel = loginViewModel,
+                        localization = localization
                     )
                 }
 
@@ -103,13 +114,17 @@ fun MainNavGraph() {
                 composable(route = Screen.ForgotPassword.route) {
                     ForgotPasswordContent(
                         navController = navController,
-                        loginViewModel = loginViewModel
+                        loginViewModel = loginViewModel,
+                        localization = localization
                     )
                 }
 
                 //language screen
                 composable(route = Screen.Language.route) {
-                    LanguageContent(navController, localizationViewModel)
+                    LanguageContent(
+                        navController,
+                        localizationViewModel,
+                    )
                 }
             }
         }

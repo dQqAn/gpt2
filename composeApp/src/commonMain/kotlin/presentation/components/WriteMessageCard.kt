@@ -20,11 +20,13 @@ import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import util.Localization
 import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun WriteMessageCard(
+    localization: Localization,
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
@@ -50,13 +52,13 @@ fun WriteMessageCard(
 //                                        modifier = Modifier.heightIn(max = 50.dp),
                                         bitmap = chatViewModel.createBitmapFromFilePath(galleryImages.value[i]!!.path)!!
                                             .asImageBitmap(),
-                                        contentDescription = "some useful description",
+                                        contentDescription = "",
                                         contentScale = ContentScale.Crop
                                     )
                                     Button(modifier = Modifier.align(Alignment.CenterHorizontally), onClick = {
                                         //todo(delete the list item )
                                     }) {
-                                        Text("Delete")
+                                        Text(localization.delete)
                                     }
                                 }
                             }
@@ -66,13 +68,8 @@ fun WriteMessageCard(
                                 Button(modifier = Modifier.align(Alignment.CenterStart), onClick = {
 
                                 }) {
-                                    Text("Cancel")
+                                    Text(localization.cancel)
                                 }
-                                /*Button(modifier = Modifier.align(Alignment.CenterEnd), onClick = {
-
-                                }) {
-                                    Text("Send")
-                                }*/
                             }
                         }
                     }
@@ -87,7 +84,7 @@ fun WriteMessageCard(
                         },
                         placeholder = {
                             Text(
-                                text = "Write your message",
+                                text = localization.writeMessage,
                                 fontWeight = FontWeight.Bold
                             )
                         },

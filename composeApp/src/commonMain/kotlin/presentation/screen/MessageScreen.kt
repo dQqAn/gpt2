@@ -22,12 +22,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import util.GetCurrentDate
+import util.Localization
 import viewmodel.MessageToChatViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MessageScreen(
     navController: NavController,
+    localization: Localization,
     viewModel: MessageViewModel = viewModel(),
     sharedVM: MessageToChatViewModel = viewModel(),
     loginViewModel: LoginViewModel = viewModel()
@@ -105,14 +107,14 @@ fun MessageScreen(
                     loginViewModel.signOut()
                     navController.navigate(route = Screen.SignIn.route)
                 }) {
-                    Text("Sign Out")
+                    Text(localization.signOut)
                 }
                 Button(
                     onClick = {
                         openGallery.value = true
                     }
                 ) {
-                    Text("Take Permissions")
+                    Text(localization.takePermission)
                 }
                 Button(
                     colors = ButtonDefaults.buttonColors(containerColor = BluePrimary),
@@ -129,7 +131,7 @@ fun MessageScreen(
                             viewModel.otherUserID(null)
                         }
                     }) {
-                    Text(modifier = Modifier, text = "New chat")
+                    Text(modifier = Modifier, text = localization.newChat)
                 }
             }
         },

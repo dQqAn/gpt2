@@ -13,12 +13,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import org.jetbrains.compose.ui.tooling.preview.Preview
+import util.Localization
 
 @Composable
 fun OnBoardingScreen(
-    navController: NavController
+    navController: NavController,
+    localization: Localization
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -79,7 +79,7 @@ fun OnBoardingScreen(
                 Text(
                     modifier = Modifier.weight(1f),
                     textAlign = TextAlign.Center,
-                    text = "Continue",
+                    text = localization.next,
                     style = MaterialTheme.typography.titleLarge.copy(
                         fontWeight = FontWeight.Bold,
                         fontSize = 19.sp
@@ -98,8 +98,9 @@ fun OnBoardingScreen(
     }
 }
 
+/*
 @Preview
 @Composable
 fun OnBoardingScreePreview() {
     OnBoardingScreen(navController = rememberNavController())
-}
+}*/

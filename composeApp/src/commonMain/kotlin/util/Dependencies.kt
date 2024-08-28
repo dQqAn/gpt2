@@ -8,6 +8,8 @@ interface Localization {
     val yourPassword: String
     val confirmYourPassword: String
     val signIn: String
+    val signOut: String
+    val signUp: String
     val forgotPassword: String
     val createNewAccount: String
     val next: String
@@ -21,6 +23,11 @@ interface Localization {
     val checkYourPhone: String
     val checkYourEmailAndSignIn: String
     val selectYourLanguage: String
+    val takePermission: String
+    val newChat: String
+    val delete: String
+    val cancel: String
+    val writeMessage: String
 
     //icons description
     val showPassword: String

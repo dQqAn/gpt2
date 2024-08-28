@@ -29,6 +29,10 @@ object EnglishLocalization : Localization {
         get() = "Confirm Your Password"
     override val signIn: String
         get() = "Sign In"
+    override val signOut: String
+        get() = "Sign Out"
+    override val signUp: String
+        get() = "Sign Up"
     override val forgotPassword: String
         get() = "Forgot Password"
     override val createNewAccount: String
@@ -55,6 +59,16 @@ object EnglishLocalization : Localization {
         get() = "Check your email and sign in"
     override val selectYourLanguage: String
         get() = "Select Your Language"
+    override val takePermission: String
+        get() = "Take Permission"
+    override val newChat: String
+        get() = "New Chat"
+    override val delete: String
+        get() = "Delete"
+    override val cancel: String
+        get() = "Cancel"
+    override val writeMessage: String
+        get() = "Write Message"
     override val showPassword: String
         get() = "Show Password"
     override val hidePassword: String
@@ -119,6 +133,10 @@ object DeutschLocalization : Localization {
         get() = "Bestätigen Sie Ihr Passwort"
     override val signIn: String
         get() = "Anmelden"
+    override val signOut: String
+        get() = "Abmelden"
+    override val signUp: String
+        get() = "Registrieren"
     override val forgotPassword: String
         get() = "Passwort vergessen"
     override val createNewAccount: String
@@ -145,6 +163,16 @@ object DeutschLocalization : Localization {
         get() = "Überprüfen Sie Ihre E-Mail und melden Sie sich an"
     override val selectYourLanguage: String
         get() = "Wählen Sie Ihre Sprache"
+    override val takePermission: String
+        get() = "Erlaubnis einholen"
+    override val newChat: String
+        get() = "Neuer Chat"
+    override val delete: String
+        get() = "Löschen"
+    override val cancel: String
+        get() = "Abbrechen"
+    override val writeMessage: String
+        get() = "Nachricht schreiben"
     override val showPassword: String
         get() = "Passwort anzeigen"
     override val hidePassword: String
@@ -208,6 +236,10 @@ object TurkishLocalization : Localization {
         get() = "Şifrenizi Onaylayın"
     override val signIn: String
         get() = "Giriş Yap"
+    override val signOut: String
+        get() = "Çıkış Yap"
+    override val signUp: String
+        get() = "Kaydol"
     override val forgotPassword: String
         get() = "Şifremi Unuttum"
     override val createNewAccount: String
@@ -234,6 +266,16 @@ object TurkishLocalization : Localization {
         get() = "E-postanızı kontrol edin ve giriş yapın"
     override val selectYourLanguage: String
         get() = "Dilinizi Seçin"
+    override val takePermission: String
+        get() = "İzin Al"
+    override val newChat: String
+        get() = "Yeni Sohbet"
+    override val delete: String
+        get() = "Sil"
+    override val cancel: String
+        get() = "İptal"
+    override val writeMessage: String
+        get() = "Mesaj Yaz"
     override val showPassword: String
         get() = "Şifreyi Göster"
     override val hidePassword: String
@@ -297,6 +339,10 @@ object FrenchLocalization : Localization {
         get() = "Confirmez votre mot de passe"
     override val signIn: String
         get() = "Se connecter"
+    override val signOut: String
+        get() = "Se déconnecter"
+    override val signUp: String
+        get() = "S'inscrire"
     override val forgotPassword: String
         get() = "Mot de passe oublié"
     override val createNewAccount: String
@@ -323,6 +369,16 @@ object FrenchLocalization : Localization {
         get() = "Vérifiez votre e-mail et connectez-vous"
     override val selectYourLanguage: String
         get() = "Sélectionnez votre langue"
+    override val takePermission: String
+        get() = "Prendre permission"
+    override val newChat: String
+        get() = "Nouvelle conversation"
+    override val delete: String
+        get() = "Supprimer"
+    override val cancel: String
+        get() = "Annuler"
+    override val writeMessage: String
+        get() = "Écrire un message"
     override val showPassword: String
         get() = "Afficher le mot de passe"
     override val hidePassword: String
@@ -386,6 +442,10 @@ object RussianLocalization : Localization {
         get() = "Подтвердите ваш пароль"
     override val signIn: String
         get() = "Войти"
+    override val signOut: String
+        get() = "Выйти"
+    override val signUp: String
+        get() = "Зарегистрироваться"
     override val forgotPassword: String
         get() = "Забыли пароль"
     override val createNewAccount: String
@@ -412,6 +472,16 @@ object RussianLocalization : Localization {
         get() = "Проверьте ваш e-mail и войдите"
     override val selectYourLanguage: String
         get() = "Выберите ваш язык"
+    override val takePermission: String
+        get() = "Получить разрешение"
+    override val newChat: String
+        get() = "Новый чат"
+    override val delete: String
+        get() = "Удалить"
+    override val cancel: String
+        get() = "Отмена"
+    override val writeMessage: String
+        get() = "Написать сообщение"
     override val showPassword: String
         get() = "Показать пароль"
     override val hidePassword: String
