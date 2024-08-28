@@ -10,11 +10,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,7 +25,7 @@ import viewmodel.MessageToChatViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MessageScreen(
+fun BoxWithConstraintsScope.MessageScreen(
     navController: NavController,
     localization: Localization,
     viewModel: MessageViewModel = viewModel(),
@@ -35,6 +33,7 @@ fun MessageScreen(
     loginViewModel: LoginViewModel = viewModel()
 //    gpt2Client: GPT2Client = viewModel()
 ) {
+    val maxWidth = maxWidth
     val openGallery = mutableStateOf(false)
     val showRationalDialog = mutableStateOf(false)
     viewModel.takePermission(openGallery, showRationalDialog)
@@ -48,44 +47,81 @@ fun MessageScreen(
     val isSearching by viewModel.isSearching.collectAsState()
     val searchedList by viewModel.searchedList.collectAsState()
 
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = false
+    )
+    val scope = rememberCoroutineScope()
+    var showBottomSheet by remember { mutableStateOf(false) }
+
     Scaffold(
         containerColor = Color.White,
         topBar = {
-            SearchBar(
-                query = searchText,//text showed on SearchBar
-                onQueryChange = viewModel::onSearchTextChange, //update the value of searchText
-                onSearch = viewModel::onSearchTextChange, //the callback to be invoked when the input service triggers the ImeAction.Search action
-                active = isSearching, //whether the user is searching or not
-                onActiveChange = { viewModel.onToogleSearch() }, //the callback to be invoked when this search bar's active state is changed
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                LazyColumn {
-                    items(searchedList.size) { mail ->
-                        searchedList[mail]?.let {
-                            Text(
-                                text = it,
-                                modifier = Modifier.padding(
-                                    start = 8.dp,
-                                    top = 4.dp,
-                                    end = 8.dp,
-                                    bottom = 4.dp
-                                ).clickable {
-                                    viewModel.changeIsSearching()
-                                    viewModel.changeSearchText(it)
-                                    sharedVM.changeIsNewChat(false)
-                                    sharedVM.changeOtherUserMail(it)
-                                    sharedVM.changeChatID(null)
-                                    navController.navigate(route = Screen.Chat.route) {
-                                        popUpTo(Screen.Chat.route) {
-                                            inclusive = true
+            Row(Modifier.fillMaxWidth().heightIn(max = 100.dp)) {
+                SearchBar(
+                    placeholder = {
+                        Text(localization.search)
+                    },
+                    query = searchText,//text showed on SearchBar
+                    onQueryChange = viewModel::onSearchTextChange, //update the value of searchText
+                    onSearch = viewModel::onSearchTextChange, //the callback to be invoked when the input service triggers the ImeAction.Search action
+                    active = isSearching, //whether the user is searching or not
+                    onActiveChange = { viewModel.onToogleSearch() }, //the callback to be invoked when this search bar's active state is changed
+                    modifier = Modifier
+                        .widthIn(max = (maxWidth / 100 * 80))
+                        .padding(
+                            start = 16.dp,
+                            top = 16.dp,
+                            end = 4.dp,
+                            bottom = 16.dp
+                        )
+                        .align(Alignment.CenterVertically)
+                ) {
+                    LazyColumn {
+                        items(searchedList.size) { mail ->
+                            searchedList[mail]?.let {
+                                Text(
+                                    text = it,
+                                    modifier = Modifier.padding(
+                                        start = 8.dp,
+                                        top = 4.dp,
+                                        end = 8.dp,
+                                        bottom = 4.dp
+                                    ).clickable {
+                                        viewModel.changeIsSearching()
+                                        viewModel.changeSearchText(it)
+                                        sharedVM.changeIsNewChat(false)
+                                        sharedVM.changeOtherUserMail(it)
+                                        sharedVM.changeChatID(null)
+                                        navController.navigate(route = Screen.Chat.route) {
+                                            popUpTo(Screen.Chat.route) {
+                                                inclusive = true
+                                            }
                                         }
                                     }
-                                }
-                            )
+                                )
+                            }
                         }
                     }
+                }
+
+                IconButton(
+                    modifier = Modifier
+                        .widthIn(max = (maxWidth / 100 * 40))
+                        .heightIn(max = 100.dp)
+                        .padding(
+                            start = 4.dp,
+                            top = 16.dp,
+                            end = 8.dp,
+                            bottom = 16.dp
+                        )
+                        .align(Alignment.CenterVertically),
+                    onClick = { showBottomSheet = true }
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.Settings,
+//                        tint = Color.Black.copy(0.3f),
+                        contentDescription = ""
+                    )
                 }
             }
         },
@@ -103,19 +139,7 @@ fun MessageScreen(
                 }) {
                     Text("Gpt2 Test")
                 }*/
-                Button(onClick = {
-                    loginViewModel.signOut()
-                    navController.navigate(route = Screen.SignIn.route)
-                }) {
-                    Text(localization.signOut)
-                }
-                Button(
-                    onClick = {
-                        openGallery.value = true
-                    }
-                ) {
-                    Text(localization.takePermission)
-                }
+
                 Button(
                     colors = ButtonDefaults.buttonColors(containerColor = BluePrimary),
                     onClick = {
@@ -186,6 +210,38 @@ fun MessageScreen(
                             }
                         }
                     }
+                }
+            }
+
+            if (showBottomSheet) {
+                ModalBottomSheet(
+                    modifier = Modifier.fillMaxHeight(),
+                    sheetState = sheetState,
+                    onDismissRequest = { showBottomSheet = false }
+                ) {
+                    Button(onClick = {
+                        loginViewModel.signOut()
+                        navController.navigate(route = Screen.SignIn.route)
+                    }) {
+                        Text(localization.signOut)
+                    }
+                    Button(
+                        onClick = {
+                            openGallery.value = true
+                        }
+                    ) {
+                        Text(localization.takePermission)
+                    }
+
+                    /*Button(onClick = {
+                        scope.launch { sheetState.hide() }.invokeOnCompletion {
+                            if (!sheetState.isVisible) {
+                                showBottomSheet = false
+                            }
+                        }
+                    }) {
+                        Text("Hide bottom sheet")
+                    }*/
                 }
             }
         }

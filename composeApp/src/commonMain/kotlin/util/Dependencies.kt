@@ -28,6 +28,7 @@ interface Localization {
     val delete: String
     val cancel: String
     val writeMessage: String
+    val search: String
 
     //icons description
     val showPassword: String

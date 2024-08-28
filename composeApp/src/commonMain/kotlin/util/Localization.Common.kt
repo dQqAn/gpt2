@@ -69,6 +69,8 @@ object EnglishLocalization : Localization {
         get() = "Cancel"
     override val writeMessage: String
         get() = "Write Message"
+    override val search: String
+        get() = "Search"
     override val showPassword: String
         get() = "Show Password"
     override val hidePassword: String
@@ -173,6 +175,8 @@ object DeutschLocalization : Localization {
         get() = "Abbrechen"
     override val writeMessage: String
         get() = "Nachricht schreiben"
+    override val search: String
+        get() = "Suche"
     override val showPassword: String
         get() = "Passwort anzeigen"
     override val hidePassword: String
@@ -276,6 +280,8 @@ object TurkishLocalization : Localization {
         get() = "İptal"
     override val writeMessage: String
         get() = "Mesaj Yaz"
+    override val search: String
+        get() = "Ara"
     override val showPassword: String
         get() = "Şifreyi Göster"
     override val hidePassword: String
@@ -379,6 +385,8 @@ object FrenchLocalization : Localization {
         get() = "Annuler"
     override val writeMessage: String
         get() = "Écrire un message"
+    override val search: String
+        get() = "Recherche"
     override val showPassword: String
         get() = "Afficher le mot de passe"
     override val hidePassword: String
@@ -482,6 +490,8 @@ object RussianLocalization : Localization {
         get() = "Отмена"
     override val writeMessage: String
         get() = "Написать сообщение"
+    override val search: String
+        get() = "Поиск"
     override val showPassword: String
         get() = "Показать пароль"
     override val hidePassword: String
