@@ -232,6 +232,17 @@ fun BoxWithConstraintsScope.MessageScreen(
                     ) {
                         Text(localization.takePermission)
                     }
+                    Button(
+                        onClick = {
+                            navController.navigate(route = Screen.Language.route) {
+                                popUpTo(Screen.Language.route) {
+                                    inclusive = true
+                                }
+                            }
+                        }
+                    ) {
+                        Text(localization.selectYourLanguage)
+                    }
 
                     /*Button(onClick = {
                         scope.launch { sheetState.hide() }.invokeOnCompletion {
