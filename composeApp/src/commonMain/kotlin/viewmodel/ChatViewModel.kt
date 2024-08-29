@@ -42,13 +42,6 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
         }
     }
 
-    init {
-        changeMessageText("")
-        viewModelScope.launch {
-//            imageClassify()
-        }
-    }
-
     private val _isListening = mutableStateOf(false)
 
     /*val isListening = _isListening
@@ -92,10 +85,21 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
         firebaseMessageRepository.getOnlineFile(path, selectedByteArrayImages)
     }
 
-    //    private val _messageList: MutableStateFlow<List<AnswerEntity?>> = MutableStateFlow(emptyList())
-    //    val messageList: StateFlow<List<AnswerEntity?>> = _messageList.asStateFlow()
-    val _remoteMessageList = firebaseMessageRepository.messageList
+    private val _localMessageList: MutableStateFlow<List<AnswerEntity?>> = MutableStateFlow(emptyList())
+    val localMessageList: StateFlow<List<AnswerEntity?>> = _localMessageList.asStateFlow()
+
+    private val _remoteMessageList = firebaseMessageRepository.messageList
     val remoteMessageList = _remoteMessageList.asStateFlow()
+
+    init {
+        changeMessageText("")
+        _remoteMessageList.update {
+            listOf()
+        }
+        _localMessageList.update {
+            listOf()
+        }
+    }
 
     val currentUserID = firebaseMessageRepository.currentUserID
     val currentUserMail = firebaseMessageRepository.currentUserMail
@@ -128,16 +132,16 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
 
     fun loadMessages(chatID: String?, senderID: String, receiverID: String, isNewChat: Boolean) {
         chatID?.let {
-            if (isNewChat) {
-                viewModelScope.launch {
-                    withContext(Dispatchers.Main) {
-                        messageRepository.getMessages(it).collect { data ->
-                            if (data.isNotEmpty()) {
-                                _remoteMessageList.update { data }
-                            }
+            viewModelScope.launch {
+                withContext(Dispatchers.Main) {
+                    messageRepository.getMessages(it).collect { data ->
+                        if (data.isNotEmpty()) {
+                            _localMessageList.update { data }
                         }
                     }
                 }
+            }
+            if (isNewChat) {
                 if (!isTitledLoaded.value) { //for gpt chat
                     viewModelScope.launch {
                         withContext(Dispatchers.IO) {
@@ -196,6 +200,14 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
                     date = GetCurrentDate()
                 )
             )
+        }
+    }
+
+    fun localAddAnswer(answerEntity: AnswerEntity) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                database.answerDao().addAnswer(answerEntity)
+            }
         }
     }
 

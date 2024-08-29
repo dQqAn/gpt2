@@ -6,10 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -46,7 +43,36 @@ fun BoxWithConstraintsScope.ChatScreen(
 
     chatViewModel.loadMessages(chatID, senderID, receiverID, isNewChat)
 
-    val messageList by chatViewModel.remoteMessageList.collectAsState()
+    val localMessageList by chatViewModel.localMessageList.collectAsState()
+    val remoteMessageList by chatViewModel.remoteMessageList.collectAsState()
+
+    LaunchedEffect(remoteMessageList) {
+        for (item in remoteMessageList) {
+            if (localMessageList.find { it?.messageID == item?.messageID } == null) {
+                item?.let {
+                    println(item.content)
+                    val tempChatID = if (localMessageList.isNotEmpty()) {
+                        localMessageList.first()?.chatID!!
+                    } else {
+                        chatID
+                    }
+                    chatViewModel.localAddAnswer(
+                        AnswerEntity(
+                            chatID = tempChatID,
+                            messageID = it.messageID,
+                            role = it.role,
+                            contentType = it.contentType,
+                            content = it.content,
+                            senderID = it.senderID,
+                            receiverID = it.receiverID,
+                            date = it.date
+                        )
+                    )
+                }
+            }
+        }
+    }
+
     friendID?.let {
         chatViewModel.getAnswer(chatID, currentUserID, friendID)
     }
@@ -80,8 +106,8 @@ fun BoxWithConstraintsScope.ChatScreen(
                 },
                 onClickSend = {
                     var _chatID: String? = null
-                    if (messageList.isNotEmpty()) {
-                        _chatID = messageList.first()?.chatID!!
+                    if (localMessageList.isNotEmpty()) {
+                        _chatID = localMessageList.first()?.chatID!!
                     } else {
                         _chatID = chatID
                     }
@@ -132,7 +158,7 @@ fun BoxWithConstraintsScope.ChatScreen(
 //                verticalArrangement = Arrangement.spacedBy(space = 8.dp),
                 horizontalAlignment = Alignment.End
             ) {
-                itemsIndexed(messageList) { index, data ->
+                itemsIndexed(localMessageList) { index, data ->
                     data?.let {
                         if (it.senderID == currentUserID && it.fromUser) {
                             MessengerItemCard(
