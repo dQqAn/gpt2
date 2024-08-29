@@ -12,6 +12,8 @@ interface MessageRepository {
 
     suspend fun getMessages(chatID: String): Flow<List<AnswerEntity?>>
 
+    suspend fun getMessage(chatID: String): AnswerEntity?
+
 //    suspend fun addAnswer(answer: Message, senderID: String, receiverID: String)
 
     //    suspend fun getChats(senderID: String, receiverID: String):Flow<List<AnswerEntity>>

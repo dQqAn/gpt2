@@ -13,6 +13,9 @@ interface AnswerDao {
     @Query("SELECT * FROM `answers` WHERE chatID = :chatID")
     fun getAnswer(chatID: String): Flow<List<AnswerEntity>>
 
+    @Query("SELECT * FROM `answers` WHERE messageID = :messageID")
+    fun getMessage(messageID: String): AnswerEntity?
+
     //    @Query("SELECT * FROM `answers` WHERE chatID in (:senderID, :receiverID)")
 //    fun getChats(senderID: String, receiverID: String): Flow<List<AnswerEntity>>
 //    @Query("SELECT chatID FROM `answers`")

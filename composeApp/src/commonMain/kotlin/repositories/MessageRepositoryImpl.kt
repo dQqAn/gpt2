@@ -55,6 +55,20 @@ class MessageRepositoryImpl(private val dao: AnswerDao) : MessageRepository {
         }
     }
 
+    override suspend fun getMessage(chatID: String): AnswerEntity? {
+        val entity = dao.getMessage(chatID) ?: return null
+        return AnswerEntity(
+            chatID = entity.chatID,
+            role = entity.role,
+            contentType = entity.contentType,
+            content = entity.content,
+            senderID = entity.senderID,
+            receiverID = entity.receiverID,
+            date = entity.date,
+            messageID = entity.messageID
+        )
+    }
+
     /*override suspend fun addAnswer(answer: Message, senderID: String, receiverID: String) {
         dao.addAnswer(
             AnswerEntity(
