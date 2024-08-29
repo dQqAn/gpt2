@@ -56,7 +56,7 @@ fun BoxWithConstraintsScope.MessageScreen(
     Scaffold(
         containerColor = Color.White,
         topBar = {
-            Row(Modifier.fillMaxWidth().heightIn(max = 100.dp)) {
+            Row(Modifier.fillMaxWidth()) {
                 SearchBar(
                     placeholder = {
                         Text(localization.search)
@@ -67,7 +67,13 @@ fun BoxWithConstraintsScope.MessageScreen(
                     active = isSearching, //whether the user is searching or not
                     onActiveChange = { viewModel.onToogleSearch() }, //the callback to be invoked when this search bar's active state is changed
                     modifier = Modifier
-                        .widthIn(max = (maxWidth / 100 * 80))
+                        .widthIn(
+                            max = (if (!isSearching) {
+                                (maxWidth / 100 * 80)
+                            } else {
+                                maxWidth
+                            })
+                        )
                         .padding(
                             start = 16.dp,
                             top = 16.dp,
@@ -104,24 +110,26 @@ fun BoxWithConstraintsScope.MessageScreen(
                     }
                 }
 
-                IconButton(
-                    modifier = Modifier
-                        .widthIn(max = (maxWidth / 100 * 40))
-                        .heightIn(max = 100.dp)
-                        .padding(
-                            start = 4.dp,
-                            top = 16.dp,
-                            end = 8.dp,
-                            bottom = 16.dp
-                        )
-                        .align(Alignment.CenterVertically),
-                    onClick = { showBottomSheet = true }
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Settings,
+                if (!isSearching) {
+                    IconButton(
+                        modifier = Modifier
+                            .widthIn(max = (maxWidth / 100 * 40))
+                            .heightIn(max = 100.dp)
+                            .padding(
+                                start = 4.dp,
+                                top = 16.dp,
+                                end = 8.dp,
+                                bottom = 16.dp
+                            )
+                            .align(Alignment.CenterVertically),
+                        onClick = { showBottomSheet = true }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.Settings,
 //                        tint = Color.Black.copy(0.3f),
-                        contentDescription = ""
-                    )
+                            contentDescription = ""
+                        )
+                    }
                 }
             }
         },
