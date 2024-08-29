@@ -168,7 +168,10 @@ actual class FirebaseMessageRepositoryImp(
                     for (postSnapshot in snapshot.children) {
                         val message: AnswerEntity? = postSnapshot?.getValue(AnswerEntity::class.java)
                         if (message != null) {
-                            if (!messageList.value.contains(message)) {
+                            val list = messageList.value.map {
+                                it?.messageID
+                            }
+                            if (!list.contains(message.messageID)) {
                                 messageList.update {
                                     messageList.value + message
                                 }
