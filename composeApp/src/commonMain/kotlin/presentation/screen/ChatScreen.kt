@@ -50,7 +50,6 @@ fun BoxWithConstraintsScope.ChatScreen(
         for (item in remoteMessageList) {
             if (localMessageList.find { it?.messageID == item?.messageID } == null) {
                 item?.let {
-                    println(item.content)
                     val tempChatID = if (localMessageList.isNotEmpty()) {
                         localMessageList.first()?.chatID!!
                     } else {

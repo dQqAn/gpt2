@@ -38,8 +38,6 @@ fun BoxWithConstraintsScope.MessageScreen(
     val showRationalDialog = mutableStateOf(false)
     viewModel.takePermission(openGallery, showRationalDialog)
 
-    viewModel.deleteMessageList()
-
     val chats by viewModel.chats.collectAsState()
 
     //Collecting states from ViewModel

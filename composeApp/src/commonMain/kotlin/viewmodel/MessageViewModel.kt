@@ -13,13 +13,6 @@ import repositories.FirebaseMessageRepository
 class MessageViewModel : ViewModel(), KoinComponent {
     private val firebaseMessageRepository: FirebaseMessageRepository by inject()
 
-    private val _remoteMessageList = firebaseMessageRepository.messageList
-    fun deleteMessageList() {
-        _remoteMessageList.update {
-            emptyList()
-        }
-    }
-
     private val messageRepository: MessageRepository by inject()
 
     val currentUserMail = firebaseMessageRepository.currentUserMail
