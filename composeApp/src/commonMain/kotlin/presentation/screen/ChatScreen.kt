@@ -75,6 +75,13 @@ fun BoxWithConstraintsScope.ChatScreen(
                 onValueChange = { value ->
                     chatViewModel.changeMessageText(value)
                 },
+                onClickCamera = {
+                    navController.navigate(route = Screen.Camera.route) {
+                        popUpTo(Screen.Camera.route) {
+                            inclusive = true
+                        }
+                    }
+                },
                 onClickGallery = {
                     openGallery.value = true
                 },

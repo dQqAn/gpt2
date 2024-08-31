@@ -34,6 +34,9 @@ serialization_ref = "1.7.1"
 serialization_plugin_ref = "2.0.0"
 camerax_version = "1.4.0-rc01"
 android_permission_ref = "0.35.1-alpha"
+concurrent_version = "1.2.0"
+guava_coroutines_version = "1.6.0"
+guava_android_version = "33.3.0-android"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -68,9 +71,15 @@ google-firestore = { module = "com.google.firebase:firebase-firestore" }
 google-storage = { module = "com.google.firebase:firebase-storage" }
 google-auth = { group = "com.firebaseui", name = "firebase-ui-auth", version.ref = "google_auth_ref" }
 serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization_ref" }
-camera-view = { module = "androidx.camera:camera-view", version.ref = "camerax_version" }
-camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "camerax_version" }
-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "camerax_version" }
+camerax-view = { module = "androidx.camera:camera-view", version.ref = "camerax_version" }
+camerax-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "camerax_version" }
+camerax-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "camerax_version" }
+camerax-core = { module = "androidx.camera:camera-core", version.ref = "camerax_version" }
+camerax-video = { module = "androidx.camera:camera-video", version.ref = "camerax_version" }
+camerax-extensions = { module = "androidx.camera:camera-extensions", version.ref = "camerax_version" }
+concurrent = { module = "androidx.concurrent:concurrent-futures", version.ref = "concurrent_version" }
+guava-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-guava", version.ref = "guava_coroutines_version" }
+guava-android = { module = "com.google.guava:guava", version.ref = "guava_android_version" }
 android-permission = { module = "com.google.accompanist:accompanist-permissions", version.ref = "android_permission_ref" }
 
 [plugins]

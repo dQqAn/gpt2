@@ -23,4 +23,6 @@ sealed class Screen(val route: String) {
     object ForgotPassword : Screen("forgot_password_screen")
 
     object Language : Screen("language_screen")
+
+    object Camera : Screen("camera_screen")
 }
