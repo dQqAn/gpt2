@@ -136,6 +136,10 @@ fun MainNavGraph() {
                         localizationViewModel,
                     )
                 }
+
+                composable(route = Screen.Camera.route) {
+                    CameraPage(navController = navController, localization = localization)
+                }
             }
         }
     }

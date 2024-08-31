@@ -45,11 +45,17 @@ kotlin {
 
             //Utils
             implementation(libs.android.permission)
+            implementation(libs.concurrent)
+            implementation(libs.guava.coroutines)
+            implementation(libs.guava.android)
 
             //Camera
-            implementation(libs.camera.view)
-            implementation(libs.camera.lifecycle)
-            implementation(libs.camera.camera2)
+            implementation(libs.camerax.view)
+            implementation(libs.camerax.lifecycle)
+            implementation(libs.camerax.camera2)
+            implementation(libs.camerax.core)
+            implementation(libs.camerax.video)
+            implementation(libs.camerax.extensions)
 
             //Firebase
             implementation(project.dependencies.platform(libs.google.bom))
