@@ -1,5 +1,6 @@
 package util
 
+import ChatViewModel
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -15,5 +16,9 @@ private val coreModule = module {
             .baseUrl("https://api.openai.com/v1/chat/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+    }
+
+    single<ChatViewModel> {
+        ChatViewModel(get(),get())
     }
 }

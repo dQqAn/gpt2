@@ -22,7 +22,7 @@ import viewmodel.MessageToChatViewModel
 fun BoxWithConstraintsScope.ChatScreen(
     navController: NavController,
     localization: Localization,
-    chatViewModel: ChatViewModel = viewModel(),
+    chatViewModel: ChatViewModel,
     sharedVM: MessageToChatViewModel = viewModel(),
 //    gpt2Client: GPT2Client = viewModel()
 ) {
@@ -40,8 +40,6 @@ fun BoxWithConstraintsScope.ChatScreen(
     val currentUserMail = chatViewModel.currentUserMail
     val currentUserID = chatViewModel.currentUserID
     val chatID = sharedVM.chatID.value ?: (currentUserMail + "_" + otherUserMail)
-
-    chatViewModel.loadMessages(chatID, senderID, receiverID, isNewChat)
 
     val localMessageList by chatViewModel.localMessageList.collectAsState()
     val remoteMessageList by chatViewModel.remoteMessageList.collectAsState()

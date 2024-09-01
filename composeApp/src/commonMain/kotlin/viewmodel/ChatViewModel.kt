@@ -23,7 +23,8 @@ import repositories.FirebaseMessageRepository
 import util.GetCurrentDate
 import java.io.File
 
-class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.ClassifierListener {
+class ChatViewModel(val chatID: String, val isNewChat: Boolean) : ViewModel(), KoinComponent,
+    ImageClassifierHelper.ClassifierListener {
     private val database: AnswerDatabase by inject()
     private val messageRepository: MessageRepository by inject()
     private val bertHelper: BertHelper by inject()
@@ -93,11 +94,18 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
 
     init {
         changeMessageText("")
+
         _remoteMessageList.update {
             listOf()
         }
         _localMessageList.update {
             listOf()
+        }
+
+        viewModelScope.launch {
+            withContext(Dispatchers.Main) {
+                loadMessages(chatID, senderID.value, receiverID.value, isNewChat)
+            }
         }
     }
 
@@ -130,11 +138,11 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
         return allTitles
     }
 
-    fun loadMessages(chatID: String?, senderID: String, receiverID: String, isNewChat: Boolean) {
-        chatID?.let {
+    private fun loadMessages(chatID: String?, senderID: String, receiverID: String, isNewChat: Boolean) {
+        if (!chatID.isNullOrBlank()) {
             viewModelScope.launch {
                 withContext(Dispatchers.Main) {
-                    messageRepository.getMessages(it).collect { data ->
+                    messageRepository.getMessages(chatID).collect { data ->
                         if (data.isNotEmpty()) {
                             _localMessageList.update { data }
                         }
@@ -147,7 +155,7 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
                         withContext(Dispatchers.IO) {
                             database.answerDao().addAnswer(
                                 answerEntity = AnswerEntity(
-                                    chatID = it,
+                                    chatID = chatID,
                                     role = "assistant",
                                     contentType = contentTypeMessage,
                                     content = getAllTitles(),
@@ -221,7 +229,7 @@ class ChatViewModel() : ViewModel(), KoinComponent, ImageClassifierHelper.Classi
 
     fun getAnswer(chatID: String, senderID: String, receiverID: String?) {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
+            withContext(Dispatchers.Main) {
                 firebaseMessageRepository.getAnswer(chatID, senderID, receiverID)
             }
         }

@@ -96,8 +96,13 @@ fun BoxWithConstraintsScope.MessageScreen(
                                         sharedVM.changeIsNewChat(false)
                                         sharedVM.changeOtherUserMail(it)
                                         sharedVM.changeChatID(null)
-                                        navController.navigate(route = Screen.Chat.route) {
-                                            popUpTo(Screen.Chat.route) {
+                                        val isNewChat = false
+                                        navController.navigate(
+                                            route = Screen.Chat.route + "?chatID=" + "&isNewChat=$isNewChat"
+                                        ) {
+                                            popUpTo(
+                                                Screen.Chat.route + "?chatID=" + "&isNewChat=$isNewChat"
+                                            ) {
                                                 inclusive = true
                                             }
                                         }
@@ -149,12 +154,13 @@ fun BoxWithConstraintsScope.MessageScreen(
                 Button(
                     colors = ButtonDefaults.buttonColors(containerColor = BluePrimary),
                     onClick = {
-                        navController.navigate(route = Screen.Chat.route) {
-                            popUpTo(Screen.Chat.route) {
+                        val currentDate = GetCurrentDate()
+                        val isNewChat = true
+                        navController.navigate(route = Screen.Chat.route + "?chatID=$currentDate gpt" + "&isNewChat=$isNewChat") {
+                            popUpTo(Screen.Chat.route + "?chatID=$currentDate gpt" + "&isNewChat=$isNewChat") {
                                 inclusive = true
                             }
                         }.apply {
-                            val currentDate = GetCurrentDate()
                             sharedVM.changeChatID("$currentDate gpt")
                             sharedVM.changeIsNewChat(true)
                             sharedVM.changeOtherUserMail("GPT")
@@ -184,8 +190,9 @@ fun BoxWithConstraintsScope.MessageScreen(
                     chatID?.let {
                         Box(
                             modifier = Modifier.clickable(onClick = {
-                                navController.navigate(route = Screen.Chat.route) {
-                                    popUpTo(Screen.Chat.route) {
+                                val isNewChat = false
+                                navController.navigate(route = Screen.Chat.route + "?chatID=" + chatID + "&isNewChat=$isNewChat") {
+                                    popUpTo(Screen.Chat.route + "?chatID=" + chatID + "&isNewChat=$isNewChat") {
                                         inclusive = true
                                     }
                                 }.apply {
