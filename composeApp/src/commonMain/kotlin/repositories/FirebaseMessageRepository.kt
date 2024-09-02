@@ -12,7 +12,8 @@ interface FirebaseMessageRepository {
     val currentUserID: String
     val currentUserMail: String
     val friendID: StateFlow<String?>
-    val messageID: String?
+    val chatID: MutableStateFlow<String?>
+    val isNewChat: MutableStateFlow<Boolean>
     val messageList: MutableStateFlow<List<AnswerEntity?>>
     val filteredList: MutableStateFlow<List<String?>>
     val otherUserID: MutableStateFlow<String?>

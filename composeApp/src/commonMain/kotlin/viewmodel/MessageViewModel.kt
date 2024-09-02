@@ -22,6 +22,22 @@ class MessageViewModel : ViewModel(), KoinComponent {
         firebaseMessageRepository.otherUserID(mail)
     }
 
+    private val _chatID = firebaseMessageRepository.chatID
+    val chatID = _chatID.asStateFlow()
+    fun changeChatID(chatID: String) {
+        _chatID.update {
+            chatID
+        }
+    }
+
+    private val _isNewChat = firebaseMessageRepository.isNewChat
+    val isNewChat = _isNewChat.asStateFlow()
+    fun changeIsNewChat(isNewChat: Boolean) {
+        _isNewChat.update {
+            isNewChat
+        }
+    }
+
     private val _chats: MutableStateFlow<List<String?>> = MutableStateFlow(emptyList())
     val chats = _chats.asStateFlow()
 

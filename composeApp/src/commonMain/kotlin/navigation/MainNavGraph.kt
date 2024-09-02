@@ -2,11 +2,9 @@ import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 import presentation.screen.MessageScreen
@@ -63,8 +61,9 @@ fun MainNavGraph() {
 //                route = "profile/{userId}/{name}",
 //                route = "userPage?userId={userId},isLoggedIn={isLoggedIn}",
                 composable(
-                    route = Screen.Chat.route + "?chatID={chatID}&isNewChat={isNewChat}",
-                    arguments = listOf(
+//                    route = Screen.Chat.route + "?chatID={chatID}&isNewChat={isNewChat}",
+                    route = Screen.Chat.route,
+                    /*arguments = listOf(
                         navArgument("chatID") {
                             nullable = true
                             defaultValue = ""
@@ -72,22 +71,17 @@ fun MainNavGraph() {
                         navArgument("isNewChat") {
                             nullable = false
                             type = NavType.BoolType
-                        })
+                        })*/
                 ) { backStackEntry ->
-                    val chatID = backStackEntry.arguments?.getString("chatID")
-                    chatID?.let {
-                        val isNewChat = backStackEntry.arguments?.getBoolean("isNewChat")
-
-                        val viewModel = koinViewModel<ChatViewModel>(
-                            parameters = { parametersOf(chatID, isNewChat) }
-                        )
-                        ChatScreen(
-                            navController = navController,
-                            sharedVM = messageToChatViewModel,
-                            localization = localization,
-                            chatViewModel = viewModel,
-                        )
-                    }
+                    /*val isNewChat = backStackEntry.arguments?.getBoolean("isNewChat")
+                    val viewModel = koinViewModel<ChatViewModel>(
+                        parameters = { parametersOf(chatID, isNewChat) }
+                    )*/
+                    ChatScreen(
+                        navController = navController,
+                        sharedVM = messageToChatViewModel,
+                        localization = localization,
+                    )
                 }
 
                 //sign in screen

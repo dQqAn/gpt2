@@ -22,7 +22,7 @@ import viewmodel.MessageToChatViewModel
 fun BoxWithConstraintsScope.ChatScreen(
     navController: NavController,
     localization: Localization,
-    chatViewModel: ChatViewModel,
+    chatViewModel: ChatViewModel = viewModel(),
     sharedVM: MessageToChatViewModel = viewModel(),
 //    gpt2Client: GPT2Client = viewModel()
 ) {

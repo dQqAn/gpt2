@@ -95,13 +95,15 @@ fun BoxWithConstraintsScope.MessageScreen(
                                         viewModel.changeSearchText(it)
                                         sharedVM.changeIsNewChat(false)
                                         sharedVM.changeOtherUserMail(it)
-                                        sharedVM.changeChatID(null)
-                                        val isNewChat = false
+                                        sharedVM.changeChatID(viewModel.currentUserMail + "_" + it)
+                                        viewModel.changeChatID(viewModel.currentUserMail + "_" + it)
+                                        viewModel.changeIsNewChat(false)
                                         navController.navigate(
-                                            route = Screen.Chat.route + "?chatID=" + "&isNewChat=$isNewChat"
+//                                            route = Screen.Chat.route + "?chatID=" + "&isNewChat=$isNewChat"
+                                            route = Screen.Chat.route
                                         ) {
                                             popUpTo(
-                                                Screen.Chat.route + "?chatID=" + "&isNewChat=$isNewChat"
+                                                Screen.Chat.route
                                             ) {
                                                 inclusive = true
                                             }
@@ -155,9 +157,10 @@ fun BoxWithConstraintsScope.MessageScreen(
                     colors = ButtonDefaults.buttonColors(containerColor = BluePrimary),
                     onClick = {
                         val currentDate = GetCurrentDate()
-                        val isNewChat = true
-                        navController.navigate(route = Screen.Chat.route + "?chatID=$currentDate gpt" + "&isNewChat=$isNewChat") {
-                            popUpTo(Screen.Chat.route + "?chatID=$currentDate gpt" + "&isNewChat=$isNewChat") {
+//                        navController.navigate(route = Screen.Chat.route + "?chatID=$currentDate gpt" + "&isNewChat=$isNewChat") {
+//                            popUpTo(Screen.Chat.route + "?chatID=$currentDate gpt" + "&isNewChat=$isNewChat") {
+                        navController.navigate(route = Screen.Chat.route) {
+                            popUpTo(Screen.Chat.route) {
                                 inclusive = true
                             }
                         }.apply {
@@ -165,6 +168,8 @@ fun BoxWithConstraintsScope.MessageScreen(
                             sharedVM.changeIsNewChat(true)
                             sharedVM.changeOtherUserMail("GPT")
                             viewModel.otherUserID(null)
+                            viewModel.changeIsNewChat(true)
+                            viewModel.changeChatID("$currentDate gpt")
                         }
                     }) {
                     Text(modifier = Modifier, text = localization.newChat)
@@ -190,9 +195,10 @@ fun BoxWithConstraintsScope.MessageScreen(
                     chatID?.let {
                         Box(
                             modifier = Modifier.clickable(onClick = {
-                                val isNewChat = false
-                                navController.navigate(route = Screen.Chat.route + "?chatID=" + chatID + "&isNewChat=$isNewChat") {
-                                    popUpTo(Screen.Chat.route + "?chatID=" + chatID + "&isNewChat=$isNewChat") {
+//                                navController.navigate(route = Screen.Chat.route + "?chatID=" + chatID + "&isNewChat=$isNewChat") {
+//                                    popUpTo(Screen.Chat.route + "?chatID=" + chatID + "&isNewChat=$isNewChat") {
+                                navController.navigate(route = Screen.Chat.route) {
+                                    popUpTo(Screen.Chat.route) {
                                         inclusive = true
                                     }
                                 }.apply {
@@ -208,6 +214,9 @@ fun BoxWithConstraintsScope.MessageScreen(
                                         viewModel.otherUserID(null)
                                         sharedVM.changeOtherUserMail(null)
                                     }
+
+                                    viewModel.changeIsNewChat(false)
+                                    viewModel.changeChatID(chatID)
                                 }
                             }).fillMaxWidth()
                                 .background(color = Color.LightGray)

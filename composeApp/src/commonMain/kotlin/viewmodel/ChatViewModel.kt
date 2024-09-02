@@ -23,7 +23,7 @@ import repositories.FirebaseMessageRepository
 import util.GetCurrentDate
 import java.io.File
 
-class ChatViewModel(val chatID: String, val isNewChat: Boolean) : ViewModel(), KoinComponent,
+class ChatViewModel : ViewModel(), KoinComponent,
     ImageClassifierHelper.ClassifierListener {
     private val database: AnswerDatabase by inject()
     private val messageRepository: MessageRepository by inject()
@@ -59,6 +59,22 @@ class ChatViewModel(val chatID: String, val isNewChat: Boolean) : ViewModel(), K
     }
 
     private val firebaseMessageRepository: FirebaseMessageRepository by inject()
+
+    private val _chatID = firebaseMessageRepository.chatID
+    val chatID = _chatID.asStateFlow()
+    fun changeChatID(chatID: String) {
+        _chatID.update {
+            chatID
+        }
+    }
+
+    private val _isNewChat = firebaseMessageRepository.isNewChat
+    val isNewChat = _isNewChat.asStateFlow()
+    fun changeIsNewChat(isNewChat: Boolean) {
+        _isNewChat.update {
+            isNewChat
+        }
+    }
 
     val selectedImages: MutableState<List<File?>> = mutableStateOf(listOf())
 
@@ -104,7 +120,7 @@ class ChatViewModel(val chatID: String, val isNewChat: Boolean) : ViewModel(), K
 
         viewModelScope.launch {
             withContext(Dispatchers.Main) {
-                loadMessages(chatID, senderID.value, receiverID.value, isNewChat)
+                loadMessages(_chatID.value, senderID.value, receiverID.value, _isNewChat.value)
             }
         }
     }

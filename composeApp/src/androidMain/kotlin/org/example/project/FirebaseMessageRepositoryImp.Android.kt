@@ -58,6 +58,9 @@ actual class FirebaseMessageRepositoryImp(
         )
     }*/
 
+    override val chatID: MutableStateFlow<String?> = MutableStateFlow(null)
+    override val isNewChat: MutableStateFlow<Boolean> = MutableStateFlow(false)
+
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
 
     private val database: AnswerDatabase by inject()
@@ -71,7 +74,6 @@ actual class FirebaseMessageRepositoryImp(
     override val currentUserID: String = auth.currentUser!!.uid
     override val currentUserMail: String = auth.currentUser!!.email!!
     override val friendID: StateFlow<String?> = otherUserID.asStateFlow()
-    override val messageID: String? = null
 
     override val messageList: MutableStateFlow<List<AnswerEntity?>> = MutableStateFlow(emptyList())
 
