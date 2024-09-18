@@ -16,6 +16,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import util.Localization
 import viewmodel.MessageToChatViewModel
 
@@ -48,27 +49,29 @@ fun BoxWithConstraintsScope.ChatScreen(
     val remoteMessageList by chatViewModel.remoteMessageList.collectAsState()
 
     LaunchedEffect(remoteMessageList) {
-        chatViewModel.viewModelScope.launch(Dispatchers.IO) {
-            for (item in remoteMessageList) {
-                if (localMessageList.find { it?.messageID == item?.messageID } == null) {
-                    item?.let {
-                        val tempChatID = if (localMessageList.isNotEmpty()) {
-                            localMessageList.first()?.chatID!!
-                        } else {
-                            chatID
-                        }
-                        chatViewModel.localAddAnswer(
-                            AnswerEntity(
-                                chatID = tempChatID,
-                                messageID = it.messageID,
-                                role = it.role,
-                                contentType = it.contentType,
-                                content = it.content,
-                                senderID = it.senderID,
-                                receiverID = it.receiverID,
-                                date = it.date
+        chatViewModel.viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                for (item in remoteMessageList) {
+                    if (localMessageList.find { it?.messageID == item?.messageID } == null) {
+                        item?.let {
+                            val tempChatID = if (localMessageList.isNotEmpty()) {
+                                localMessageList.first()?.chatID!!
+                            } else {
+                                chatID
+                            }
+                            chatViewModel.localAddAnswer(
+                                AnswerEntity(
+                                    chatID = tempChatID,
+                                    messageID = it.messageID,
+                                    role = it.role,
+                                    contentType = it.contentType,
+                                    content = it.content,
+                                    senderID = it.senderID,
+                                    receiverID = it.receiverID,
+                                    date = it.date
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }
