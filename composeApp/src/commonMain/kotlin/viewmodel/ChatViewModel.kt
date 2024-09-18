@@ -108,32 +108,6 @@ class ChatViewModel : ViewModel(), KoinComponent,
     private val _remoteMessageList = firebaseMessageRepository.messageList
     val remoteMessageList = _remoteMessageList.asStateFlow()
 
-    init {
-        changeMessageText("")
-
-        _remoteMessageList.update {
-            listOf()
-        }
-        _localMessageList.update {
-            listOf()
-        }
-
-        viewModelScope.launch {
-            withContext(Dispatchers.Main) {
-                loadMessages(_chatID.value, senderID.value, receiverID.value, _isNewChat.value)
-            }
-        }
-    }
-
-    val currentUserID = firebaseMessageRepository.currentUserID
-    val currentUserMail = firebaseMessageRepository.currentUserMail
-    val friendID: StateFlow<String?> = firebaseMessageRepository.friendID
-
-    val isTitledLoaded = mutableStateOf(false)
-
-    private val _loading = MutableStateFlow(false)
-    val loading = _loading.asStateFlow()
-
     private val _receiverID = mutableStateOf("")
     val receiverID = _receiverID
     fun changeReceiverID(senderID: String) {
@@ -146,6 +120,28 @@ class ChatViewModel : ViewModel(), KoinComponent,
         _senderID.value = senderID
     }
 
+    init {
+        changeMessageText("")
+
+        _remoteMessageList.update {
+            listOf()
+        }
+        _localMessageList.update {
+            listOf()
+        }
+
+        loadMessages(_chatID.value, senderID.value, receiverID.value, _isNewChat.value)
+    }
+
+    val currentUserID = firebaseMessageRepository.currentUserID
+    val currentUserMail = firebaseMessageRepository.currentUserMail
+    val friendID: StateFlow<String?> = firebaseMessageRepository.friendID
+
+    val isTitledLoaded = mutableStateOf(false)
+
+    private val _loading = MutableStateFlow(false)
+    val loading = _loading.asStateFlow()
+
     private fun getAllTitles(): String {
         var allTitles = ""
         for ((index, message) in getTitles().withIndex()) {
@@ -154,7 +150,7 @@ class ChatViewModel : ViewModel(), KoinComponent,
         return allTitles
     }
 
-    private fun loadMessages(chatID: String?, senderID: String, receiverID: String, isNewChat: Boolean) {
+    private fun loadMessages(chatID: String?, senderID: String?, receiverID: String?, isNewChat: Boolean) {
         if (!chatID.isNullOrBlank()) {
             viewModelScope.launch {
                 withContext(Dispatchers.Main) {
@@ -165,7 +161,7 @@ class ChatViewModel : ViewModel(), KoinComponent,
                     }
                 }
             }
-            if (isNewChat) {
+            if (isNewChat && senderID != null && receiverID != null) {
                 if (!isTitledLoaded.value) { //for gpt chat
                     viewModelScope.launch {
                         withContext(Dispatchers.IO) {
