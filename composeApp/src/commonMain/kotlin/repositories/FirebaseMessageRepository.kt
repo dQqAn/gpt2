@@ -21,7 +21,15 @@ interface FirebaseMessageRepository {
     fun otherUserID(mail: String?)
     fun getMailtoFirestore(mail: String)
 
-    suspend fun addAnswer(content: String, contentType: String, chatID: String, senderID: String, receiverID: String)
+    suspend fun addAnswer(
+        content: String,
+        contentType: String,
+        chatID: String,
+        senderID: String,
+        receiverID: String,
+        id: Int
+    )
+
     suspend fun getAnswer(chatID: String, senderID: String, receiverID: String?)
     suspend fun uploadFiles(
         files: MutableState<List<File?>>,
@@ -29,7 +37,8 @@ interface FirebaseMessageRepository {
         chatID: String,
         senderID: String,
         receiverID: String,
-        viewModelScope: CoroutineScope
+        viewModelScope: CoroutineScope,
+        id: Int
     )
 
     fun getOnlineFile(path: String, byteArray: MutableState<ByteArray?>)

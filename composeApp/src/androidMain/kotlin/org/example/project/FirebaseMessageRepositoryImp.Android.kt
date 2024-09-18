@@ -128,11 +128,12 @@ actual class FirebaseMessageRepositoryImp(
     }
 
     override suspend fun addAnswer(
-        content: String, contentType: String, chatID: String, senderID: String, receiverID: String
+        content: String, contentType: String, chatID: String, senderID: String, receiverID: String, id: Int
     ) {
         val key = databaseMessaging.child(senderID).child(receiverID).push().key
         if (key != null) {
             val messageObject = AnswerEntity(
+                id = id,
                 chatID = chatID,
                 role = "user",
                 contentType = contentType,
@@ -205,7 +206,7 @@ actual class FirebaseMessageRepositoryImp(
         chatID: String,
         senderID: String,
         receiverID: String,
-        viewModelScope: CoroutineScope
+        viewModelScope: CoroutineScope, id: Int
     ) {
         if (files.value.isNotEmpty()) {
             for ((index, item) in files.value.withIndex()) {
@@ -218,7 +219,7 @@ actual class FirebaseMessageRepositoryImp(
                     println("${item.name} uploaded.")
                     viewModelScope.launch {
                         withContext(Dispatchers.IO) {
-                            addAnswer(it.storage.path, contentType, chatID, senderID, receiverID)
+                            addAnswer(it.storage.path, contentType, chatID, senderID, receiverID, id)
                         }
                     }
 //                    fileUploadListener.onFileUploadResults(it.storage.path, contentType, chatID, senderID, receiverID)

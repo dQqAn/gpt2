@@ -92,7 +92,8 @@ class ChatViewModel : ViewModel(), KoinComponent,
                     chatID,
                     senderID,
                     receiverID,
-                    viewModelScope
+                    viewModelScope,
+                    getLastMessageID() + 1
                 )
             }
         }
@@ -148,6 +149,14 @@ class ChatViewModel : ViewModel(), KoinComponent,
             allTitles += "$index. $message\n"
         }
         return allTitles
+    }
+
+    private fun getLastMessageID(): Int {
+        return if (_remoteMessageList.value.isEmpty()) {
+            0
+        } else {
+            _remoteMessageList.value.last()!!.id
+        }
     }
 
     private fun loadMessages(chatID: String?, senderID: String?, receiverID: String?, isNewChat: Boolean) {
@@ -234,7 +243,14 @@ class ChatViewModel : ViewModel(), KoinComponent,
     fun addAnswer(content: String, contentType: String, chatID: String, senderID: String, receiverID: String) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                firebaseMessageRepository.addAnswer(content, contentType, chatID, senderID, receiverID)
+                firebaseMessageRepository.addAnswer(
+                    content,
+                    contentType,
+                    chatID,
+                    senderID,
+                    receiverID,
+                    getLastMessageID() + 1
+                )
             }
         }
     }

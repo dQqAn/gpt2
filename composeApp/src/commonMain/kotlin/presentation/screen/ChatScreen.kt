@@ -61,6 +61,7 @@ fun BoxWithConstraintsScope.ChatScreen(
                             }
                             chatViewModel.localAddAnswer(
                                 AnswerEntity(
+                                    id = it.id,
                                     chatID = tempChatID,
                                     messageID = it.messageID,
                                     role = it.role,

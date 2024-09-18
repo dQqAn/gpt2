@@ -4,7 +4,8 @@ import androidx.room.PrimaryKey
 
 @Entity("answers")
 data class AnswerEntity(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
+    @ColumnInfo(name = "id")
     val id: Int = 0,
     @ColumnInfo(name = "messageID")
     val messageID: String = "",
