@@ -16,3 +16,7 @@ captures
 !*.xcodeproj/project.xcworkspace/
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
+/composeApp/schemas/AppDatabase/
+/composeApp/src/androidMain/assets/model.tflite
+/composeApp/src/androidMain/assets/
+/composeApp/schemas/

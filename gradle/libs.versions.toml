@@ -1,18 +1,42 @@
 [versions]
-agp = "8.2.0"
+agp = "8.3.0"
 android-compileSdk = "34"
 android-minSdk = "24"
 android-targetSdk = "34"
-androidx-activityCompose = "1.9.0"
+androidx-activityCompose = "1.9.1"
 androidx-appcompat = "1.7.0"
 androidx-constraintlayout = "2.1.4"
 androidx-core-ktx = "1.13.1"
-androidx-espresso-core = "3.6.0"
+androidx-espresso-core = "3.6.1"
 androidx-material = "1.12.0"
-androidx-test-junit = "1.2.0"
+androidx-test-junit = "1.2.1"
 compose-plugin = "1.6.11"
 junit = "4.13.2"
 kotlin = "2.0.0"
+viewmodel_ref = "2.8.0"
+navigation_ref = "2.8.0-alpha08"
+koin_ref = "3.6.0-wasm-alpha2"
+gson_ref = "2.11.0"
+room = "2.7.0-alpha06"
+ksp = "2.0.0-1.0.23"
+retrofit_ref = "2.11.0"
+lifecycle_ref = "2.8.4"
+tensorflow_lite_ref = "2.16.1"
+tensorflow_text_ref = "0.4.4"
+tensorflow_vision_ref = "0.4.4"
+tensorflow_gpu_delegate_ref = "0.4.4"
+tensorflow_gpu_ref = "2.16.1"
+undercouch_ref = "5.6.0"
+google_service_ref = "4.4.2"
+google_bom_ref = "33.1.2"
+google_auth_ref = "7.2.0"
+serialization_ref = "1.7.1"
+serialization_plugin_ref = "2.0.0"
+camerax_version = "1.4.0-rc01"
+android_permission_ref = "0.35.1-alpha"
+concurrent_version = "1.2.0"
+guava_coroutines_version = "1.6.0"
+guava_android_version = "33.3.0-android"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -25,6 +49,38 @@ androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version
 androidx-material = { group = "com.google.android.material", name = "material", version.ref = "androidx-material" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidx-constraintlayout" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
+viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "viewmodel_ref" }
+navigation = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "navigation_ref" }
+koin = { group = "io.insert-koin", name = "koin-core", version.ref = "koin_ref" }
+koin-android = { group = "io.insert-koin", name = "koin-androidx-compose", version.ref = "koin_ref" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson_ref" }
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
+retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit_ref" }
+retrofit-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit_ref" }
+lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle_ref" }
+lifecycle-livedata = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle_ref" }
+tensorflow-lite = { module = "org.tensorflow:tensorflow-lite", version.ref = "tensorflow_lite_ref" }
+tensorflow-text = { module = "org.tensorflow:tensorflow-lite-task-text", version.ref = "tensorflow_text_ref" }
+tensorflow-vision = { module = "org.tensorflow:tensorflow-lite-task-vision", version.ref = "tensorflow_vision_ref" }
+tensorflow-gpu-delegate = { module = "org.tensorflow:tensorflow-lite-gpu-delegate-plugin", version.ref = "tensorflow_gpu_delegate_ref" }
+tensorflow-gpu = { module = "org.tensorflow:tensorflow-lite-gpu", version.ref = "tensorflow_gpu_ref" }
+google-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "google_bom_ref" }
+google-database = { group = "com.google.firebase", name = "firebase-database" }
+google-firestore = { module = "com.google.firebase:firebase-firestore" }
+google-storage = { module = "com.google.firebase:firebase-storage" }
+google-auth = { group = "com.firebaseui", name = "firebase-ui-auth", version.ref = "google_auth_ref" }
+serialization = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization_ref" }
+camerax-view = { module = "androidx.camera:camera-view", version.ref = "camerax_version" }
+camerax-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "camerax_version" }
+camerax-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "camerax_version" }
+camerax-core = { module = "androidx.camera:camera-core", version.ref = "camerax_version" }
+camerax-video = { module = "androidx.camera:camera-video", version.ref = "camerax_version" }
+camerax-extensions = { module = "androidx.camera:camera-extensions", version.ref = "camerax_version" }
+concurrent = { module = "androidx.concurrent:concurrent-futures", version.ref = "concurrent_version" }
+guava-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-guava", version.ref = "guava_coroutines_version" }
+guava-android = { module = "com.google.guava:guava", version.ref = "guava_android_version" }
+android-permission = { module = "com.google.accompanist:accompanist-permissions", version.ref = "android_permission_ref" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -32,3 +88,8 @@ androidLibrary = { id = "com.android.library", version.ref = "agp" }
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+room = { id = "androidx.room", version.ref = "room" }
+undercouch = { id = "de.undercouch.download", version.ref = "undercouch_ref" }
+google-service = { id = "com.google.gms.google-services", version.ref = "google_service_ref" }
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serialization_plugin_ref" }

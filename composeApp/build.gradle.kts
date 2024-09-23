@@ -1,4 +1,3 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -7,36 +6,95 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
+    alias(libs.plugins.undercouch)
+    alias(libs.plugins.google.service)
+    alias(libs.plugins.serialization)
 }
 
+project.ext.set("ASSET_DIR", "$projectDir/src/androidMain/assets")
+//project.ext.set("TEST_ASSETS_DIR", "$projectDir/src/androidTest/assets")
+apply("download_models.gradle")
+apply("download_models2.gradle")
+apply("download.gradle")
+
 kotlin {
+    @OptIn(ExperimentalKotlinGradlePluginApi::class)
+    compilerOptions {
+        // Common compiler options applied to all Kotlin source sets
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
+
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_19)
         }
     }
-    
-    jvm("desktop")
-    
+
+//    jvm("desktop")
+
     sourceSets {
-        val desktopMain by getting
-        
+//        val desktopMain by getting
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.koin.android)
+
+            //Utils
+            implementation(libs.android.permission)
+            implementation(libs.concurrent)
+            implementation(libs.guava.coroutines)
+            implementation(libs.guava.android)
+
+            //Camera
+            implementation(libs.camerax.view)
+            implementation(libs.camerax.lifecycle)
+            implementation(libs.camerax.camera2)
+            implementation(libs.camerax.core)
+            implementation(libs.camerax.video)
+            implementation(libs.camerax.extensions)
+
+            //Firebase
+            implementation(project.dependencies.platform(libs.google.bom))
+            implementation(libs.google.auth)
+            implementation(libs.google.database)
+            implementation(libs.google.firestore)
+            implementation(libs.google.storage)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
-            implementation(compose.material)
+            implementation(compose.material3)
             implementation(compose.ui)
+            implementation(compose.preview)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+
+            //Utils
+            implementation(libs.viewmodel)
+            implementation(libs.navigation)
+            implementation(libs.koin)
+            implementation(libs.gson)
+            implementation(libs.room.runtime)
+            implementation(libs.retrofit)
+            implementation(libs.retrofit.gson)
+            implementation(libs.lifecycle)
+            implementation(libs.lifecycle.livedata)
+            implementation(libs.serialization)
+
+            //Tensorflow
+            implementation(libs.tensorflow.lite)
+            implementation(libs.tensorflow.text)
+            implementation(libs.tensorflow.vision)
+            implementation(libs.tensorflow.gpu.delegate)
+            implementation(libs.tensorflow.gpu)
         }
-        desktopMain.dependencies {
+        /*desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
-        }
+        }*/
     }
 }
 
@@ -63,11 +121,13 @@ android {
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
+            getDefaultProguardFile("proguard-android-optimize.txt")
+            proguardFile("proguard-rules.pro")
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_19
+        targetCompatibility = JavaVersion.VERSION_19
     }
     buildFeatures {
         compose = true
@@ -75,9 +135,10 @@ android {
     dependencies {
         debugImplementation(compose.uiTooling)
     }
+    androidResources.noCompress.add("tflite")
 }
 
-compose.desktop {
+/*compose.desktop {
     application {
         mainClass = "MainKt"
 
@@ -87,4 +148,10 @@ compose.desktop {
             packageVersion = "1.0.0"
         }
     }
+}*/
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }
+
+dependencies { ksp(libs.room.compiler) }
