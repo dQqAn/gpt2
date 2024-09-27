@@ -5,10 +5,10 @@ import androidx.room.PrimaryKey
 @Entity("answers")
 data class AnswerEntity(
     @PrimaryKey
-    @ColumnInfo(name = "id")
-    val id: Int = 0,
     @ColumnInfo(name = "messageID")
     val messageID: String = "",
+    @ColumnInfo(name = "id")
+    val id: Int = 0,
     @ColumnInfo("chatID")
     val chatID: String = "",
     @ColumnInfo("role")

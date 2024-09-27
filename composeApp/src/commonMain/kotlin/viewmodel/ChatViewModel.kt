@@ -61,12 +61,12 @@ class ChatViewModel : ViewModel(), KoinComponent,
     private val firebaseMessageRepository: FirebaseMessageRepository by inject()
 
     private val _chatID = firebaseMessageRepository.chatID
-    val chatID = _chatID.asStateFlow()
+    /*val chatID = _chatID.asStateFlow()
     fun changeChatID(chatID: String) {
         _chatID.update {
             chatID
         }
-    }
+    }*/
 
     private val _isNewChat = firebaseMessageRepository.isNewChat
     val isNewChat = _isNewChat.asStateFlow()
@@ -81,22 +81,6 @@ class ChatViewModel : ViewModel(), KoinComponent,
     @Composable
     fun launchGallery(openGallery: MutableState<Boolean>, showRationalDialog: MutableState<Boolean>) {
         firebaseMessageRepository.launchGallery(openGallery, showRationalDialog, selectedImages)
-    }
-
-    fun uploadFiles(contentType: String, chatID: String, senderID: String, receiverID: String) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                firebaseMessageRepository.uploadFiles(
-                    selectedImages,
-                    contentType,
-                    chatID,
-                    senderID,
-                    receiverID,
-                    viewModelScope,
-                    getLastMessageID() + 1
-                )
-            }
-        }
     }
 
     fun getFile(path: String, selectedByteArrayImages: MutableState<ByteArray?>) {
@@ -121,80 +105,18 @@ class ChatViewModel : ViewModel(), KoinComponent,
         _senderID.value = senderID
     }
 
-    init {
-        changeMessageText("")
-
-        _remoteMessageList.update {
-            listOf()
-        }
-        _localMessageList.update {
-            listOf()
-        }
-
-        loadMessages(_chatID.value, senderID.value, receiverID.value, _isNewChat.value)
-    }
+    val isTitledLoaded = mutableStateOf(false)
 
     val currentUserID = firebaseMessageRepository.currentUserID
     val currentUserMail = firebaseMessageRepository.currentUserMail
     val friendID: StateFlow<String?> = firebaseMessageRepository.friendID
 
-    val isTitledLoaded = mutableStateOf(false)
-
     private val _loading = MutableStateFlow(false)
     val loading = _loading.asStateFlow()
 
-    private fun getAllTitles(): String {
-        var allTitles = ""
-        for ((index, message) in getTitles().withIndex()) {
-            allTitles += "$index. $message\n"
-        }
-        return allTitles
-    }
-
-    private fun getLastMessageID(): Int {
-        return if (_remoteMessageList.value.isEmpty()) {
-            0
-        } else {
-            _remoteMessageList.value.last()!!.id
-        }
-    }
-
-    private fun loadMessages(chatID: String?, senderID: String?, receiverID: String?, isNewChat: Boolean) {
-        if (!chatID.isNullOrBlank()) {
-            viewModelScope.launch {
-                withContext(Dispatchers.Main) {
-                    messageRepository.getMessages(chatID).collect { data ->
-                        if (data.isNotEmpty()) {
-                            _localMessageList.update { data }
-                        }
-                    }
-                }
-            }
-            if (isNewChat && senderID != null && receiverID != null) {
-                if (!isTitledLoaded.value) { //for gpt chat
-                    viewModelScope.launch {
-                        withContext(Dispatchers.IO) {
-                            database.answerDao().addAnswer(
-                                answerEntity = AnswerEntity(
-                                    chatID = chatID,
-                                    role = "assistant",
-                                    contentType = contentTypeMessage,
-                                    content = getAllTitles(),
-                                    senderID = senderID,
-                                    receiverID = receiverID,
-                                    date = GetCurrentDate()
-                                )
-                            )
-                        }
-                        isTitledLoaded.value = true
-                    }
-                }
-            }
-        }
-    }
-
     private var _titles: List<String> = emptyList()
     private val client = LoadDataSetClient()
+
     private fun getTitles(): List<String?> {
         //        val rnds = (0..10).random()
         //    var questions: List<String> = emptyList()
@@ -216,18 +138,106 @@ class ChatViewModel : ViewModel(), KoinComponent,
         return _content
     }
 
+    private fun getAllTitles(): String {
+        var allTitles = ""
+        for ((index, message) in getTitles().withIndex()) {
+            allTitles += "$index. $message\n"
+        }
+        return allTitles
+    }
+
+    private fun getLastRemoteMessageID(): Int {
+//        println("1: "+_remoteMessageList.value)
+        return if (_remoteMessageList.value.isEmpty() || _remoteMessageList.value.isNullOrEmpty()) {
+            0
+        } else {
+            _remoteMessageList.value.last()!!.id
+        }
+    }
+
+    private fun getLastLocalMessageID(): Int {
+//        println("2: "+_localMessageList.value)
+        return if (_localMessageList.value.isEmpty() || _localMessageList.value.isNullOrEmpty()) {
+            0
+        } else {
+            _localMessageList.value.last()!!.id
+        }
+    }
+
+    private fun loadMessages(chatID: String?, senderID: String?, receiverID: String?, isNewChat: Boolean) {
+        if (!chatID.isNullOrBlank()) {
+            viewModelScope.launch {
+                withContext(Dispatchers.Main) {
+//                    println("chatid: "+chatID)
+                    messageRepository.getMessages(chatID).collect { data ->
+                        if (data.isNotEmpty()) {
+                            _localMessageList.update { data }
+                        }
+                    }
+                }
+            }
+            if (isNewChat && senderID != null && receiverID != null) {
+                if (!isTitledLoaded.value) { //for gpt chat
+                    viewModelScope.launch {
+                        withContext(Dispatchers.IO) {
+                            val date = GetCurrentDate()
+                            val entity = AnswerEntity(
+                                messageID = date,
+                                id = getLastLocalMessageID() + 1,
+                                chatID = chatID,
+                                role = "assistant",
+                                contentType = contentTypeMessage,
+                                content = getAllTitles(),
+                                senderID = senderID,
+                                receiverID = receiverID,
+                                date = date,
+                            )
+
+                            _localMessageList.update { _localMessageList.value + entity }
+
+                            database.answerDao().addAnswer(
+                                answerEntity = entity
+                            )
+                        }
+                        isTitledLoaded.value = true
+                    }
+                }
+            }
+        }
+    }
+
+    init {
+        changeMessageText("")
+
+        _remoteMessageList.update {
+            listOf()
+        }
+        _localMessageList.update {
+            listOf()
+        }
+
+        loadMessages(_chatID.value, senderID.value, receiverID.value, _isNewChat.value)
+    }
+
     private suspend fun answerQuestion(question: String?, senderID: String, receiverID: String, chatID: String) {
         question?.let {
+            val date = GetCurrentDate()
+            val entity = AnswerEntity(
+                messageID = date,
+                id = getLastLocalMessageID() + 1,
+                chatID = chatID,
+                role = "assistant",
+                contentType = contentTypeMessage,
+                content = it,
+                senderID = senderID,
+                receiverID = receiverID,
+                date = date,
+            )
+
+            _localMessageList.update { _localMessageList.value + entity }
+
             database.answerDao().addAnswer(
-                answerEntity = AnswerEntity(
-                    chatID = chatID,
-                    role = "assistant",
-                    contentType = contentTypeMessage,
-                    content = it,
-                    senderID = senderID,
-                    receiverID = receiverID,
-                    date = GetCurrentDate()
-                )
+                answerEntity = entity
             )
         }
     }
@@ -236,6 +246,22 @@ class ChatViewModel : ViewModel(), KoinComponent,
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 database.answerDao().addAnswer(answerEntity)
+            }
+        }
+    }
+
+    fun uploadFiles(contentType: String, chatID: String, senderID: String, receiverID: String) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                firebaseMessageRepository.uploadFiles(
+                    selectedImages,
+                    contentType,
+                    chatID,
+                    senderID,
+                    receiverID,
+                    viewModelScope,
+                    getLastRemoteMessageID() + 1
+                )
             }
         }
     }
@@ -249,7 +275,7 @@ class ChatViewModel : ViewModel(), KoinComponent,
                     chatID,
                     senderID,
                     receiverID,
-                    getLastMessageID() + 1
+                    getLastRemoteMessageID() + 1
                 )
             }
         }
@@ -267,44 +293,62 @@ class ChatViewModel : ViewModel(), KoinComponent,
         if (_content.isBlank()) { //new chat
             viewModelScope.launch {
                 withContext(Dispatchers.IO) {
-                    database.answerDao().addAnswer(
-                        answerEntity = AnswerEntity(
-                            chatID = chatID,
-                            role = "user",
-                            contentType = contentType,
-                            content = question,
-                            senderID = senderID,
-                            receiverID = receiverID,
-                            date = GetCurrentDate()
-                        )
+                    val tempDate = GetCurrentDate()
+                    val tempEntity = AnswerEntity(
+                        messageID = tempDate,
+                        id = getLastLocalMessageID() + 1,
+                        chatID = chatID,
+                        role = "user",
+                        contentType = contentType,
+                        content = question,
+                        senderID = senderID,
+                        receiverID = receiverID,
+                        date = tempDate,
                     )
+
+                    _localMessageList.update { _localMessageList.value + tempEntity }
+
+                    database.answerDao().addAnswer(
+                        answerEntity = tempEntity
+                    )
+
                     if (_titles.isEmpty()) {
                         getTitles()
                     }
                     val questionIndex = question.toIntOrNull()
                     if (questionIndex != null && 0 <= questionIndex && questionIndex <= _titles.size) {
+                        val date = GetCurrentDate()
+                        val entity = AnswerEntity(
+                            messageID = date,
+                            id = getLastLocalMessageID() + 1,
+                            chatID = chatID,
+                            role = "assistant",
+                            contentType = contentType,
+                            content = getContent(questionIndex),
+                            senderID = senderID,
+                            receiverID = receiverID,
+                            date = date,
+                        )
+                        _localMessageList.update { _localMessageList.value + entity }
                         database.answerDao().addAnswer(
-                            answerEntity = AnswerEntity(
-                                chatID = chatID,
-                                role = "assistant",
-                                contentType = contentType,
-                                content = getContent(questionIndex),
-                                senderID = senderID,
-                                receiverID = receiverID,
-                                date = GetCurrentDate()
-                            )
+                            answerEntity = entity
                         )
                     } else {
+                        val date = GetCurrentDate()
+                        val entity = AnswerEntity(
+                            messageID = date,
+                            id = getLastLocalMessageID() + 1,
+                            chatID = chatID,
+                            role = "assistant",
+                            contentType = contentType,
+                            content = getAllTitles(),
+                            senderID = senderID,
+                            receiverID = receiverID,
+                            date = date,
+                        )
+                        _localMessageList.update { _localMessageList.value + entity }
                         database.answerDao().addAnswer(
-                            answerEntity = AnswerEntity(
-                                chatID = chatID,
-                                role = "assistant",
-                                contentType = contentType,
-                                content = getAllTitles(),
-                                senderID = senderID,
-                                receiverID = receiverID,
-                                date = GetCurrentDate()
-                            )
+                            answerEntity = entity
                         )
                     }
                 }
@@ -312,24 +356,26 @@ class ChatViewModel : ViewModel(), KoinComponent,
         } else { //todo: check _content id from database
             viewModelScope.launch {
                 withContext(Dispatchers.IO) {
+                    val date = GetCurrentDate()
+                    val entity = AnswerEntity(
+                        messageID = date,
+                        id = getLastLocalMessageID() + 1,
+                        chatID = chatID,
+                        role = "user",
+                        contentType = contentType,
+                        content = question,
+                        senderID = senderID,
+                        receiverID = receiverID,
+                        date = date,
+                    )
+
+                    _localMessageList.update { _localMessageList.value + entity }
+
                     database.answerDao().addAnswer(
-                        answerEntity = AnswerEntity(
-                            chatID = chatID,
-                            role = "user",
-                            contentType = contentType,
-                            content = question,
-                            senderID = senderID,
-                            receiverID = receiverID,
-                            date = GetCurrentDate()
-                        )
+                        answerEntity = entity
                     )
                 }
                 _loading.update { true }
-
-                //load all prevquestions from database
-                for (item in bertHelper.answer(_content, question)) {
-                    answerQuestion(item, senderID, receiverID, chatID)
-                }
 
                 /*repository.askQuestion(
                         prevQuestion = messages.value,
@@ -361,6 +407,19 @@ class ChatViewModel : ViewModel(), KoinComponent,
                             else -> {}
                         }
                     }*/
+            }
+
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    val lastMessage = bertHelper.answer(_content, question).last()
+                    answerQuestion(lastMessage, senderID, receiverID, chatID)
+
+                    //load all prevquestions from database
+                    //TODO: problem with for
+                    /*for (item in bertHelper.answer(_content, question)) {
+                        answerQuestion(item, senderID, receiverID, chatID)
+                    }*/
+                }
             }
         }
     }

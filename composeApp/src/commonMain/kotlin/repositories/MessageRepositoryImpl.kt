@@ -42,6 +42,7 @@ class MessageRepositoryImpl(private val dao: AnswerDao) : MessageRepository {
         return dao.getAnswer(chatID).map { value ->
             value.map { entity ->
                 AnswerEntity(
+                    id = entity.id,
                     chatID = entity.chatID,
                     role = entity.role,
                     contentType = entity.contentType,
@@ -58,6 +59,7 @@ class MessageRepositoryImpl(private val dao: AnswerDao) : MessageRepository {
     override suspend fun getMessage(messageID: String): AnswerEntity? {
         val entity = dao.getMessage(messageID) ?: return null
         return AnswerEntity(
+            id = entity.id,
             chatID = entity.chatID,
             role = entity.role,
             contentType = entity.contentType,
