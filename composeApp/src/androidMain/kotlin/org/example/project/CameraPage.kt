@@ -3,6 +3,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.media.MediaScannerConnection
 import android.net.Uri
+import android.os.Environment.getExternalStorageDirectory
 import android.webkit.MimeTypeMap
 import android.widget.ImageView
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -120,8 +121,8 @@ private fun CameraView(
 }
 
 private fun Context.getOutputDirectory(): File {
-    val mediaDir = getExternalFilesDir("Pictures")?.let {
-        File(it, "Camera").apply { mkdirs() }
+    val mediaDir = getExternalStorageDirectory()?.let {
+        File(it, "/Pictures/Camera").apply { mkdirs() }
     }
     return if (mediaDir != null && mediaDir.exists())
         mediaDir else this.filesDir
