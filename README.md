@@ -9,4 +9,12 @@ This is a Kotlin Multiplatform project targeting Android, Desktop.
 
 Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
 
-![image](https://github.com/user-attachments/assets/31b5ea6f-d7bd-4828-9cc6-6315b8d68770)
+![img.png](img.png) 
+
+![img_1.png](img_1.png)
+
+![img_2.png](img_2.png)
+
+![img_3.png](img_3.png)
+
+![img_4.png](img_4.png)
