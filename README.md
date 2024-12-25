@@ -9,14 +9,18 @@ This is a Kotlin Multiplatform project targeting Android, Desktop.
 
 Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
 
-![img_5.png](img_5.png)
+| Chat with AI            | Phone Auth.          |
+| ----------------------- | -------------------- |
+| ![img_5.png](img_5.png) | ![img.png](img.png)  |
 
-![img.png](img.png) 
 
-![img_1.png](img_1.png)
+| Phone Area Codes        | AI and Users Chat       |
+| ----------------------- | ----------------------- |
+| ![img_1.png](img_1.png) | ![img_2.png](img_2.png) |
 
-![img_2.png](img_2.png)
+| Users Chat              | Resources               |
+| ----------------------- | ----------------------- |
+| ![img_3.png](img_3.png) | ![img_4.png](img_4.png) |
 
-![img_3.png](img_3.png)
 
-![img_4.png](img_4.png)
+
