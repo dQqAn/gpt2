@@ -6,14 +6,17 @@
 | ----------------------- | -------------------- |
 | ![img_5.png](img_5.png) | ![img.png](img.png)  |
 
+| Localization            | AI and Users Chat |
+| ----------------------- | -------------------- |
+| ![image](https://github.com/user-attachments/assets/4c8dca49-8c33-4a55-a251-ab81fc5d1e84) | ![img_2.png](img_2.png) |
 
-| Phone Area Codes        | AI and Users Chat       |
+| Phone Area Codes        | Users Chat |
 | ----------------------- | ----------------------- |
-| ![img_1.png](img_1.png) | ![img_2.png](img_2.png) |
+| ![img_1.png](img_1.png) | ![img_3.png](img_3.png) |
 
-| Users Chat              | Resources               |
+| Resources               |                         |
 | ----------------------- | ----------------------- |
-| ![img_3.png](img_3.png) | ![img_4.png](img_4.png) |
+| ![img_4.png](img_4.png) |                         |
 
 This is a Kotlin Multiplatform project targeting Android, Desktop.
 
