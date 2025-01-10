@@ -1,6 +1,6 @@
 [TR] Yapay zeka ve arkadaşlarınızla konuşabileceğiniz bir uygulama. Sesten yazıya, görüntü ve mesaj olarak mesajlaşabilirsiniz. Telefon ve mail doğrulama yapılması gerekmektedir.   
 
-[EN] An app where you can message with artificial intelligence and friends. You can exchange voice-to-text, video and text messages. Phone and mail verification is required.   
+[EN] An app where you can message with artificial intelligence and friends. You can exchange voice-to-text, image and text messages. Phone and mail verification is required.   
 
 | Chat with AI            | Phone Auth.          |
 | ----------------------- | -------------------- |
