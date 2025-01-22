@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "274488745165",
+    "firebase_url": "https://gpt-chat-6c38c-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "gpt-chat-6c38c",
     "storage_bucket": "gpt-chat-6c38c.appspot.com"
   },
