@@ -1,7 +1,6 @@
 package org.example.project
 
 import AnswerDatabase
-import Api
 import FirebaseMessageRepositoryImp
 import MessageRepository
 import SpeechRepository
@@ -20,7 +19,6 @@ import presentation.components.SpeechInterface
 import presentation.components.UserInterface
 import repositories.FirebaseMessageRepository
 import repositories.MessageRepositoryImpl
-import retrofit2.Retrofit
 import util.initKoin
 
 class AndroidApp : Application() {
@@ -31,11 +29,6 @@ class AndroidApp : Application() {
             module {
                 single<Context> { this@AndroidApp }
                 single<Application> { this@AndroidApp }
-
-                single {
-                    val retrofit: Retrofit = get()
-                    retrofit.create(Api::class.java)
-                }
 
                 single<AnswerDatabase> {
                     Room.databaseBuilder(
